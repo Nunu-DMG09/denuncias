@@ -2,6 +2,13 @@ import { useState } from "react";
 import "./App.css";
 import Header from "./Components/Header";
 
+interface Step {
+  id: number;
+  title: string;
+  isCompleted: boolean;
+  isActive: boolean;
+}
+
 function App() {
 	const [selectedReason, setSelectedReason] = useState<number | null>(0);
 	return (
