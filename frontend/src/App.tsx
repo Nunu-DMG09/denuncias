@@ -12,7 +12,7 @@ function App() {
 					Realizar Denuncias sobre Fraude
 				</h1>
 
-				<section className="max-w-4xl mx-auto rounded-lg shadow-lg backdrop-blur-2xl backdrop-saturate-100 bg-[#002F590D]">
+				<section className="max-w-4xl mx-auto rounded-lg shadow-lg backdrop-blur-2xl backdrop-saturate-100 bg-[#3a46500d]">
 					<div className="bg-gray-50 p-6 border-b">
 						<div className="flex justify-center items-center gap-4 max-w-md mx-auto">
 							{[1, 2, 3].map((step) => (
