@@ -1,6 +1,8 @@
+import { useState } from "react";
 import "./App.css";
 
 function App() {
+	const [selectedReason, setSelectedReason] = useState<number | null>(0);
 	return (
 		<div className="min-h-screen">
 			<header className="header shadow-md w-full bg-white py-4 px-4">
@@ -77,6 +79,10 @@ function App() {
 											name="reason"
 											id={`reason-${num}`}
 											className="mt-1"
+											onChange={() =>
+												setSelectedReason(num)
+											}
+											checked={selectedReason === num}
 										/>
 										<label
 											htmlFor={`reason-${num}`}
@@ -93,6 +99,19 @@ function App() {
 									</div>
 								))}
 							</div>
+							{/* Después del map de radio buttons */}
+							{selectedReason === 5 && (
+								<div className="mt-4 p-4 border rounded-lg bg-gray-50 transition-all duration-300 ease-in-out">
+									<label className="block text-sm font-medium text-gray-700 mb-2">
+										Especifique otro motivo
+									</label>
+									<input
+										type="text"
+										className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+										placeholder="Describa el motivo de su denuncia"
+									/>
+								</div>
+							)}
 							{/* Additional Details */}
 							<div className="space-y-4">
 								<div>
@@ -117,8 +136,8 @@ function App() {
 									<input
 										type="file"
 										className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    id="file"
-                    hidden
+										id="file"
+										hidden
 									/>
 								</div>
 							</div>
