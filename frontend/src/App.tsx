@@ -3,20 +3,65 @@ import "./App.css";
 import Header from "./Components/Header";
 
 interface Step {
-  id: number;
-  title: string;
-  isCompleted: boolean;
-  isActive: boolean;
+	id: number;
+	title: string;
+	isCompleted: boolean;
+	isActive: boolean;
 }
 
 function App() {
 	const [currentStep, setCurrentStep] = useState<number>(1);
-  const [steps, setSteps] = useState<Step[]>([
-    { id: 1, title: "Información de Denuncia", isCompleted: false, isActive: true },
-    { id: 2, title: "Datos del Denunciado", isCompleted: false, isActive: false },
-    { id: 3, title: "Datos del Denunciante", isCompleted: false, isActive: false },
-  ]);
-  const [selectedReason, setSelectedReason] = useState<number | null>(0);
+	const [steps, setSteps] = useState<Step[]>([
+		{
+			id: 1,
+			title: "Información de Denuncia",
+			isCompleted: false,
+			isActive: true,
+		},
+		{
+			id: 2,
+			title: "Datos del Denunciado",
+			isCompleted: false,
+			isActive: false,
+		},
+		{
+			id: 3,
+			title: "Datos del Denunciante",
+			isCompleted: false,
+			isActive: false,
+		},
+	]);
+	const [selectedReason, setSelectedReason] = useState<number | null>(0);
+
+	const handleNav = (direction: "next" | "back") => {
+		if (direction === "next" && currentStep < 3) {
+			setSteps((prev) =>
+				prev.map((step) => {
+					if (step.id === currentStep) {
+						return { ...step, isCompleted: true, isActive: false };
+					}
+					if (step.id === currentStep + 1) {
+						return { ...step, isActive: true };
+					}
+					return step;
+				})
+			);
+			setCurrentStep((prev) => prev + 1);
+		} else if (direction === "back" && currentStep > 1) {
+			setSteps((prev) =>
+				prev.map((step) => {
+					if (step.id === currentStep) {
+						return { ...step, isActive: false };
+					}
+					if (step.id === currentStep - 1) {
+						return { ...step, isActive: true };
+					}
+					return step;
+				})
+			);
+		}
+	};
+
 	return (
 		<div className="min-h-screen">
 			<Header />
@@ -28,18 +73,28 @@ function App() {
 				<section className="max-w-4xl mx-auto rounded-lg shadow-lg backdrop-blur-2xl backdrop-saturate-100 bg-[#3a46500d]">
 					<div className="bg-gray-50 p-6 border-b">
 						<div className="flex justify-center items-center gap-4 max-w-md mx-auto">
-							{[1, 2, 3].map((step) => (
-								<div key={step} className="flex items-center">
-									<button
-										type="button"
-										className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold"
+							{steps.map((step, index) => (
+								<>
+									<div
+										key={step.id}
+										className={`flex items-center justify-center w-12 h-12 rounded-full ${
+											step.isActive
+												? "bg-(--secondary-color) text-white"
+												: "bg-slate-500 text-white"
+										}`}
 									>
-										{step}
-									</button>
-									{step < 3 && (
-										<div className="h-1 w-16 bg-blue-200 mx-2" />
+										{step.id}
+									</div>
+									{index < steps.length - 1 && (
+										<div
+											className={`h-1 w-20 mx-2 ${
+												step.isActive
+													? "bg-blue-900"
+													: "bg-slate-400"
+											}`}
+										/>
 									)}
-								</div>
+								</>
 							))}
 						</div>
 					</div>
