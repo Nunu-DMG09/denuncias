@@ -29,6 +29,10 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #ffffff;
+  background-image: 
+        radial-gradient(at 90% 75%, #ffffff, transparent 95%),
+        radial-gradient(at 90% 95%, #0DC1F2, transparent 75%);
 }
 
 h1 {
