@@ -10,7 +10,13 @@ interface Step {
 }
 
 function App() {
-	const [selectedReason, setSelectedReason] = useState<number | null>(0);
+	const [currentStep, setCurrentStep] = useState<number>(1);
+  const [steps, setSteps] = useState<Step[]>([
+    { id: 1, title: "Información de Denuncia", isCompleted: false, isActive: true },
+    { id: 2, title: "Datos del Denunciado", isCompleted: false, isActive: false },
+    { id: 3, title: "Datos del Denunciante", isCompleted: false, isActive: false },
+  ]);
+  const [selectedReason, setSelectedReason] = useState<number | null>(0);
 	return (
 		<div className="min-h-screen">
 			<Header />
