@@ -101,7 +101,7 @@ function App() {
 							</div>
 							{/* Después del map de radio buttons */}
 							{selectedReason === 5 && (
-								<div className="mt-4 p-4 border rounded-lg bg-gray-50 transition-all duration-300 ease-in-out">
+								<div className="mt-4 p-4 border rounded-lg bg-gray-50">
 									<label className="block text-sm font-medium text-gray-700 mb-2">
 										Especifique otro motivo
 									</label>
