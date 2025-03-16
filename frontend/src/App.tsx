@@ -59,7 +59,7 @@ function App() {
 					return step;
 				})
 			);
-      setCurrentStep((prev) => prev - 1);
+			setCurrentStep((prev) => prev - 1);
 		}
 	};
 	const renderStepContent = () => {
@@ -155,70 +155,70 @@ function App() {
 						</div>
 					</div>
 				);
-      case 2:
-        return (
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Nombre del Denunciado
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Dirección del Denunciado
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Teléfono del Denunciado
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-          </div>
-        )
-      case 3:
-        return (
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Nombre del Denunciante
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Dirección del Denunciante
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Teléfono del Denunciante
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-          </div>
-        )
+			case 2:
+				return (
+					<div className="space-y-6">
+						<div className="space-y-2">
+							<label className="block text-sm font-medium text-gray-700">
+								Nombre del Denunciado
+							</label>
+							<input
+								type="text"
+								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+							/>
+						</div>
+						<div className="space-y-2">
+							<label className="block text-sm font-medium text-gray-700">
+								Dirección del Denunciado
+							</label>
+							<input
+								type="text"
+								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+							/>
+						</div>
+						<div className="space-y-2">
+							<label className="block text-sm font-medium text-gray-700">
+								Teléfono del Denunciado
+							</label>
+							<input
+								type="text"
+								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+							/>
+						</div>
+					</div>
+				);
+			case 3:
+				return (
+					<div className="space-y-6">
+						<div className="space-y-2">
+							<label className="block text-sm font-medium text-gray-700">
+								Nombre del Denunciante
+							</label>
+							<input
+								type="text"
+								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+							/>
+						</div>
+						<div className="space-y-2">
+							<label className="block text-sm font-medium text-gray-700">
+								Dirección del Denunciante
+							</label>
+							<input
+								type="text"
+								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+							/>
+						</div>
+						<div className="space-y-2">
+							<label className="block text-sm font-medium text-gray-700">
+								Teléfono del Denunciante
+							</label>
+							<input
+								type="text"
+								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+							/>
+						</div>
+					</div>
+				);
 		}
 	};
 
@@ -234,7 +234,10 @@ function App() {
 					<div className="bg-gray-50 p-6 border-b">
 						<div className="flex justify-center items-center gap-0 md:gap-4 max-w-md mx-auto">
 							{steps.map((step, index) => (
-								<div key={step.id} className="flex items-center">
+								<div
+									key={step.id}
+									className="flex items-center"
+								>
 									<div
 										key={step.id}
 										className={`flex items-center justify-center w-12 h-12 rounded-full ${
@@ -259,9 +262,7 @@ function App() {
 						</div>
 					</div>
 					<div className="p-6">
-						<form className="space-y-6">
-              {renderStepContent()}
-            </form>
+						<form className="space-y-6">{renderStepContent()}</form>
 					</div>
 
 					{/* Action Buttons */}
@@ -269,19 +270,23 @@ function App() {
 						{currentStep > 1 && (
 							<button
 								onClick={() => handleNav("back")}
-								className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+								className="px-10 py-4 border border-(--gray-light) rounded-md text-(--gray) cursor-pointer hover:scale-105 hover:bg-gray-300 transition-all ease-out duration-300"
 							>
 								Atrás
 							</button>
 						)}
 						<button
 							onClick={() => handleNav("next")}
-							className="px-8 py-4 bg-(--secondary-color) text-white rounded-md text-center hover:bg-(--primary-color) cursor-pointer text-lg hover:scale-105 transition-all ease-out duration-300"
+							className={`px-8 py-4 bg-(--secondary-color) text-white rounded-md text-center hover:bg-(--primary-color) cursor-pointer text-lg hover:scale-105 transition-all ease-out duration-300`}
 						>
-							{
-                currentStep === 3 ? "Enviar Denuncia" : "Siguiente"
-              }
-							<i className="fa-solid fa-arrow-right ml-5"></i>
+							{currentStep === 3
+								? "Enviar Denuncia"
+								: "Siguiente"}
+							{currentStep === 3 ? (
+								<i className="fa-solid fa-check ml-2"></i>
+							) : (
+								<i className="fa-solid fa-arrow-right ml-5"></i>
+							)}
 						</button>
 					</div>
 				</section>
