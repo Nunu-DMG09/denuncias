@@ -174,7 +174,7 @@ function App() {
 
 								<div>
 									<label
-										className="flex items-center px-4 py-2 border rounded-md text-blue-600 hover:bg-blue-50 w-1/3 cursor-pointer mx-auto"
+										className="flex items-center gap-4 md:gap-0 justify-center px-4 py-2 border rounded-md text-blue-600 hover:bg-blue-50 w-1/2 md:w-1/3 cursor-pointer mx-auto"
 										htmlFor="file"
 									>
 										<i className="fas fa-paperclip mr-2"></i>
