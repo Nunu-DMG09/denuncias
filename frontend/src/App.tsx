@@ -193,11 +193,20 @@ function App() {
 
 					{/* Action Buttons */}
 					<div className="bg-gray-50 px-6 py-4 flex justify-between border-t">
-						<button className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
-							Atrás
-						</button>
-						<button className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+						{currentStep > 1 && (
+							<button
+								onClick={() => handleNav("back")}
+								className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100"
+							>
+								Atrás
+							</button>
+						)}
+						<button
+							onClick={() => handleNav("next")}
+							className="px-8 py-4 bg-(--secondary-color) text-white rounded-md text-center hover:bg-(--primary-color) text-lg hover:scale-105 transition-all ease-out duration-300"
+						>
 							Siguiente
+							<i className="fa-solid fa-arrow-right ml-5"></i>
 						</button>
 					</div>
 				</section>
