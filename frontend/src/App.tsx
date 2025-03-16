@@ -59,6 +59,166 @@ function App() {
 					return step;
 				})
 			);
+      setCurrentStep((prev) => prev - 1);
+		}
+	};
+	const renderStepContent = () => {
+		switch (currentStep) {
+			case 1:
+				return (
+					<div className="space-y-6">
+						{/* Date Input */}
+						<div className="space-y-2">
+							<label className="block text-sm font-medium text-gray-700">
+								Fecha de denuncia
+							</label>
+							<input
+								type="date"
+								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+							/>
+						</div>
+
+						{/* Radio Options */}
+						<div className="space-y-4">
+							<h3 className="font-medium text-gray-900">
+								Identifique el motivo de la denuncia
+							</h3>
+							{[1, 2, 3, 4, 5].map((num) => (
+								<div
+									key={num}
+									className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-gray-50 transition-all ease-in duration-300"
+								>
+									<input
+										type="radio"
+										name="reason"
+										id={`reason-${num}`}
+										className="mt-1"
+										onChange={() => setSelectedReason(num)}
+										checked={selectedReason === num}
+									/>
+									<label
+										htmlFor={`reason-${num}`}
+										className="flex-1 cursor-pointer"
+									>
+										<span className="font-medium text-gray-700">
+											Opción {num}
+										</span>
+										<p className="text-gray-500 text-sm mt-1">
+											Lorem ipsum dolor sit amet,
+											consectetur adipisicing elit.
+										</p>
+									</label>
+								</div>
+							))}
+						</div>
+						{/* Después del map de radio buttons */}
+						{selectedReason === 5 && (
+							<div className="mt-4 p-4 border rounded-lg bg-gray-50">
+								<label className="block text-sm font-medium text-gray-700 mb-2">
+									Especifique otro motivo
+								</label>
+								<input
+									type="text"
+									className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+									placeholder="Describa el motivo de su denuncia"
+								/>
+							</div>
+						)}
+						{/* Additional Details */}
+						<div className="space-y-4">
+							<div>
+								<label className="block text-sm font-medium text-gray-700 mb-2">
+									Cuéntanos qué sucedió
+								</label>
+								<textarea
+									rows={4}
+									className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+									placeholder="Escribe aquí tu denuncia"
+								/>
+							</div>
+
+							<div>
+								<label
+									className="flex items-center gap-4 md:gap-0 justify-center px-4 py-2 rounded-md text-white bg-(--secondary-color) hover:bg-(--primary-color) hover:scale-105 w-1/2 md:w-1/3 cursor-pointer mx-auto transition-all ease-out duration-300"
+									htmlFor="file"
+								>
+									<i className="fas fa-paperclip mr-2"></i>
+									Adjuntar Pruebas
+								</label>
+								<input
+									type="file"
+									className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+									id="file"
+									hidden
+								/>
+							</div>
+						</div>
+					</div>
+				);
+      case 2:
+        return (
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Nombre del Denunciado
+              </label>
+              <input
+                type="text"
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Dirección del Denunciado
+              </label>
+              <input
+                type="text"
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Teléfono del Denunciado
+              </label>
+              <input
+                type="text"
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </div>
+        )
+      case 3:
+        return (
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Nombre del Denunciante
+              </label>
+              <input
+                type="text"
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Dirección del Denunciante
+              </label>
+              <input
+                type="text"
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Teléfono del Denunciante
+              </label>
+              <input
+                type="text"
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </div>
+        )
 		}
 	};
 
@@ -74,7 +234,7 @@ function App() {
 					<div className="bg-gray-50 p-6 border-b">
 						<div className="flex justify-center items-center gap-0 md:gap-4 max-w-md mx-auto">
 							{steps.map((step, index) => (
-								<>
+								<div key={step.id} className="flex items-center">
 									<div
 										key={step.id}
 										className={`flex items-center justify-center w-12 h-12 rounded-full ${
@@ -94,101 +254,14 @@ function App() {
 											}`}
 										/>
 									)}
-								</>
+								</div>
 							))}
 						</div>
 					</div>
 					<div className="p-6">
 						<form className="space-y-6">
-							{/* Date Input */}
-							<div className="space-y-2">
-								<label className="block text-sm font-medium text-gray-700">
-									Fecha de denuncia
-								</label>
-								<input
-									type="date"
-									className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-								/>
-							</div>
-
-							{/* Radio Options */}
-							<div className="space-y-4">
-								<h3 className="font-medium text-gray-900">
-									Identifique el motivo de la denuncia
-								</h3>
-								{[1, 2, 3, 4, 5].map((num) => (
-									<div
-										key={num}
-										className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-gray-50 transition-all ease-in duration-300"
-									>
-										<input
-											type="radio"
-											name="reason"
-											id={`reason-${num}`}
-											className="mt-1"
-											onChange={() =>
-												setSelectedReason(num)
-											}
-											checked={selectedReason === num}
-										/>
-										<label
-											htmlFor={`reason-${num}`}
-											className="flex-1 cursor-pointer"
-										>
-											<span className="font-medium text-gray-700">
-												Opción {num}
-											</span>
-											<p className="text-gray-500 text-sm mt-1">
-												Lorem ipsum dolor sit amet,
-												consectetur adipisicing elit.
-											</p>
-										</label>
-									</div>
-								))}
-							</div>
-							{/* Después del map de radio buttons */}
-							{selectedReason === 5 && (
-								<div className="mt-4 p-4 border rounded-lg bg-gray-50">
-									<label className="block text-sm font-medium text-gray-700 mb-2">
-										Especifique otro motivo
-									</label>
-									<input
-										type="text"
-										className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-										placeholder="Describa el motivo de su denuncia"
-									/>
-								</div>
-							)}
-							{/* Additional Details */}
-							<div className="space-y-4">
-								<div>
-									<label className="block text-sm font-medium text-gray-700 mb-2">
-										Cuéntanos qué sucedió
-									</label>
-									<textarea
-										rows={4}
-										className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-										placeholder="Escribe aquí tu denuncia"
-									/>
-								</div>
-
-								<div>
-									<label
-										className="flex items-center gap-4 md:gap-0 justify-center px-4 py-2 rounded-md text-white bg-(--secondary-color) hover:bg-(--primary-color) hover:scale-105 w-1/2 md:w-1/3 cursor-pointer mx-auto transition-all ease-out duration-300"
-										htmlFor="file"
-									>
-										<i className="fas fa-paperclip mr-2"></i>
-										Adjuntar Pruebas
-									</label>
-									<input
-										type="file"
-										className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-										id="file"
-										hidden
-									/>
-								</div>
-							</div>
-						</form>
+              {renderStepContent()}
+            </form>
 					</div>
 
 					{/* Action Buttons */}
@@ -203,9 +276,11 @@ function App() {
 						)}
 						<button
 							onClick={() => handleNav("next")}
-							className="px-8 py-4 bg-(--secondary-color) text-white rounded-md text-center hover:bg-(--primary-color) text-lg hover:scale-105 transition-all ease-out duration-300"
+							className="px-8 py-4 bg-(--secondary-color) text-white rounded-md text-center hover:bg-(--primary-color) cursor-pointer text-lg hover:scale-105 transition-all ease-out duration-300"
 						>
-							Siguiente
+							{
+                currentStep === 3 ? "Enviar Denuncia" : "Siguiente"
+              }
 							<i className="fa-solid fa-arrow-right ml-5"></i>
 						</button>
 					</div>
