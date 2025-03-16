@@ -72,7 +72,7 @@ function App() {
 
 				<section className="max-w-4xl mx-auto rounded-lg shadow-lg backdrop-blur-2xl backdrop-saturate-100 bg-[#3a46500d]">
 					<div className="bg-gray-50 p-6 border-b">
-						<div className="flex justify-center items-center gap-4 max-w-md mx-auto">
+						<div className="flex justify-center items-center gap-0 md:gap-4 max-w-md mx-auto">
 							{steps.map((step, index) => (
 								<>
 									<div
@@ -87,7 +87,7 @@ function App() {
 									</div>
 									{index < steps.length - 1 && (
 										<div
-											className={`h-1 w-20 mx-2 ${
+											className={`h-1 w-16 mx-2 ${
 												step.isActive
 													? "bg-blue-900"
 													: "bg-slate-400"
