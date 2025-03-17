@@ -199,6 +199,49 @@ function App() {
 			case 3:
 				return (
 					<div className="space-y-6">
+						<div className="space-y-4">
+							<h3 className="font-medium text-gray-900">
+								Identificación del denunciante
+							</h3>
+							<div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-gray-50 transition-all ease-in duration-300">
+								<input
+									type="radio"
+									name="datos"
+									id={`datos-personales`}
+									className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
+								/>
+								<label
+									htmlFor={`datos-personales`}
+									className="flex-1 cursor-pointer"
+								>
+									<span className="font-medium text-gray-700">
+										Denuncia con datos personales
+									</span>
+									<p className="text-gray-500 text-sm mt-1">
+										Si eliges esta opción, los responsables de procesar tu denuncia recibirán tus datos y podrás recibir actualizaciones, además, podrás solicitar medidas de protección.
+									</p>
+								</label>
+							</div>
+							<div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-gray-50 transition-all ease-in duration-300">
+								<input
+									type="radio"
+									name="datos"
+									id={`anónimo`}
+									className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
+								/>
+								<label
+									htmlFor={`anónimo`}
+									className="flex-1 cursor-pointer"
+								>
+									<span className="font-medium text-gray-700">
+										Denuncia anónima
+									</span>
+									<p className="text-gray-500 text-sm mt-1">
+										Eligiendo esta alternativa, nadie conocerá tu identifad, pero tampoco podrás añadir información a tu denuncia, recibir notificaciones sobre tu avance, ni pedir medidas de protección.
+									</p>
+								</label>
+							</div>
+						</div>
 						<div className="space-y-2">
 							<label className="block text-sm font-medium text-gray-700">
 								Nombre del Denunciante
