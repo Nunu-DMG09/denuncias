@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./App.css";
 import Header from "./Components/Header";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface Step {
 	id: number;
@@ -10,6 +12,7 @@ interface Step {
 }
 
 function App() {
+	const [startDate, setStartDate] = useState<Date | null>(null);
 	const [currentStep, setCurrentStep] = useState<number>(1);
 	const [steps, setSteps] = useState<Step[]>([
 		{
@@ -72,10 +75,12 @@ function App() {
 							<label className="block text-sm font-medium text-gray-700" htmlFor="date">
 								Fecha de denuncia
 							</label>
-							<input
-								type="date"
+							<DatePicker 
+								selected={startDate} 
+								onChange={(date) => setStartDate(date)} 
 								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-								id="date"
+								placeholderText="Selecciona una fecha"
+								dateFormat={"dd/MM/yyyy"}
 							/>
 						</div>
 
