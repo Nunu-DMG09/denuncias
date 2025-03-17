@@ -270,14 +270,14 @@ function App() {
 						{currentStep > 1 && (
 							<button
 								onClick={() => handleNav("back")}
-								className="px-10 py-4 border border-(--gray-light) rounded-md text-(--gray) cursor-pointer hover:scale-105 hover:bg-gray-300 transition-all ease-out duration-300"
+								className="px-5 md:px-10 py-4 border border-(--gray-light) rounded-md text-(--gray) cursor-pointer hover:scale-105 hover:bg-gray-300 transition-all ease-out duration-300"
 							>
 								Atrás
 							</button>
 						)}
 						<button
 							onClick={() => handleNav("next")}
-							className={`px-8 py-4 bg-(--secondary-color) text-white rounded-md text-center hover:bg-(--primary-color) cursor-pointer text-lg hover:scale-105 transition-all ease-out duration-300`}
+							className={`px-4 md:px-8 py-4 bg-(--secondary-color) text-white rounded-md text-center hover:bg-(--primary-color) cursor-pointer text-lg hover:scale-105 transition-all ease-out duration-300`}
 						>
 							{currentStep === 3
 								? "Enviar Denuncia"
@@ -285,7 +285,7 @@ function App() {
 							{currentStep === 3 ? (
 								<i className="fa-solid fa-check ml-2"></i>
 							) : (
-								<i className="fa-solid fa-arrow-right ml-5"></i>
+								<i className="fa-solid fa-arrow-right ml-2"></i>
 							)}
 						</button>
 					</div>
