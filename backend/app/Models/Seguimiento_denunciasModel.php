@@ -4,20 +4,19 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class AdjuntosModel extends Model
+class Seguimiento_denunciasModel extends Model
 {
-    protected $table = 'adjuntos';
+    protected $table = 'seguimiento_denuncias';
     protected $primaryKey = 'id';
     protected $returnType = 'array';
     protected $allowedFields =
     [
         'id',
         'denuncia_id',
-        'file_path',
-        'file_name',
-        'file_type',
-        'fecha_subida'
+        'estado',
+        'comentario',
+        'fecha_actualizacion'
     ];
     protected $useTimestamps = true;
-    protected $createdField = 'fecha_subida';
+    protected $createdField  = 'fecha_creacion';
 }
