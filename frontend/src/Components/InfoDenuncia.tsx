@@ -3,20 +3,10 @@ import { registerLocale } from "react-datepicker";
 import { es } from "date-fns/locale/es";
 registerLocale("es", es);
 import "react-datepicker/dist/react-datepicker.css";
+import { useDenuncias } from "../hooks/useDenuncias";
 
-interface InfoDenunciaProps {
-	startDate: Date | null;
-	setStartDate: (date: Date | null) => void;
-	selectedReason: number | null;
-	setSelectedReason: (num: number) => void;
-}
-
-export const InfoDenuncia = ({
-	startDate,
-	setStartDate,
-	selectedReason,
-	setSelectedReason,
-}: InfoDenunciaProps) => {
+export const InfoDenuncia = () => {
+	const { startDate, selectedReason, handleDate, handleReason } = useDenuncias();
 	return (
 		<div className="space-y-6">
 			{/* Date Input */}
@@ -26,7 +16,7 @@ export const InfoDenuncia = ({
 				</h3>
 				<DatePicker
 					selected={startDate}
-					onChange={(date) => setStartDate(date)}
+					onChange={(date) => handleDate(date)}
 					className="w-full px-4 py-2 border rounded-md transition-all duration-300 ease focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) outline-none"
 					placeholderText="Selecciona una fecha"
 					dateFormat={"dd/MM/yyyy"}
@@ -49,7 +39,7 @@ export const InfoDenuncia = ({
 							name="reason"
 							id={`reason-${num}`}
 							className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
-							onChange={() => setSelectedReason(num)}
+							onChange={() => handleReason(num)}
 							checked={selectedReason === num}
 						/>
 						<label

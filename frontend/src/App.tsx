@@ -12,7 +12,6 @@ interface Step {
 
 function App() {
 	const [tipoDatos, setTipoDatos] = useState<string>("anonimo");
-	const [startDate, setStartDate] = useState<Date | null>(null);
 	const [currentStep, setCurrentStep] = useState<number>(1);
 	const [steps, setSteps] = useState<Step[]>([
 		{
@@ -34,7 +33,6 @@ function App() {
 			isActive: false,
 		},
 	]);
-	const [selectedReason, setSelectedReason] = useState<number | null>(0);
 
 	const handleNav = (direction: "next" | "back") => {
 		if (direction === "next" && currentStep < 3) {
@@ -68,12 +66,7 @@ function App() {
 	const renderStepContent = () => {
 		switch (currentStep) {
 			case 1:
-				return <InfoDenuncia
-					startDate={startDate}
-					setStartDate={setStartDate}
-					selectedReason={selectedReason}
-					setSelectedReason={setSelectedReason}
-				/>
+				return <InfoDenuncia />;
 			case 2:
 				return (
 					<div className="space-y-6">
@@ -107,10 +100,12 @@ function App() {
 					</div>
 				);
 			case 3:
-				return <DatosDenunciante
-					tipoDatos={tipoDatos}
-					setTipoDatos={setTipoDatos}
-				/>
+				return (
+					<DatosDenunciante
+						tipoDatos={tipoDatos}
+						setTipoDatos={setTipoDatos}
+					/>
+				);
 		}
 	};
 
