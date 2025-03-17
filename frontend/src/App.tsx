@@ -113,15 +113,15 @@ function App() {
 						</div>
 						{/* Después del map de radio buttons */}
 						{selectedReason === 5 && (
-							<div className="mt-4 p-4 border rounded-lg bg-gray-50">
-								<label className="block text-sm font-medium text-gray-700 mb-2">
-									Especifique otro motivo
-								</label>
+							<div className="relative">
 								<input
 									type="text"
-									className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-									placeholder="Describa el motivo de su denuncia"
+									className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
+									placeholder=" "
 								/>
+								<label className="absolute top-1/2 left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
+									Describa el motivo de la denuncia
+								</label>
 							</div>
 						)}
 						{/* Additional Details */}
