@@ -3,6 +3,7 @@ import "./App.css";
 import Header from "./Components/Header";
 import { InfoDenuncia } from "./Components/InfoDenuncia";
 import { DatosDenunciante } from "./Components/DatosDenunciante";
+import { DatosDenunciado } from "./Components/DatosDenunciado";
 interface Step {
 	id: number;
 	title: string;
@@ -67,37 +68,7 @@ function App() {
 			case 1:
 				return <InfoDenuncia />;
 			case 2:
-				return (
-					<div className="space-y-6">
-						<div className="space-y-2">
-							<label className="block text-sm font-medium text-gray-700">
-								Nombre del Denunciado
-							</label>
-							<input
-								type="text"
-								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-							/>
-						</div>
-						<div className="space-y-2">
-							<label className="block text-sm font-medium text-gray-700">
-								Dirección del Denunciado
-							</label>
-							<input
-								type="text"
-								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-							/>
-						</div>
-						<div className="space-y-2">
-							<label className="block text-sm font-medium text-gray-700">
-								Teléfono del Denunciado
-							</label>
-							<input
-								type="text"
-								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-							/>
-						</div>
-					</div>
-				);
+				return <DatosDenunciado />;
 			case 3:
 				return <DatosDenunciante />;
 		}
