@@ -142,7 +142,7 @@ function App() {
 									className="min-h-[3em] max-h-[10em] resize-none field-sizing-content w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
 									placeholder=" "
 								/>
-								<label className="absolute top-1/2 left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
+								<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 									Cuéntanos qué sucedió
 								</label>
 							</div>
@@ -259,32 +259,35 @@ function App() {
 						</div>
 						{tipoDatos === "datos-personales" && (
 							<div className="space-y-6">
-								<div className="space-y-2">
-									<label className="block text-sm font-medium text-gray-700">
+								<div className="space-y-2 relative">
+									<input
+										type="text"
+										className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
+										placeholder=" "
+									/>
+									<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 										Nombre del Denunciante
 									</label>
+								</div>
+								<div className="space-y-2 relative">
 									<input
 										type="text"
-										className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+										className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
+										placeholder=" "
 									/>
-								</div>
-								<div className="space-y-2">
-									<label className="block text-sm font-medium text-gray-700">
+									<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 										Dirección del Denunciante
 									</label>
+								</div>
+								<div className="space-y-2 relative">
 									<input
 										type="text"
-										className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+										className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
+										placeholder=" "
 									/>
-								</div>
-								<div className="space-y-2">
-									<label className="block text-sm font-medium text-gray-700">
+									<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 										Teléfono del Denunciante
 									</label>
-									<input
-										type="text"
-										className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-									/>
 								</div>
 							</div>
 						)}
