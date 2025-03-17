@@ -12,7 +12,7 @@ export const InfoDenuncia = () => {
 			{/* Date Input */}
 			<div className="space-y-2">
 				<h3 className="font-medium text-gray-900">
-					Fecha de la denuncia
+					Fecha del incidente
 				</h3>
 				<DatePicker
 					selected={startDate}
