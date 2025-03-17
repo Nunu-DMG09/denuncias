@@ -7,7 +7,13 @@ export const DatosDenunciante = () => {
 		handleTipoDocumento,
 		sexo,
 		handleSexo,
+		nombre,
+		numeroDocumento,
+		handleDocumentoChange,
+		isLoading,
+		error,
 	} = useDenunciante();
+
 	return (
 		<div className="space-y-6">
 			<div className="space-y-4">
@@ -101,17 +107,32 @@ export const DatosDenunciante = () => {
 							type="text"
 							className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
 							placeholder=" "
+							value={numeroDocumento}
+							onChange={handleDocumentoChange}
+							minLength={8}
+							maxLength={tipoDocumento === "dni" ? 8 : 20}
 						/>
 						<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 							Número de Documento de Identidad del Denunciado
 							<span className="text-red-500 font-black">*</span>
 						</label>
 					</div>
+					{isLoading && (
+						<div className="text-blue-500 text-xs mt-1">
+							Buscando información...
+						</div>
+					)}
+					{error && (
+						<div className="text-red-500 text-xs mt-1">{error}</div>
+					)}
 					<div className="space-y-2 relative">
 						<input
 							type="text"
 							className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
 							placeholder=" "
+							value={nombre}
+							disabled={isLoading}
+							readOnly
 						/>
 						<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 							Nombre del Denunciante
