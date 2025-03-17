@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import "./App.css";
 import Header from "./Components/Header";
 import DatePicker from "react-datepicker";
@@ -15,8 +15,7 @@ interface Step {
 }
 
 function App() {
-	const anonimoRef = useRef<HTMLInputElement>(null);
-	const datosPersonalesRef = useRef<HTMLInputElement>(null);
+	const [tipoDatos, setTipoDatos] = useState<string>("anonimo");
 	const [startDate, setStartDate] = useState<Date | null>(null);
 	const [currentStep, setCurrentStep] = useState<number>(1);
 	const [steps, setSteps] = useState<Step[]>([
@@ -211,7 +210,10 @@ function App() {
 									name="datos"
 									id={`datos-personales`}
 									className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
-									ref={datosPersonalesRef}
+									checked={tipoDatos === "datos-personales"}
+									onChange={() =>
+										setTipoDatos("datos-personales")
+									}
 								/>
 								<label
 									htmlFor={`datos-personales`}
@@ -235,7 +237,8 @@ function App() {
 									name="datos"
 									id={`anónimo`}
 									className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
-									ref={anonimoRef}
+									checked={tipoDatos === "anonimo"}
+									onChange={() => setTipoDatos("anonimo")}
 								/>
 								<label
 									htmlFor={`anónimo`}
@@ -254,33 +257,37 @@ function App() {
 								</label>
 							</div>
 						</div>
-						<div className="space-y-2">
-							<label className="block text-sm font-medium text-gray-700">
-								Nombre del Denunciante
-							</label>
-							<input
-								type="text"
-								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-							/>
-						</div>
-						<div className="space-y-2">
-							<label className="block text-sm font-medium text-gray-700">
-								Dirección del Denunciante
-							</label>
-							<input
-								type="text"
-								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-							/>
-						</div>
-						<div className="space-y-2">
-							<label className="block text-sm font-medium text-gray-700">
-								Teléfono del Denunciante
-							</label>
-							<input
-								type="text"
-								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-							/>
-						</div>
+						{tipoDatos === "datos-personales" && (
+							<div className="space-y-6">
+								<div className="space-y-2">
+									<label className="block text-sm font-medium text-gray-700">
+										Nombre del Denunciante
+									</label>
+									<input
+										type="text"
+										className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+									/>
+								</div>
+								<div className="space-y-2">
+									<label className="block text-sm font-medium text-gray-700">
+										Dirección del Denunciante
+									</label>
+									<input
+										type="text"
+										className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+									/>
+								</div>
+								<div className="space-y-2">
+									<label className="block text-sm font-medium text-gray-700">
+										Teléfono del Denunciante
+									</label>
+									<input
+										type="text"
+										className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+									/>
+								</div>
+							</div>
+						)}
 					</div>
 				);
 		}
