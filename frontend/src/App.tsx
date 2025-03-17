@@ -92,7 +92,7 @@ function App() {
 										type="radio"
 										name="reason"
 										id={`reason-${num}`}
-										className="mt-1"
+										className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
 										onChange={() => setSelectedReason(num)}
 										checked={selectedReason === num}
 									/>
