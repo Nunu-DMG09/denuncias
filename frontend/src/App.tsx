@@ -126,15 +126,14 @@ function App() {
 						)}
 						{/* Additional Details */}
 						<div className="space-y-4">
-							<div>
-								<label className="block text-sm font-medium text-gray-700 mb-2">
+							<div className="relative">
+								<textarea
+									className="min-h-[3em] max-h-[10em] resize-none field-sizing-content w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
+									placeholder=" "
+								/>
+								<label className="absolute top-1/2 left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 									Cuéntanos qué sucedió
 								</label>
-								<textarea
-									rows={4}
-									className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-									placeholder="Escribe aquí tu denuncia"
-								/>
 							</div>
 
 							<div>
