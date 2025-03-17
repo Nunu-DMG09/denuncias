@@ -2,6 +2,9 @@ import { useState } from "react";
 import "./App.css";
 import Header from "./Components/Header";
 import DatePicker from "react-datepicker";
+import { registerLocale } from "react-datepicker";
+import { es } from "date-fns/locale/es";
+registerLocale("es", es);
 import "react-datepicker/dist/react-datepicker.css";
 
 interface Step {
@@ -81,6 +84,7 @@ function App() {
 								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
 								placeholderText="Selecciona una fecha"
 								dateFormat={"dd/MM/yyyy"}
+								locale={"es"}
 							/>
 						</div>
 
