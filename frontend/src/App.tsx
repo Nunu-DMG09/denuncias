@@ -251,7 +251,7 @@ function App() {
 										key={step.id}
 										className={`flex items-center justify-center w-12 h-12 rounded-full ${
 											step.isActive
-												? "bg-(--secondary-color) text-white"
+												? "bg-(--primary-color) text-white"
 												: "bg-slate-500 text-white"
 										}`}
 									>
@@ -261,7 +261,7 @@ function App() {
 										<div
 											className={`h-1 w-16 mx-2 ${
 												step.isActive
-													? "bg-blue-900"
+													? "bg-(--primary-color)"
 													: "bg-slate-400"
 											}`}
 										/>
