@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./App.css";
 import Header from "./Components/Header";
 import DatePicker from "react-datepicker";
@@ -15,6 +15,8 @@ interface Step {
 }
 
 function App() {
+	const anonimoRef = useRef<HTMLInputElement>(null);
+	const datosPersonalesRef = useRef<HTMLInputElement>(null);
 	const [startDate, setStartDate] = useState<Date | null>(null);
 	const [currentStep, setCurrentStep] = useState<number>(1);
 	const [steps, setSteps] = useState<Step[]>([
@@ -209,6 +211,7 @@ function App() {
 									name="datos"
 									id={`datos-personales`}
 									className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
+									ref={datosPersonalesRef}
 								/>
 								<label
 									htmlFor={`datos-personales`}
@@ -218,7 +221,11 @@ function App() {
 										Denuncia con datos personales
 									</span>
 									<p className="text-gray-500 text-sm mt-1">
-										Si eliges esta opción, los responsables de procesar tu denuncia recibirán tus datos y podrás recibir actualizaciones, además, podrás solicitar medidas de protección.
+										Si eliges esta opción, los responsables
+										de procesar tu denuncia recibirán tus
+										datos y podrás recibir actualizaciones,
+										además, podrás solicitar medidas de
+										protección.
 									</p>
 								</label>
 							</div>
@@ -228,6 +235,7 @@ function App() {
 									name="datos"
 									id={`anónimo`}
 									className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
+									ref={anonimoRef}
 								/>
 								<label
 									htmlFor={`anónimo`}
@@ -237,7 +245,11 @@ function App() {
 										Denuncia anónima
 									</span>
 									<p className="text-gray-500 text-sm mt-1">
-										Eligiendo esta alternativa, nadie conocerá tu identifad, pero tampoco podrás añadir información a tu denuncia, recibir notificaciones sobre tu avance, ni pedir medidas de protección.
+										Eligiendo esta alternativa, nadie
+										conocerá tu identifad, pero tampoco
+										podrás añadir información a tu denuncia,
+										recibir notificaciones sobre tu avance,
+										ni pedir medidas de protección.
 									</p>
 								</label>
 							</div>
