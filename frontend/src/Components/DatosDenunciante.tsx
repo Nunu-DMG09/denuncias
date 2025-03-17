@@ -1,8 +1,6 @@
-interface DatosDenuncianteProps {
-    tipoDatos: string;
-    setTipoDatos: (tipo: string) => void;
-}
-export const DatosDenunciante = ({ tipoDatos, setTipoDatos } : DatosDenuncianteProps) => {
+import { useDenunciante } from "../hooks/useDenunciante";
+export const DatosDenunciante = () => {
+	const { tipoDatos, handleTipoDatos } = useDenunciante();
 	return (
 		<div className="space-y-6">
 			<div className="space-y-4">
@@ -16,7 +14,7 @@ export const DatosDenunciante = ({ tipoDatos, setTipoDatos } : DatosDenuncianteP
 						id={`datos-personales`}
 						className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
 						checked={tipoDatos === "datos-personales"}
-						onChange={() => setTipoDatos("datos-personales")}
+						onChange={() => handleTipoDatos("datos-personales")}
 					/>
 					<label
 						htmlFor={`datos-personales`}
@@ -40,7 +38,7 @@ export const DatosDenunciante = ({ tipoDatos, setTipoDatos } : DatosDenuncianteP
 						id={`anónimo`}
 						className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
 						checked={tipoDatos === "anonimo"}
-						onChange={() => setTipoDatos("anonimo")}
+						onChange={() => handleTipoDatos("anonimo")}
 					/>
 					<label
 						htmlFor={`anónimo`}

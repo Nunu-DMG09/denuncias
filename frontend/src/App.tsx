@@ -11,7 +11,6 @@ interface Step {
 }
 
 function App() {
-	const [tipoDatos, setTipoDatos] = useState<string>("anonimo");
 	const [currentStep, setCurrentStep] = useState<number>(1);
 	const [steps, setSteps] = useState<Step[]>([
 		{
@@ -100,12 +99,7 @@ function App() {
 					</div>
 				);
 			case 3:
-				return (
-					<DatosDenunciante
-						tipoDatos={tipoDatos}
-						setTipoDatos={setTipoDatos}
-					/>
-				);
+				return <DatosDenunciante />;
 		}
 	};
 
