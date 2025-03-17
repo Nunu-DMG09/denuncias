@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import Header from "./Components/Header";
-
+import { InfoDenuncia } from "./Components/InfoDenuncia";
 interface Step {
 	id: number;
 	title: string;
@@ -67,7 +67,12 @@ function App() {
 	const renderStepContent = () => {
 		switch (currentStep) {
 			case 1:
-				
+				return <InfoDenuncia
+					startDate={startDate}
+					setStartDate={setStartDate}
+					selectedReason={selectedReason}
+					setSelectedReason={setSelectedReason}
+				/>
 			case 2:
 				return (
 					<div className="space-y-6">
