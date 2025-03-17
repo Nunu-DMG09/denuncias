@@ -1,6 +1,11 @@
 import { useState } from "react";
 import "./App.css";
 import Header from "./Components/Header";
+import DatePicker from "react-datepicker";
+import { registerLocale } from "react-datepicker";
+import { es } from "date-fns/locale/es";
+registerLocale("es", es);
+import "react-datepicker/dist/react-datepicker.css";
 
 interface Step {
 	id: number;
@@ -10,6 +15,7 @@ interface Step {
 }
 
 function App() {
+	const [startDate, setStartDate] = useState<Date | null>(null);
 	const [currentStep, setCurrentStep] = useState<number>(1);
 	const [steps, setSteps] = useState<Step[]>([
 		{
@@ -69,12 +75,16 @@ function App() {
 					<div className="space-y-6">
 						{/* Date Input */}
 						<div className="space-y-2">
-							<label className="block text-sm font-medium text-gray-700">
+							<label className="block text-sm font-medium text-gray-700" htmlFor="date">
 								Fecha de denuncia
 							</label>
-							<input
-								type="date"
+							<DatePicker 
+								selected={startDate} 
+								onChange={(date) => setStartDate(date)} 
 								className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+								placeholderText="Selecciona una fecha"
+								dateFormat={"dd/MM/yyyy"}
+								locale={"es"}
 							/>
 						</div>
 
@@ -92,7 +102,7 @@ function App() {
 										type="radio"
 										name="reason"
 										id={`reason-${num}`}
-										className="mt-1"
+										className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
 										onChange={() => setSelectedReason(num)}
 										checked={selectedReason === num}
 									/>
@@ -113,28 +123,27 @@ function App() {
 						</div>
 						{/* Después del map de radio buttons */}
 						{selectedReason === 5 && (
-							<div className="mt-4 p-4 border rounded-lg bg-gray-50">
-								<label className="block text-sm font-medium text-gray-700 mb-2">
-									Especifique otro motivo
-								</label>
+							<div className="relative">
 								<input
 									type="text"
-									className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-									placeholder="Describa el motivo de su denuncia"
+									className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
+									placeholder=" "
 								/>
+								<label className="absolute top-1/2 left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
+									Describa el motivo de la denuncia
+								</label>
 							</div>
 						)}
 						{/* Additional Details */}
 						<div className="space-y-4">
-							<div>
-								<label className="block text-sm font-medium text-gray-700 mb-2">
+							<div className="relative">
+								<textarea
+									className="min-h-[3em] max-h-[10em] resize-none field-sizing-content w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
+									placeholder=" "
+								/>
+								<label className="absolute top-1/2 left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 									Cuéntanos qué sucedió
 								</label>
-								<textarea
-									rows={4}
-									className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-									placeholder="Escribe aquí tu denuncia"
-								/>
 							</div>
 
 							<div>
@@ -270,14 +279,14 @@ function App() {
 						{currentStep > 1 && (
 							<button
 								onClick={() => handleNav("back")}
-								className="px-10 py-4 border border-(--gray-light) rounded-md text-(--gray) cursor-pointer hover:scale-105 hover:bg-gray-300 transition-all ease-out duration-300"
+								className="px-5 md:px-10 py-4 border border-(--gray-light) rounded-md text-(--gray) cursor-pointer hover:scale-105 hover:bg-gray-300 transition-all ease-out duration-300"
 							>
 								Atrás
 							</button>
 						)}
 						<button
 							onClick={() => handleNav("next")}
-							className={`px-8 py-4 bg-(--secondary-color) text-white rounded-md text-center hover:bg-(--primary-color) cursor-pointer text-lg hover:scale-105 transition-all ease-out duration-300`}
+							className={`px-4 md:px-8 py-4 bg-(--secondary-color) text-white rounded-md text-center hover:bg-(--primary-color) cursor-pointer text-lg hover:scale-105 transition-all ease-out duration-300`}
 						>
 							{currentStep === 3
 								? "Enviar Denuncia"
@@ -285,7 +294,7 @@ function App() {
 							{currentStep === 3 ? (
 								<i className="fa-solid fa-check ml-2"></i>
 							) : (
-								<i className="fa-solid fa-arrow-right ml-5"></i>
+								<i className="fa-solid fa-arrow-right ml-2"></i>
 							)}
 						</button>
 					</div>
