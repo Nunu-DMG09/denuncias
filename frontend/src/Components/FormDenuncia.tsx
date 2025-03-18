@@ -3,9 +3,9 @@ import { DatosDenunciado } from "../pages/DatosDenunciado";
 import { DatosDenunciante } from "../pages/DatosDenunciante";
 import { InfoDenuncia } from "../pages/InfoDenuncia";
 import { useFormContext } from "../hooks/useFormContext";
+import { FormNavigator } from "./FormNavigator";
 
 // import ResumenDenuncia from "../components/ResumenDenuncia";
-// import FormNavigator from "../components/FormNavigator";
 
 const FormularioDenuncia: React.FC = () => {
 	const { currentPage, error } = useFormContext();
@@ -35,13 +35,13 @@ const FormularioDenuncia: React.FC = () => {
 			{/* Barra de progreso - mantiene tu diseño existente */}
 			<div className="mb-8">
 				<div className="flex justify-between mb-2">
-					{["Denunciante", "Denunciado", "Detalles", "Resumen"].map(
+					{["Detalles", "Denunciado", "Denunciante", "Resumen"].map(
 						(step, index) => (
 							<div
 								key={index}
 								className={`text-sm text-center ${
 									currentPage === index + 1
-										? "font-bold text-blue-600"
+										? "font-bold text-(--primary-color)"
 										: "text-gray-500"
 								}`}
 							>
@@ -52,7 +52,7 @@ const FormularioDenuncia: React.FC = () => {
 				</div>
 				<div className="w-full bg-gray-200 h-2 rounded-full">
 					<div
-						className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+						className="bg-(--primary-color) h-2 rounded-full transition-all duration-300"
 						style={{ width: `${(currentPage / 4) * 100}%` }}
 					></div>
 				</div>
@@ -66,9 +66,9 @@ const FormularioDenuncia: React.FC = () => {
 			)}
 
 			{/* Formulario */}
-			<form className="bg-white shadow-md rounded-lg p-6">
+			<form className="rounded-lg p-6 shadow-lg backdrop-blur-2xl backdrop-saturate-100 bg-[#3a46500d]">
 				{renderPage()}
-				{/* <FormNavigator /> */}
+				<FormNavigator />
 			</form>
 		</div>
 	);

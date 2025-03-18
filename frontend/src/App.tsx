@@ -15,7 +15,7 @@ function App() {
 		<FormProvider>
 			<div className="min-h-screen">
 				<Header />
-				<FormularioDenuncia></FormularioDenuncia>
+				<FormularioDenuncia />
 				<Toaster richColors closeButton />
 			</div>
 		</FormProvider>
