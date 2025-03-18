@@ -95,7 +95,7 @@ export const DatosDenunciante = () => {
 				<div className="space-y-6">
 					<div className="space-y-2">
 						<label className="mb-2" htmlFor="tipo-documento">
-							Tipo de Documento de Identidad del Denunciado
+							Tipo de Documento de Identidad del Denunciante
 							<span className="text-red-500 font-black text-xl">
 								*
 							</span>
@@ -140,7 +140,7 @@ export const DatosDenunciante = () => {
 							}
 						/>
 						<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
-							Número de Documento de Identidad del Denunciado
+							Nro de Documento de Identidad
 							<span className="text-red-500 font-black">*</span>
 						</label>
 						{isLoading && <Loader isBtn={false} />}
