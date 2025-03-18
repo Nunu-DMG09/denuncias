@@ -71,7 +71,7 @@ export const DatosDenunciado = () => {
 					}
 				/>
 				<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
-					Número de Documento de Identidad del Denunciado
+					Nro de Documento de Identidad
 					<span className="text-red-500 font-black">*</span>
 				</label>
 				{isLoading && <Loader isBtn={false} />}
