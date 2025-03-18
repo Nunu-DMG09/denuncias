@@ -28,6 +28,11 @@ export const useDenunciante = () => {
 		setNumeroDocumento(documentoValue);
 	};
 
+	const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const nameValue = e.target.value;
+		setNombre(nameValue);
+	};
+
 	useEffect(() => {
 		if (tipoDocumento === "dni" && numeroDocumento.length !== 8) {
 			setNombre("");
@@ -76,6 +81,7 @@ export const useDenunciante = () => {
         nombre,
         setNombre,
         isLoading,
-        error
+        error,
+		handleName
 	};
 };

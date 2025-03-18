@@ -12,6 +12,7 @@ export const DatosDenunciante = () => {
 		handleDocumentoChange,
 		isLoading,
 		error,
+		handleName
 	} = useDenunciante();
 
 	return (
@@ -132,7 +133,12 @@ export const DatosDenunciante = () => {
 							placeholder=" "
 							value={nombre}
 							disabled={isLoading}
-							readOnly
+							readOnly = {tipoDocumento === "dni" || tipoDocumento === "ruc" || tipoDocumento === ""}
+							onChange={
+								tipoDocumento === "dni" || tipoDocumento === "ruc" || tipoDocumento === ""
+									? undefined
+									: handleName
+							}
 						/>
 						<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 							Nombre del Denunciante
