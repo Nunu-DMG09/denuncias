@@ -1,4 +1,5 @@
 import "./App.css";
+import FormularioDenuncia from "./Components/FormDenuncia";
 import Header from "./Components/Header";
 import { FormProvider } from "./context/DenunciasContext";
 import { Toaster } from "sonner";
@@ -14,6 +15,7 @@ function App() {
 		<FormProvider>
 			<div className="min-h-screen">
 				<Header />
+				<FormularioDenuncia></FormularioDenuncia>
 				<Toaster richColors closeButton />
 			</div>
 		</FormProvider>
