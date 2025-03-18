@@ -1,4 +1,5 @@
 import { useFormContext } from "../hooks/useFormContext";
+import { Loader } from "./Loader";
 // import { toast } from "sonner";
 
 export const FormNavigator = () => {
@@ -43,11 +44,7 @@ export const FormNavigator = () => {
 					className={`px-4 md:px-8 py-4 bg-(--secondary-color) text-white rounded-md text-center hover:bg-(--primary-color) cursor-pointer text-lg hover:scale-105 transition-all ease-out duration-300`}
 				>
 					{isLoading ? (
-						<>
-							<span className="inline-block animate-spin mr-2">
-								⟳
-							</span>
-						</>
+						<Loader isBtn={true} />
 					) : (
 						"Enviar Denuncia"
 					)}
