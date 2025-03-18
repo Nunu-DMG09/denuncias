@@ -26,6 +26,9 @@ export const useDenunciante = () => {
 	};
 
 	useEffect(() => {
+		if (tipoDocumento === "dni" && numeroDocumento.length !== 8) {
+			setNombre("");
+		}
 		if (tipoDocumento === "dni" && numeroDocumento.length === 8) {
 			const fetchDniData = async () => {
 				setIsLoading(true);
