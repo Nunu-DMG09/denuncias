@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-03-2025 a las 15:44:41
+-- Tiempo de generación: 18-03-2025 a las 17:36:19
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `denuncias`
+-- Base de datos: `denuncias jleon`
 --
 
 -- --------------------------------------------------------
@@ -35,6 +35,18 @@ CREATE TABLE `adjuntos` (
   `file_type` varchar(50) NOT NULL,
   `fecha_subida` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Disparadores `adjuntos`
+--
+DELIMITER $$
+CREATE TRIGGER `before_insert_adjuntos` BEFORE INSERT ON `adjuntos` FOR EACH ROW BEGIN
+  IF NEW.id IS NULL OR NEW.id = '' THEN
+    SET NEW.id = CONCAT('ad', SUBSTRING(REPLACE(UUID(), '-', ''), 1, 6));
+  END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -66,6 +78,18 @@ CREATE TABLE `denunciados` (
   `cargo` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Disparadores `denunciados`
+--
+DELIMITER $$
+CREATE TRIGGER `before_insert_denunciados` BEFORE INSERT ON `denunciados` FOR EACH ROW BEGIN
+  IF NEW.id IS NULL OR NEW.id = '' THEN
+    SET NEW.id = CONCAT('de', SUBSTRING(REPLACE(UUID(), '-', ''), 1, 6));
+  END IF;
+END
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -81,6 +105,18 @@ CREATE TABLE `denunciantes` (
   `tipo_documento` enum('DNI','Carnet Extranjeria','RUC') DEFAULT 'DNI',
   `sexo` enum('M','F') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Disparadores `denunciantes`
+--
+DELIMITER $$
+CREATE TRIGGER `before_insert_denunciantes` BEFORE INSERT ON `denunciantes` FOR EACH ROW BEGIN
+  IF NEW.id IS NULL OR NEW.id = '' THEN
+    SET NEW.id = CONCAT('dn', SUBSTRING(REPLACE(UUID(), '-', ''), 1, 6));
+  END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -102,6 +138,18 @@ CREATE TABLE `denuncias` (
   `pdf_path` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Disparadores `denuncias`
+--
+DELIMITER $$
+CREATE TRIGGER `before_insert_denuncias` BEFORE INSERT ON `denuncias` FOR EACH ROW BEGIN
+  IF NEW.id IS NULL OR NEW.id = '' THEN
+    SET NEW.id = CONCAT('de', SUBSTRING(REPLACE(UUID(), '-', ''), 1, 6));
+  END IF;
+END
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -113,6 +161,31 @@ CREATE TABLE `motivos` (
   `nombre` varchar(255) NOT NULL,
   `descripcion` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `motivos`
+--
+
+INSERT INTO `motivos` (`id`, `nombre`, `descripcion`) VALUES
+('mo221768', 'Acceso a ventajas indebidas (incluye soborno nacional y transnacional) ', 'Cuando el servidor propicia, solicita o acepta alguna ventaja o beneficio indebido (regalos, donaciones a título personal, bienes, incentivos, cortesías o favores). Incluye el soborno a un servidor público extranjero para obtener o retener un negocio u otra ventaja indebida en la realización de actividades económicas o comerciales internacionales. '),
+('mo22176a', 'Invocación de influencias en el Estado ', 'Cuando el servidor utiliza o simula su capacidad de influencia en el sector público para obtener un beneficio o una ventaja irregular. '),
+('mo58aa06', 'Mantener intereses en conflicto ', 'Cuando el servidor mantiene vínculos familiares, comerciales, institucionales o laborales que podrían afectar el manejo imparcial de los asuntos a su cargo y las relaciones de la entidad con actores externos. '),
+('mo58aa1e', 'Obstrucción al acceso a la información pública ', 'Cuando el servidor se rehúsa a entregar información pública solicitada por los conductos regulares que no sea reservada, confidencial o secreta, de acuerdo con las normas vigentes. '),
+('mo58aa1f', 'Abuso de autoridad ', 'Cuando el servidor comete u ordena un acto arbitrario alegando el cumplimiento de sus funciones.'),
+('mod4b288', 'Favorecimiento indebido ', 'Cuando el servidor utiliza su cargo para favorecer irregularmente a alguna persona por un interés particular o por un interés ajeno al cumplimiento de sus funciones.'),
+('mod4b28c', 'Apropiación o uso indebido de recursos, bienes o información del Estado ', 'Cuando el servidor se adueña o utiliza de manera indebida dinero, recursos (incluyendo el tiempo asignado a la función pública), bienes o información del Estado. ');
+
+--
+-- Disparadores `motivos`
+--
+DELIMITER $$
+CREATE TRIGGER `before_insert_motivos` BEFORE INSERT ON `motivos` FOR EACH ROW BEGIN
+  IF NEW.id IS NULL OR NEW.id = '' THEN
+    SET NEW.id = CONCAT('mo', SUBSTRING(REPLACE(UUID(), '-', ''), 1, 6));
+  END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -127,6 +200,18 @@ CREATE TABLE `seguimiento_denuncias` (
   `comentario` text DEFAULT NULL,
   `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Disparadores `seguimiento_denuncias`
+--
+DELIMITER $$
+CREATE TRIGGER `before_insert_seguimiento_denuncias` BEFORE INSERT ON `seguimiento_denuncias` FOR EACH ROW BEGIN
+  IF NEW.id IS NULL OR NEW.id = '' THEN
+    SET NEW.id = CONCAT('sd', SUBSTRING(REPLACE(UUID(), '-', ''), 1, 6));
+  END IF;
+END
+$$
+DELIMITER ;
 
 --
 -- Índices para tablas volcadas
