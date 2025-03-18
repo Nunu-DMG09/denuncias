@@ -45,7 +45,8 @@ export const useDenunciante = () => {
 					const data = await response.json();
 					if (data && data.success && data.data) {
 						const personaData = data.data;
-						setNombre(personaData.nombre_completo);
+						const nombre = `${personaData.apellido_paterno} ${personaData.apellido_materno}, ${personaData.nombres}`;
+						setNombre(nombre);
 					} else {
 						setError("No se pudo obtener la información del DNI");
 					}
