@@ -12,5 +12,6 @@ $routes->group('api', function ($routes) {
     $routes->get('ruc/(:num)', 'ConsultaApi::buscarRUC/$1');
 });
 $routes->group('form', function ($routes) {
+    $routes->get('motivos', 'FormularioDenunciasController::index');
     $routes->get('create', 'FormularioDenunciasController::create');
 });
