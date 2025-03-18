@@ -28,7 +28,8 @@ class FormularioDenunciasController extends ResourceController
     }
     function index()
     {
-        return $this->respond($this->motivosModel->findAll());
+        $data = $this->motivosModel->findAll();
+        return $this->response->setJSON($data);
     }
     function  create()
     {

@@ -106,8 +106,8 @@ class Filters extends BaseFilters
      */
     public array $filters = [
         'cors' => [
-            'before' => ['api/*'],
-            'after'  => ['api/*'],
+            'before' => ['api/*, form/*'],
+            'after'  => ['api/*, form/*'],
         ],
     ];
 }
