@@ -130,8 +130,14 @@ export const DatosDenunciante = () => {
 							placeholder=" "
 							value={numeroDocumento}
 							onChange={handleDocumentoChange}
-							minLength={8}
-							maxLength={tipoDocumento === "dni" ? 8 : 20}
+							minLength={tipoDocumento === "dni" ? 8 : 11}
+							maxLength={
+								tipoDocumento === "dni"
+									? 8
+									: tipoDocumento === "ruc"
+									? 11
+									: 20
+							}
 						/>
 						<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 							Número de Documento de Identidad del Denunciado
