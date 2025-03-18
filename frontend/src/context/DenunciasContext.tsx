@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
-import axios from "axios";
 import { toast } from "sonner";
+import api from "../utils/apiAxios";
 
 interface Denunciante {
 	nombres: string;
@@ -86,13 +86,6 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		motivo_otro: "",
 		descripcion: "",
 		adjuntos: [],
-	});
-
-	const api = axios.create({
-		baseURL: "http://localhost/denuncias/backend/public/api",
-		headers: {
-			"Content-Type": "application/json",
-		},
 	});
 
 	useEffect(() => {

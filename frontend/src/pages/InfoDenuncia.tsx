@@ -4,9 +4,11 @@ import { es } from "date-fns/locale/es";
 registerLocale("es", es);
 import "react-datepicker/dist/react-datepicker.css";
 import { useDenuncias } from "../hooks/useDenuncias";
+import { useFormContext } from "../hooks/useFormContext";
 
 export const InfoDenuncia = () => {
 	const { startDate, selectedReason, handleDate, handleReason } = useDenuncias();
+	const { motivos } = useFormContext();
 	return (
 		<div className="space-y-6">
 			{/* Date Input */}
@@ -29,36 +31,35 @@ export const InfoDenuncia = () => {
 				<h3 className="font-medium text-gray-900">
 					Identifique el motivo de la denuncia
 				</h3>
-				{[1, 2, 3, 4, 5].map((num) => (
+				{motivos.map((motivo) => (
 					<div
-						key={num}
+						key={motivo.id}
 						className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-gray-50 transition-all ease-in duration-300"
 					>
 						<input
 							type="radio"
 							name="reason"
-							id={`reason-${num}`}
+							id={`reason-${motivo.nombre}`}
 							className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
-							onChange={() => handleReason(num)}
-							checked={selectedReason === num}
+							onChange={() => handleReason(motivo.nombre)}
+							checked={selectedReason === motivo.nombre}
 						/>
 						<label
-							htmlFor={`reason-${num}`}
+							htmlFor={`reason-${motivo.nombre}`}
 							className="flex-1 cursor-pointer"
 						>
 							<span className="font-medium text-gray-700">
-								Opción {num}
+								Opción {motivo.nombre}
 							</span>
 							<p className="text-gray-500 text-sm mt-1">
-								Lorem ipsum dolor sit amet, consectetur
-								adipisicing elit.
+								{motivo.descripcion}
 							</p>
 						</label>
 					</div>
 				))}
 			</div>
 			{/* Después del map de radio buttons */}
-			{selectedReason === 5 && (
+			{selectedReason === 'Otros' && (
 				<div className="relative">
 					<input
 						type="text"
