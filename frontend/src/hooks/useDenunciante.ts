@@ -1,13 +1,26 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useFormContext } from "./useFormContext";
+
 
 
 export const useDenunciante = () => {
-	const [tipoDatos, setTipoDatos] = useState<string>("datos-personales");
-	const [tipoDocumento, setTipoDocumento] = useState("");
-	const [sexo, setSexo] = useState<string>("");
-	const [numeroDocumento, setNumeroDocumento] = useState<string>("");
-	const [nombre, setNombre] = useState<string>("");
+	const { formData } = useFormContext();
+	const [tipoDatos, setTipoDatos] = useState<string>(
+		formData.es_anonimo ? "anonimo" : "datos-personales"
+	);
+	const [tipoDocumento, setTipoDocumento] = useState(
+		formData.denunciante?.tipo_documento || ""
+	);
+	const [sexo, setSexo] = useState<string>(
+		formData.denunciante?.sexo || ""
+	);
+	const [numeroDocumento, setNumeroDocumento] = useState<string>(
+		formData.denunciante?.numero_documento || ""
+	);
+	const [nombre, setNombre] = useState<string>(
+		formData.denunciante?.nombres || ""
+	);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 

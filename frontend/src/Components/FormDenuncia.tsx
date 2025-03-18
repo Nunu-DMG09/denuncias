@@ -1,4 +1,3 @@
-import React from "react";
 import { DatosDenunciado } from "../pages/DatosDenunciado";
 import { DatosDenunciante } from "../pages/DatosDenunciante";
 import { InfoDenuncia } from "../pages/InfoDenuncia";
@@ -8,7 +7,10 @@ import { FormNavigator } from "./FormNavigator";
 // import ResumenDenuncia from "../components/ResumenDenuncia";
 
 const FormularioDenuncia: React.FC = () => {
-	const { currentPage, error } = useFormContext();
+	const {
+		currentPage,
+		error,
+	} = useFormContext();
 
 	// Renderizar la página actual
 	const renderPage = () => {
@@ -66,7 +68,10 @@ const FormularioDenuncia: React.FC = () => {
 			)}
 
 			{/* Formulario */}
-			<form className="rounded-lg p-6 shadow-lg backdrop-blur-2xl backdrop-saturate-100 bg-[#3a46500d]">
+			<form
+				className="rounded-lg p-6 shadow-lg backdrop-blur-2xl backdrop-saturate-100 bg-[#3a46500d]"
+				onSubmit={(e) => e.preventDefault()}
+			>
 				{renderPage()}
 				<FormNavigator />
 			</form>

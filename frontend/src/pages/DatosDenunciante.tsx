@@ -1,5 +1,8 @@
+import { useEffect } from "react";
 import { Loader } from "../Components/Loader";
 import { useDenunciante } from "../hooks/useDenunciante";
+import { useFormContext } from "../hooks/useFormContext";
+
 export const DatosDenunciante = () => {
 	const {
 		tipoDatos,
@@ -15,7 +18,23 @@ export const DatosDenunciante = () => {
 		error,
 		handleName,
 	} = useDenunciante();
+	const {
+		formData: { denunciante },
+		updateDenunciante,
+		updateFormData,
+	} = useFormContext();
 
+	useEffect(() => {
+		updateFormData("es_anonimo", tipoDatos === "anonimo");
+		if (tipoDatos === "datos-personales") {
+			updateDenunciante({
+				nombres: nombre,
+				tipo_documento: tipoDocumento,
+				numero_documento: numeroDocumento,
+				sexo,
+			});
+		}
+	}, [tipoDatos, nombre, tipoDocumento, numeroDocumento, sexo]);
 	return (
 		<div className="space-y-6">
 			<div className="space-y-4">
@@ -118,9 +137,7 @@ export const DatosDenunciante = () => {
 							Número de Documento de Identidad del Denunciado
 							<span className="text-red-500 font-black">*</span>
 						</label>
-						{isLoading && (
-							<Loader isBtn={false} />
-						)}
+						{isLoading && <Loader isBtn={false} />}
 					</div>
 					{error && (
 						<div className="text-red-500 text-xs mt-1">{error}</div>
@@ -157,6 +174,10 @@ export const DatosDenunciante = () => {
 							type="email"
 							className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
 							placeholder=" "
+							value={denunciante?.email}
+							onChange={(e) =>
+								updateDenunciante({ email: e.target.value })
+							}
 						/>
 						<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 							Correo del Denunciante
@@ -170,6 +191,10 @@ export const DatosDenunciante = () => {
 							type="phone"
 							className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
 							placeholder=" "
+							value={denunciante?.telefono}
+							onChange={(e) =>
+								updateDenunciante({ telefono: e.target.value })
+							}
 						/>
 						<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 							Teléfono del Denunciante
