@@ -14,6 +14,9 @@ export const useDenunciante = () => {
 	};
 	const handleTipoDocumento = (tipo: string) => {
 		setTipoDocumento(tipo);
+		setNumeroDocumento("");
+		setNombre("");
+		setError(null);
 	};
 
 	const handleSexo = (sexo: string) => {
