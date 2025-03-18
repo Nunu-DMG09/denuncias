@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useDenunciante } from "../hooks/useDenunciante";
 
 export const DatosDenunciado = () => {
-	const [tipoDocumento, setTipoDocumento] = useState("");
-
+    const {
+        tipoDocumento,
+        handleTipoDocumento
+    } = useDenunciante();
 	return (
 		<div className="space-y-6">
 			<div className="space-y-2">
@@ -14,7 +16,7 @@ export const DatosDenunciado = () => {
 					name="tipo-documento"
 					id="tipo-documento"
 					value={tipoDocumento}
-					onChange={(e) => setTipoDocumento(e.target.value)}
+					onChange={(e) => handleTipoDocumento(e.target.value)}
 					className="w-full cursor-pointer p-[1em] border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent text-(--secondary-color) focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out"
 				>
 					<option value="" disabled className="text-(--gray-light)">
