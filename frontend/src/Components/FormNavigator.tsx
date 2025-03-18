@@ -15,13 +15,13 @@ export const FormNavigator = () => {
 		await submitForm();
 	};
 	return (
-		<div className="flex justify-between mt-8">
+		<div className="flex justify-end mt-8 w-full">
 			{currentPage > 1 && (
 				<button
 					type="button"
 					onClick={prevPage}
 					disabled={isLoading}
-					className="px-5 md:px-10 py-4 border border-(--gray-light) rounded-md text-(--gray) cursor-pointer hover:scale-105 hover:bg-gray-300 transition-all ease-out duration-300 bg-gray-200"
+					className="px-5 md:px-10 py-4 border border-(--gray-light) rounded-md text-(--gray) cursor-pointer hover:scale-105 hover:bg-gray-300 transition-all ease-out duration-300 bg-gray-200 mr-auto"
 				>
 					Atrás
 				</button>
