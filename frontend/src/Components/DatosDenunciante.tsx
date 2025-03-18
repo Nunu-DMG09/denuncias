@@ -12,7 +12,7 @@ export const DatosDenunciante = () => {
 		handleDocumentoChange,
 		isLoading,
 		error,
-		handleName
+		handleName,
 	} = useDenunciante();
 
 	return (
@@ -117,12 +117,14 @@ export const DatosDenunciante = () => {
 							Número de Documento de Identidad del Denunciado
 							<span className="text-red-500 font-black">*</span>
 						</label>
+						{isLoading && (
+							<div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+								<div className="w-6 h-6 border-2 border-transparent text-(--secondary-color) animate-spin flex items-center justify-center border-t-(--secondary-color) rounded-full">
+									<div className="w-4 h-4 border-2 border-transparent text-(--primary-color) animate-spin flex items-center justify-center border-t-(--primary-color) rounded-full"></div>
+								</div>
+							</div>
+						)}
 					</div>
-					{isLoading && (
-						<div className="text-blue-500 text-xs mt-1">
-							Buscando información...
-						</div>
-					)}
 					{error && (
 						<div className="text-red-500 text-xs mt-1">{error}</div>
 					)}
@@ -133,9 +135,15 @@ export const DatosDenunciante = () => {
 							placeholder=" "
 							value={nombre}
 							disabled={isLoading}
-							readOnly = {tipoDocumento === "dni" || tipoDocumento === "ruc" || tipoDocumento === ""}
+							readOnly={
+								tipoDocumento === "dni" ||
+								tipoDocumento === "ruc" ||
+								tipoDocumento === ""
+							}
 							onChange={
-								tipoDocumento === "dni" || tipoDocumento === "ruc" || tipoDocumento === ""
+								tipoDocumento === "dni" ||
+								tipoDocumento === "ruc" ||
+								tipoDocumento === ""
 									? undefined
 									: handleName
 							}
@@ -149,7 +157,7 @@ export const DatosDenunciante = () => {
 					</div>
 					<div className="space-y-2 relative">
 						<input
-							type="text"
+							type="email"
 							className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
 							placeholder=" "
 						/>
@@ -162,7 +170,7 @@ export const DatosDenunciante = () => {
 					</div>
 					<div className="space-y-2 relative">
 						<input
-							type="text"
+							type="phone"
 							className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
 							placeholder=" "
 						/>
