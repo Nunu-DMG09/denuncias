@@ -5,10 +5,22 @@ registerLocale("es", es);
 import "react-datepicker/dist/react-datepicker.css";
 import { useDenuncias } from "../hooks/useDenuncias";
 import { useFormContext } from "../hooks/useFormContext";
+import { useMemo } from "react";
 
 export const InfoDenuncia = () => {
-	const { startDate, selectedReason, handleDate, handleReason } = useDenuncias();
+	const { startDate, selectedReason, handleDate, handleReason } =
+		useDenuncias();
 	const { motivos } = useFormContext();
+
+	const sortedMotivos = useMemo(() => {
+		if (!motivos.length) return [];
+		return [...motivos].sort((a, b) => {
+			if (a.nombre.toLowerCase() === "otros") return 1;
+			if (b.nombre.toLowerCase() === "otros") return -1;
+			return 0;
+		});
+	}, [motivos]);
+
 	return (
 		<div className="space-y-6">
 			{/* Date Input */}
@@ -31,7 +43,7 @@ export const InfoDenuncia = () => {
 				<h3 className="font-medium text-gray-900">
 					Identifique el motivo de la denuncia
 				</h3>
-				{motivos.map((motivo) => (
+				{sortedMotivos.map((motivo) => (
 					<div
 						key={motivo.id}
 						className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-gray-50 transition-all ease-in duration-300"
@@ -49,7 +61,7 @@ export const InfoDenuncia = () => {
 							className="flex-1 cursor-pointer"
 						>
 							<span className="font-medium text-gray-700">
-								Opción {motivo.nombre}
+								{motivo.nombre}
 							</span>
 							<p className="text-gray-500 text-sm mt-1">
 								{motivo.descripcion}
@@ -59,7 +71,7 @@ export const InfoDenuncia = () => {
 				))}
 			</div>
 			{/* Después del map de radio buttons */}
-			{selectedReason === 'Otros' && (
+			{selectedReason === "Otros" && (
 				<div className="relative">
 					<input
 						type="text"
