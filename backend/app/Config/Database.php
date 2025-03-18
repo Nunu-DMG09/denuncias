@@ -29,7 +29,8 @@ class Database extends Config
         'hostname'     => 'localhost',
         'username'     => 'root',
         'password'     => '',
-        'database'     => 'denuncias jleon',
+        'database'     => 'denuncias jlo',
+        // CUANDO MIERDA VAS A ENTENDER QUE ES J-L-O Y NO JLEON
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
