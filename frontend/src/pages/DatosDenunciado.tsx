@@ -28,8 +28,10 @@ export const DatosDenunciado = () => {
 			tipo_documento: tipoDocumento,
 			numero_documento: numeroDocumento,
 			cargo,
+			representante_legal: representanteLegal,
+			razon_social: razonSocial,
 		});
-	}, [nombre, tipoDocumento, numeroDocumento, cargo]);
+	}, [nombre, tipoDocumento, numeroDocumento, cargo, representanteLegal, razonSocial]);
 	return (
 		<div className="space-y-6">
 			<div className="space-y-2">

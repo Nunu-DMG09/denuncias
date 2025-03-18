@@ -179,7 +179,12 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 				  }
 				: null,
 			denunciado: {
-				...formData.denunciado,
+				nombre: formData.denunciado.nombre || null,
+				tipo_documento: formData.denunciado.tipo_documento,
+				numero_documento: formData.denunciado.numero_documento,
+				representante_legal: formData.denunciado.representante_legal || null,
+				razon_social: formData.denunciado.razon_social || null,
+				cargo: formData.denunciado.cargo
 			},
 			adjuntos: formData.adjuntos.map((adjunto) => ({
 				file_name: adjunto.name,
