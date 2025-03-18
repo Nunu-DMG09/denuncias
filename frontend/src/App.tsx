@@ -4,6 +4,7 @@ import Header from "./Components/Header";
 import { InfoDenuncia } from "./Components/InfoDenuncia";
 import { DatosDenunciante } from "./Components/DatosDenunciante";
 import { DatosDenunciado } from "./Components/DatosDenunciado";
+import { Toaster } from "sonner";
 interface Step {
 	id: number;
 	title: string;
@@ -142,6 +143,7 @@ function App() {
 						</button>
 					</div>
 				</section>
+				<Toaster richColors />
 			</main>
 		</div>
 	);

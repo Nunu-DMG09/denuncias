@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
 
 export const useDenunciante = () => {
 	const [tipoDatos, setTipoDatos] = useState<string>("datos-personales");
@@ -56,11 +58,15 @@ export const useDenunciante = () => {
 						const nombre = `${personaData.apellido_paterno} ${personaData.apellido_materno}, ${personaData.nombres}`;
 						setNombre(nombre);
 					} else {
-						setError("No se pudo obtener la información del DNI");
+						const errMsg = "No se pudo obtener la información del DNI"
+						setError(errMsg);
+						toast.error(errMsg)
 					}
-				} catch (error) {
-					console.error("Error al consultar DNI:", error);
-					setError("Error al consultar el DNI. Intente nuevamente.");
+				} catch (err) {
+					console.error("Error al consultar DNI:", err);
+					const errMsg = 'Error al consultar el DNI. Intente nuevamente.'
+					setError(errMsg);
+					toast.error(errMsg)
 				} finally {
 					setIsLoading(false);
 				}
