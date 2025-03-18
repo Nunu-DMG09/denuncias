@@ -1,10 +1,4 @@
-import React, {
-	createContext,
-	useContext,
-	useState,
-	useEffect,
-	ReactNode,
-} from "react";
+import { createContext, useState, useEffect, ReactNode } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -57,7 +51,9 @@ interface FormContextType {
 	submitForm: () => Promise<void>;
 }
 
-const FormContext = createContext<FormContextType | undefined>(undefined);
+export const FormContext = createContext<FormContextType | undefined>(
+	undefined
+);
 
 export const FormProvider: React.FC<{ children: ReactNode }> = ({
 	children,
@@ -74,13 +70,13 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 			nombres: "",
 			email: "",
 			telefono: "",
-			tipo_documento: "DNI",
+			tipo_documento: "",
 			numero_documento: "",
 			sexo: "",
 		},
 		denunciado: {
 			nombre: "",
-			tipo_documento: "DNI",
+			tipo_documento: "",
 			numero_documento: "",
 			representante_legal: "",
 			razon_social: "",
@@ -129,7 +125,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 					nombres: "",
 					email: "",
 					telefono: "",
-					tipo_documento: "DNI",
+					tipo_documento: "",
 					numero_documento: "",
 					sexo: "",
 				},
@@ -254,11 +250,3 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		<FormContext.Provider value={value}>{children}</FormContext.Provider>
 	);
 };
-
-// export const useFormContext = () => {
-// 	const context = useContext(FormContext);
-// 	if (context === undefined) {
-// 		throw new Error("useFormContext debe usarse dentro de un FormProvider");
-// 	}
-// 	return context;
-// };
