@@ -26,13 +26,17 @@ class FormularioDenunciasController extends ResourceController
         $this->motivosModel = new MotivosModel();
         $this->seguimientoDenunciasModel = new Seguimiento_denunciasModel();
     }
+    function index()
+    {
+        return $this->respond($this->motivosModel->findAll());
+    }
     function  create()
     {
-        $formData = $this->request->getJSON();
-        $denunciante = $formData->denunciante;
-        $denunciado = $formData->denunciado;
-        $denuncia = $formData->denuncia;
-        $adjuntos = $formData->adjuntos;
-        $motivo = $formData->motivo;
+        $formData = $this->request->getJSON(true);
+        $denunciante = $formData['denunciante'];
+        $denunciado = $formData['denunciado'];
+        $motivos = $formData['motivos'];
+        $denuncia = $formData['denuncia'];
+        $adjuntos = $formData['adjuntos'];
     }
 }
