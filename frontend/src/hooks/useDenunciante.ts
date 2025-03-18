@@ -73,6 +73,43 @@ export const useDenunciante = () => {
 			};
 			fetchDniData();
 		}
+		if (tipoDocumento === "ruc" && numeroDocumento.length !== 11) {
+			setNombre("");
+		}
+		if (tipoDocumento === 'ruc' && numeroDocumento.length === 11) {
+			const fetchRucData = async () => {
+				setIsLoading(true);
+				setError(null);
+				try {
+					const response = await fetch(
+						`http://localhost/denuncias/backend/public/api/ruc/${numeroDocumento}`
+					);
+					if (!response.ok) {
+						throw new Error(
+							`Error: ${response.status} - ${response.statusText}`
+						);
+					}
+					const data = await response.json();
+					if (data && data.success && data.data) {
+						const empresaData = data.data;
+						const nombre = empresaData.nombre_o_razon_social;
+						setNombre(nombre);
+					} else {
+						const errMsg = "No se pudo obtener la información del RUC"
+						setError(errMsg);
+						toast.error(errMsg)
+					}
+				} catch (err) {
+					console.error("Error al consultar RUC:", err);
+					const errMsg = 'Error al consultar el RUC. Intente nuevamente.'
+					setError(errMsg);
+					toast.error(errMsg)
+				} finally {
+					setIsLoading(false);
+				}
+			};
+			fetchRucData();
+		}
 	}, [tipoDocumento, numeroDocumento]);
 
 	return {

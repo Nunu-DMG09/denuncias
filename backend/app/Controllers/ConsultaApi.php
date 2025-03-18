@@ -30,7 +30,11 @@ class ConsultaApi extends ResourceController
         $response = $this->consultarApi($this->apiUrlRUC, $ruc);
 
         if (isset($response['data'])) {
-            return $this->respond($response['data'], 200);
+            $result = [
+                'success' => true,
+                'data' => $response['data']
+            ];
+            return $this->respond($result, 200);
         }
 
         return $this->failNotFound("RUC no encontrado");
