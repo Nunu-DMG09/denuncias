@@ -34,10 +34,6 @@ class FormularioDenunciasController extends ResourceController
     function  create()
     {
         $formData = $this->request->getJSON(true);
-        $denunciante = $formData['denunciante'];
-        $denunciado = $formData['denunciado'];
-        $motivos = $formData['motivos'];
-        $denuncia = $formData['denuncia'];
-        $adjuntos = $formData['adjuntos'];
+        echo json_encode($formData);
     }
 }

@@ -193,7 +193,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		setError(null);
 		try {
 			const submissionData = prepareDataForSubmission();
-			const response = await api.post("/denuncias/crear", submissionData);
+			const response = await api.post("/create", submissionData);
 			if (formData.adjuntos.length > 0 && response.data?.denuncia_id) {
 				const formDataFiles = new FormData();
 				formData.adjuntos.forEach((adjunto, index) => {

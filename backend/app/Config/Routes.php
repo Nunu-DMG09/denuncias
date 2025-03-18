@@ -11,7 +11,7 @@ $routes->group('api', function ($routes) {
     $routes->get('dni/(:num)', 'ConsultaApi::buscarDNI/$1');
     $routes->get('ruc/(:num)', 'ConsultaApi::buscarRUC/$1');
 });
-$routes->group('form', ['filter' => 'cors'], function ($routes) {
+$routes->group('form', function ($routes) {
     $routes->get('motivos', 'FormularioDenunciasController::index');
     $routes->get('create', 'FormularioDenunciasController::create');
 });
