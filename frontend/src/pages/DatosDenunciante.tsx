@@ -226,7 +226,7 @@ export const DatosDenunciante = () => {
 								id={`masculino`}
 								className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
 								checked={sexo === "masculino"}
-								onChange={() => handleSexo("masculino")}
+								onChange={() => handleSexo("M")}
 							/>
 							<label
 								htmlFor={`masculino`}
@@ -244,7 +244,7 @@ export const DatosDenunciante = () => {
 								id={`femenino`}
 								className="mt-1 w-5 h-5 cursor-pointer border-2 border-solid border-(--gray) rounded-full transition-all duration-300 ease-in-out hover:border-(--primary-color) checked:bg-(--primary-color) checked:border-(--primary-color) checked:bg-(image:--bg-radios) focus:outline-2 focus:outline-(--primary-color) focus:outline-offset-2 appearance-none"
 								checked={sexo === "femenino"}
-								onChange={() => handleSexo("femenino")}
+								onChange={() => handleSexo("F")}
 							/>
 							<label
 								htmlFor={`femenino`}
