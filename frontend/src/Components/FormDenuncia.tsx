@@ -30,8 +30,8 @@ const FormularioDenuncia: React.FC = () => {
 	};
 	return (
 		<div className="container mx-auto px-4 py-6 max-w-3xl">
-			<h2 className="text-2xl font-bold mb-6 text-gray-800">
-				Sistema de Denuncias - Municipalidad de Lambayeque
+			<h2 className="text-2xl text-center font-bold mb-6 text-gray-800">
+				Sistema de Denuncias de Corrupción - MDJLO
 			</h2>
 
 			{/* Barra de progreso - mantiene tu diseño existente */}
