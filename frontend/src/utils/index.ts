@@ -1,4 +1,4 @@
-// Para validar tamaño de archivos
+// Para validar tamaño de archivos y tipos de archivos permitidos
 import { Adjunto } from "../types";
 export const MB = 1048576;
 export const MAX_SIZE_BYTES = MB * 20;
