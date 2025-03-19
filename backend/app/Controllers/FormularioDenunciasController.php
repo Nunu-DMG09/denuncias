@@ -151,7 +151,8 @@ class FormularioDenunciasController extends ResourceController
         return $this->response->setJSON([
             'success' => true,
             'message' => 'Denuncia registrada correctamente',
-            'tracking_code' => $code
+            'tracking_code' => $code,
+            'formData' => $formData
         ]);
     }
 }
