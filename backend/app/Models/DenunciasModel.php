@@ -28,7 +28,7 @@ class DenunciasModel extends Model
         'pdf_path'
     ];
     // Dates
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
     protected $createdField = 'fecha_registro';
     protected $updatedField  = 'updated_at';

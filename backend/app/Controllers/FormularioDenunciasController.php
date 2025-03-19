@@ -135,7 +135,7 @@ class FormularioDenunciasController extends ResourceController
             foreach ($adjuntos as $adjunto) {
                 $this->adjuntosModel->insert([
                     'denuncia_id' => $id_denuncia,
-                    'file_path' => $adjunto['file_path'],
+                    'file_path' => $adjunto['file_name'],
                     'file_name' => $adjunto['file_name'],
                     'file_type' => $adjunto['file_type']                 
                 ]);
