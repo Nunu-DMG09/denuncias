@@ -14,4 +14,5 @@ $routes->group('api', function ($routes) {
 $routes->group('form', function ($routes) {
     $routes->get('motivos', 'FormularioDenunciasController::index');
     $routes->post('create', 'FormularioDenunciasController::create');
+    $routes->options('create', 'FormularioDenunciasController::options');
 });

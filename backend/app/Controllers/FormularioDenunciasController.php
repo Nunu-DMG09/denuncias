@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\AdjuntosModel;
 use App\Models\DenunciadosModel;
@@ -31,10 +32,19 @@ class FormularioDenunciasController extends ResourceController
         $data = $this->motivosModel->findAll();
         return $this->response->setJSON($data);
     }
-    function  create()
+    public function options()
+    {
+        return $this->response->setStatusCode(200);
+    }
+    function create()
     {
         $formData = $this->request->getJSON(true);
         // echo json_encode($formData);
         log_message('debug', 'Datos recibidos: ' . json_encode($formData));
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'Datos recibidos correctamente',
+            'data_received' => $formData
+        ]);
     }
 }
