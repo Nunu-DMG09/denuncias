@@ -7,6 +7,7 @@ import { useDenuncias } from "../hooks/useDenuncias";
 import { useFormContext } from "../hooks/useFormContext";
 import { useMemo } from "react";
 import { FilesProgressBar } from "../Components/FilesProgressBar";
+import { calcTotalSize, MAX_SIZE_BYTES, MAX_FILES } from "../utils";
 
 export const InfoDenuncia = () => {
 	const { startDate,  handleDate } =
@@ -21,13 +22,7 @@ export const InfoDenuncia = () => {
 			return 0;
 		});
 	}, [motivos]);
-	const totalSize = formData.adjuntos.reduce(
-		(tot, file) => tot + file.file.size,
-		0
-	);
-
-	const MAX_SIZE_BYTES = 1048576 * 20;
-	const MAX_FILES = 5;
+	const totalSize = calcTotalSize(formData.adjuntos);
 
 	return (
 		<div className="space-y-6">
