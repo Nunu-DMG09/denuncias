@@ -3,7 +3,7 @@ import { Loader } from "./Loader";
 // import { toast } from "sonner";
 
 export const FormNavigator = () => {
-	const { currentPage, formData, nextPage, prevPage, submitForm, isLoading } =
+	const { currentPage, nextPage, prevPage, submitForm, isLoading } =
 		useFormContext();
 
 	const TOTAL_PAGES = 3;
