@@ -1,3 +1,4 @@
+import { Adjunto } from '../types';
 export const MB = 1048576;
 export const MAX_SIZE_BYTES = MB * 20;
 export const MAX_FILES = 5;
@@ -12,7 +13,7 @@ export const bytesToMB = (bytes: number) => {
 
 export const validateFileAddition = (currentFiles: Adjunto[], newFile: Adjunto) => {
     const currentSize = calcTotalSize(currentFiles);
-    const newFileSize = newFile.size;
+    const newFileSize = newFile.file.size;
     const totalSize = currentSize + newFileSize;
 
     const isOverSizeLimit = totalSize > MAX_SIZE_BYTES;

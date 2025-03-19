@@ -3,39 +3,7 @@ import { toast } from "sonner";
 import api from "../utils/apiAxios";
 import { AxiosError } from "axios";
 import { validateFileAddition } from "../utils";
-
-interface Denunciante {
-	nombres: string;
-	email: string;
-	telefono: string;
-	tipo_documento: string;
-	numero_documento: string;
-	sexo: string;
-}
-
-interface Denunciado {
-	nombre: string;
-	tipo_documento: string;
-	numero_documento: string;
-	representante_legal: string;
-	razon_social: string;
-	cargo: string;
-}
-
-interface Adjunto {
-	file: File;
-	name: string;
-}
-
-interface FormData {
-	es_anonimo: boolean;
-	denunciante: Denunciante | null;
-	denunciado: Denunciado;
-	motivo_id: string;
-	motivo_otro: string;
-	descripcion: string;
-	adjuntos: Adjunto[];
-}
+import type { Denunciado, Denunciante, FormData } from "../types.d";
 
 interface FormContextType {
 	currentPage: number;
@@ -156,7 +124,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 	};
 
 	const addAdjunto = (file: File) => {
-		const validation = validateFileAddition(formData.adjuntos, file);
+		const validation = validateFileAddition(formData.adjuntos, { file, name: file.name });
 
 		if (validation.isOverFileLimit){
 			toast.error("Máximo 5 archivos adjuntos");
