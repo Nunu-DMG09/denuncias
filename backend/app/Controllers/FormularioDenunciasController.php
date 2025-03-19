@@ -34,7 +34,7 @@ class FormularioDenunciasController extends ResourceController
     function  create()
     {
         $formData = $this->request->getJSON(true);
-        echo json_encode($formData);
+        // echo json_encode($formData);
         log_message('debug', 'Datos recibidos: ' . json_encode($formData));
     }
 }
