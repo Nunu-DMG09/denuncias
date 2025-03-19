@@ -31,10 +31,6 @@ class Seguimiento_denunciasModel extends Model
     // Validation
     protected $validationRules      = 
     [
-        'id' =>[
-            'label' => 'id',
-            'rules' => 'required'
-        ],
         'denuncia_id' =>[
             'label' => 'denuncia_id',
             'rules' => 'required'
@@ -54,9 +50,6 @@ class Seguimiento_denunciasModel extends Model
     ];
     protected $validationMessages   = 
     [
-        'id' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ],
         'denuncia_id' =>[
             'required' => 'El campo {field} es obligatorio'
         ],

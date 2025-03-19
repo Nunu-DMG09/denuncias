@@ -33,10 +33,6 @@ class DenunciadosModel extends Model
     // Validation
     protected $validationRules      = 
     [
-        'id' =>[
-            'label' => 'id',
-            'rules' => 'required'
-        ],
         'nombre' =>[
             'label' => 'nombre',
             'rules' => 'required'
@@ -64,9 +60,6 @@ class DenunciadosModel extends Model
     ];
     protected $validationMessages   = 
     [
-        'id' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ],
         'nombre' =>[
             'required' => 'El campo {field} es obligatorio'
         ],

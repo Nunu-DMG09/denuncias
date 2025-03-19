@@ -8,14 +8,14 @@ class AdministradoresModel extends Model
 {
     protected $DBGroup = 'default';
     protected $table = 'adminitradores';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'dni_admin';
     protected $useAutoIncrement = false;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
     protected $allowedFields =
     [
-        'id',
+        'dni_admin',
         'nombres',
         'password',
         'categoria',
@@ -31,8 +31,8 @@ class AdministradoresModel extends Model
     // Validation
     protected $validationRules      = 
     [
-        'id' =>[
-            'label' => 'id',
+        'dni_admin' =>[
+            'label' => 'dni_admin',
             'rules' => 'required'
         ],
         'nombres' =>[
@@ -54,20 +54,20 @@ class AdministradoresModel extends Model
     ];
     protected $validationMessages   = 
     [
-        'id' =>[
-            'required' => 'El campo id es obligatorio'
+        'dni_admin' =>[
+            'required' => 'El campo {field} es obligatorio'
         ],
         'nombres' =>[
-            'required' => 'El campo nombres es obligatorio'
+            'required' => 'El campo {field} es obligatorio'
         ],
         'password' =>[
-            'required' => 'El campo password es obligatorio'
+            'required' => 'El campo {field} es obligatorio'
         ],
         'categoria' =>[
-            'required' => 'El campo categoria es obligatorio'
+            'required' => 'El campo {field} es obligatorio'
         ],
         'estado' =>[
-            'required' => 'El campo estado es obligatorio'
+            'required' => 'El campo {field} es obligatorio'
         ]
     ];
     protected $skipValidation       = false;

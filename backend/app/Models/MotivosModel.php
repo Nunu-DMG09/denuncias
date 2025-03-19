@@ -30,10 +30,6 @@ class MotivosModel extends Model
     // Validation
     protected $validationRules      = 
     [
-        'id' =>[
-            'label' => 'id',
-            'rules' => 'required'
-        ],
         'nombre' =>[
             'label' => 'nombre',
             'rules' => 'required'
@@ -45,9 +41,6 @@ class MotivosModel extends Model
     ];
     protected $validationMessages   = 
     [
-        'id' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ],
         'nombre' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
