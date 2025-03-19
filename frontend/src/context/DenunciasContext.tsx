@@ -21,7 +21,7 @@ interface FormContextType {
 	removeAdjunto: (index: number) => void;
 	nextPage: () => void;
 	prevPage: () => void;
-	submitForm: () => Promise<void>;
+	submitForm: () => Promise<boolean>;
 }
 
 export const FormContext = createContext<FormContextType | undefined>(
@@ -220,6 +220,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 					`Tu código de seguimiento es: ${response.data.tracking_code}`
 				);
 			}
+			return true
 		} catch (err: unknown) {
 			const axiosError = err as AxiosError<{ message?: string }>;
 			const errorMsg =
@@ -228,6 +229,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 			setError(errorMsg);
 			toast.error(errorMsg);
 			console.error("Error al enviar formulario:", err);
+			return false
 		} finally {
 			setIsLoading(false);
 		}
