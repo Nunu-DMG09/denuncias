@@ -31,7 +31,14 @@ export const DatosDenunciado = () => {
 			representante_legal: representanteLegal,
 			razon_social: razonSocial,
 		});
-	}, [nombre, tipoDocumento, numeroDocumento, cargo, representanteLegal, razonSocial]);
+	}, [
+		nombre,
+		tipoDocumento,
+		numeroDocumento,
+		cargo,
+		representanteLegal,
+		razonSocial,
+	]);
 	return (
 		<div className="space-y-6">
 			<div className="space-y-2">
@@ -101,6 +108,7 @@ export const DatosDenunciado = () => {
 				/>
 				<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 					Nombre del Denunciado
+					<span className="text-red-500 font-black text-xl">*</span>
 				</label>
 			</div>
 			<div className="space-y-2 relative">
@@ -113,6 +121,7 @@ export const DatosDenunciado = () => {
 				/>
 				<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 					Cargo del Denunciado
+					<span className="text-red-500 font-black text-xl">*</span>
 				</label>
 			</div>
 			{denunciado.tipo_documento === "ruc" && (
