@@ -1,3 +1,5 @@
+import { bytesToMB } from "../utils";
+
 interface FilesProgressBarProps {
 	currentSize: number;
 	maxSize: number;
@@ -5,17 +7,15 @@ interface FilesProgressBarProps {
 	maxFiles: number;
 }
 
-const MB = 1048576;
-
 export const FilesProgressBar = ({
 	currentSize,
 	maxSize,
 	fileCount,
 	maxFiles,
 }: FilesProgressBarProps) => {
-	const currentSizeMB = currentSize / MB;
-	const maxSizeMB = maxSize / MB;
-	const percentage = (currentSize / maxSize) * 100;
+	const currentSizeMB = bytesToMB(currentSize);
+	const maxSizeMB = bytesToMB(maxSize);
+	const percentage = (currentSizeMB / maxSizeMB) * 100;
 
 	const getBarColor = () => {
 		if (percentage < 50) return "bg-green-500";
