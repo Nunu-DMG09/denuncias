@@ -106,8 +106,8 @@ export const InfoDenuncia = () => {
 						Cuéntanos qué sucedió
 					</label>
 				</div>
-				<AddFiles />
 			</div>
+			<AddFiles />
 		</div>
 	);
 };
