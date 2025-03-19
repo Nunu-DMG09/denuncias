@@ -7,11 +7,15 @@ import { useDenuncias } from "../hooks/useDenuncias";
 import { useFormContext } from "../hooks/useFormContext";
 import { useMemo } from "react";
 import { FilesProgressBar } from "../Components/FilesProgressBar";
-import { calcTotalSize, MAX_SIZE_BYTES, MAX_FILES } from "../utils";
+import {
+	calcTotalSize,
+	MAX_SIZE_BYTES,
+	MAX_FILES,
+	ALLOWED_EXTENSIONS,
+} from "../utils";
 
 export const InfoDenuncia = () => {
-	const { startDate,  handleDate } =
-		useDenuncias();
+	const { startDate, handleDate } = useDenuncias();
 	const { motivos, formData, updateFormData, addAdjunto, removeAdjunto } =
 		useFormContext();
 	const sortedMotivos = useMemo(() => {
@@ -109,15 +113,19 @@ export const InfoDenuncia = () => {
 				</div>
 
 				<div>
-					<h3 className="font-medium text-gray-900">
-						Archivos adjuntos
-					</h3>
-					<FilesProgressBar
-						currentSize={totalSize}
-						maxSize={MAX_SIZE_BYTES}
-						fileCount={formData.adjuntos.length}
-						maxFiles={MAX_FILES}
-					/>
+					{formData.adjuntos.length > 0 && (
+						<div className="space-y-4">
+							<h3 className="font-medium text-gray-900">
+								Archivos adjuntos
+							</h3>
+							<FilesProgressBar
+								currentSize={totalSize}
+								maxSize={MAX_SIZE_BYTES}
+								fileCount={formData.adjuntos.length}
+								maxFiles={MAX_FILES}
+							/>
+						</div>
+					)}
 					<label
 						className="flex items-center gap-4 md:gap-0 justify-center px-4 py-2 rounded-md text-white bg-(--secondary-color) hover:bg-(--primary-color) hover:scale-105 w-1/2 md:w-1/3 cursor-pointer mx-auto transition-all ease-out duration-300"
 						htmlFor="file"
@@ -125,6 +133,9 @@ export const InfoDenuncia = () => {
 						<i className="fas fa-paperclip mr-2"></i>
 						Adjuntar Pruebas
 					</label>
+					<div className="text-xs text-gray-500 mt-2 text-center">
+						Formatos permitidos: {ALLOWED_EXTENSIONS}
+					</div>
 					<input
 						type="file"
 						className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -136,6 +147,7 @@ export const InfoDenuncia = () => {
 							}
 						}}
 						hidden
+						accept={ALLOWED_EXTENSIONS}
 					/>
 					{formData.adjuntos.length > 0 && (
 						<div className="mt-4">
@@ -152,7 +164,7 @@ export const InfoDenuncia = () => {
 										<button
 											type="button"
 											onClick={() => removeAdjunto(index)}
-											className="text-red-500 hover:text-red-700"
+											className="text-red-500 hover:text-red-700 cursor-pointer"
 										>
 											<i className="fas fa-trash"></i>
 										</button>

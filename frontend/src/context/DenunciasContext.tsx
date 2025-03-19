@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
 import api from "../utils/apiAxios";
 import { AxiosError } from "axios";
-import { validateFileAddition } from "../utils";
+import { validateFileAddition, ALLOWED_EXTENSIONS } from "../utils";
 import type { Denunciado, Denunciante, FormData } from "../types.d";
 
 interface FormContextType {
@@ -124,15 +124,29 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 	};
 
 	const addAdjunto = (file: File) => {
-		const validation = validateFileAddition(formData.adjuntos, { file, name: file.name });
-
-		if (validation.isOverFileLimit){
+		const validation = validateFileAddition(formData.adjuntos, {
+			file,
+			name: file.name,
+		});
+		if (validation.isInvalidType) {
+			const fileExtension =
+				file.name.split(".").pop()?.toLowerCase() || "desconocido";
+			toast.error(
+				`Tipo de archivo no permitido (.${fileExtension}). 
+				Por favor, suba archivos de los siguientes tipos: ${ALLOWED_EXTENSIONS}`
+			);
+		}
+		if (validation.isOverFileLimit) {
 			toast.error("Máximo 5 archivos adjuntos");
 			return;
 		}
 
 		if (validation.isOverSizeLimit) {
-			toast.error(`El archivo excede el límite de tamaño. Tamaño del nuevo archivo: ${validation.newFileSizeMB.toFixed(2)}MB`);
+			toast.error(
+				`El archivo excede el límite de tamaño. Tamaño del nuevo archivo: ${validation.newFileSizeMB.toFixed(
+					2
+				)}MB`
+			);
 			return;
 		}
 
