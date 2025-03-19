@@ -115,7 +115,7 @@ class FormularioDenunciasController extends ResourceController
             if ($this->denunciasModel->insert([
                 'id' => $id_denuncia,
                 'tracking_code' => $code,
-                'es_animo' => $denuncia['es_animo'],
+                'es_anonimo' => $denuncia['es_anonimo'],
                 'denunciante_id' => $id_denunciante,
                 'motivo_id' => $denuncia['motivo_id'],
                 'motivo_otro' => $denuncia['motivo_otro'],

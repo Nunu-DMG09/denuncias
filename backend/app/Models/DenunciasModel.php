@@ -17,7 +17,7 @@ class DenunciasModel extends Model
     [
         'id',
         'tracking_code',
-        'es_animo',
+        'es_anonimo',
         'denunciante_id',
         'motivo_id',
         'motivo_otro',
@@ -41,8 +41,8 @@ class DenunciasModel extends Model
             'label' => 'tracking_code',
             'rules' => 'required'
         ],
-        'es_animo' =>[
-            'label' => 'es_animo',
+        'es_anonimo' =>[
+            'label' => 'es_anonimo',
             'rules' => 'required'
         ],
         'denunciante_id' =>[
@@ -79,7 +79,7 @@ class DenunciasModel extends Model
         'tracking_code' =>[
             'required' => 'El campo {field} es obligatorio',
         ],
-        'es_animo' =>[
+        'es_anonimo' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
         'denunciante_id' =>[
