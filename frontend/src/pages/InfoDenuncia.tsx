@@ -6,6 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useDenuncias } from "../hooks/useDenuncias";
 import { useFormContext } from "../hooks/useFormContext";
 import { useMemo } from "react";
+import { FilesProgressBar } from "../Components/FilesProgressBar";
 
 export const InfoDenuncia = () => {
 	const { startDate,  handleDate } =
@@ -20,6 +21,13 @@ export const InfoDenuncia = () => {
 			return 0;
 		});
 	}, [motivos]);
+	const totalSize = formData.adjuntos.reduce(
+		(tot, file) => tot + file.file.size,
+		0
+	);
+
+	const MAX_SIZE_BYTES = 1048576 * 20;
+	const MAX_FILES = 5;
 
 	return (
 		<div className="space-y-6">
@@ -106,6 +114,15 @@ export const InfoDenuncia = () => {
 				</div>
 
 				<div>
+					<h3 className="font-medium text-gray-900">
+						Archivos adjuntos
+					</h3>
+					<FilesProgressBar
+						currentSize={totalSize}
+						maxSize={MAX_SIZE_BYTES}
+						fileCount={formData.adjuntos.length}
+						maxFiles={MAX_FILES}
+					/>
 					<label
 						className="flex items-center gap-4 md:gap-0 justify-center px-4 py-2 rounded-md text-white bg-(--secondary-color) hover:bg-(--primary-color) hover:scale-105 w-1/2 md:w-1/3 cursor-pointer mx-auto transition-all ease-out duration-300"
 						htmlFor="file"
