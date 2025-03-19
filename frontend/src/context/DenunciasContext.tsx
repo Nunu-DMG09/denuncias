@@ -41,7 +41,7 @@ interface FormContextType {
 	isLoading: boolean;
 	error: string | null;
 	motivos: Array<{ id: string; nombre: string; descripcion: string }>;
-	updateFormData: (key: string, value: any) => void;
+	updateFormData: <K extends keyof FormData>(key: K, value: FormData[K]) => void;
 	updateDenunciante: (data: Partial<Denunciante>) => void;
 	updateDenunciado: (data: Partial<Denunciado>) => void;
 	addAdjunto: (file: File) => void;
@@ -100,7 +100,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		fetchMotivos();
 	}, []);
 
-	const updateFormData = (key: string, value: any) => {
+	const updateFormData = <K extends keyof FormData>(key: K, value: FormData[K]) => {
 		setFormData((prev) => ({
 			...prev,
 			[key]: value,
