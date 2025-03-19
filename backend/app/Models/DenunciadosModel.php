@@ -45,14 +45,6 @@ class DenunciadosModel extends Model
             'label' => 'tipo_documento',
             'rules' => 'required'
         ],
-        'representante_legal' =>[
-            'label' => 'representante_legal',
-            'rules' => 'required'
-        ],
-        'razon_social' =>[
-            'label' => 'razon_social',
-            'rules' => 'required'
-        ],
         'cargo' =>[
             'label' => 'cargo',
             'rules' => 'required'
@@ -67,12 +59,6 @@ class DenunciadosModel extends Model
             'required' => 'El campo {field} es obligatorio'
         ],
         'tipo_documento' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ],
-        'representante_legal' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ],
-        'razon_social' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
         'cargo' =>[
