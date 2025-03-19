@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
 import api from "../utils/apiAxios";
+import { AxiosError } from "axios";
 
 interface Denunciante {
 	nombres: string;
@@ -41,7 +42,10 @@ interface FormContextType {
 	isLoading: boolean;
 	error: string | null;
 	motivos: Array<{ id: string; nombre: string; descripcion: string }>;
-	updateFormData: <K extends keyof FormData>(key: K, value: FormData[K]) => void;
+	updateFormData: <K extends keyof FormData>(
+		key: K,
+		value: FormData[K]
+	) => void;
 	updateDenunciante: (data: Partial<Denunciante>) => void;
 	updateDenunciado: (data: Partial<Denunciado>) => void;
 	addAdjunto: (file: File) => void;
@@ -100,7 +104,10 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		fetchMotivos();
 	}, []);
 
-	const updateFormData = <K extends keyof FormData>(key: K, value: FormData[K]) => {
+	const updateFormData = <K extends keyof FormData>(
+		key: K,
+		value: FormData[K]
+	) => {
 		setFormData((prev) => ({
 			...prev,
 			[key]: value,
@@ -182,9 +189,10 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 				nombre: formData.denunciado.nombre || null,
 				tipo_documento: formData.denunciado.tipo_documento,
 				numero_documento: formData.denunciado.numero_documento,
-				representante_legal: formData.denunciado.representante_legal || null,
+				representante_legal:
+					formData.denunciado.representante_legal || null,
 				razon_social: formData.denunciado.razon_social || null,
-				cargo: formData.denunciado.cargo
+				cargo: formData.denunciado.cargo,
 			},
 			adjuntos: formData.adjuntos.map((adjunto) => ({
 				file_name: adjunto.name,
@@ -217,9 +225,11 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 					`Tu código de seguimiento es: ${response.data.tracking_code}`
 				);
 			}
-		} catch (err) {
+		} catch (err: unknown) {
+			const axiosError = err as AxiosError<{ message?: string }>;
 			const errorMsg =
-				err.response?.data?.message || "Error al enviar la denuncia";
+				axiosError.response?.data?.message ||
+				"Error al enviar la denuncia";
 			setError(errorMsg);
 			toast.error(errorMsg);
 			console.error("Error al enviar formulario:", err);
