@@ -7,7 +7,12 @@ import { useDenuncias } from "../hooks/useDenuncias";
 import { useFormContext } from "../hooks/useFormContext";
 import { useMemo } from "react";
 import { FilesProgressBar } from "../Components/FilesProgressBar";
-import { calcTotalSize, MAX_SIZE_BYTES, MAX_FILES } from "../utils";
+import {
+	calcTotalSize,
+	MAX_SIZE_BYTES,
+	MAX_FILES,
+	ALLOWED_EXTENSIONS,
+} from "../utils";
 
 export const InfoDenuncia = () => {
 	const { startDate, handleDate } = useDenuncias();
@@ -128,6 +133,9 @@ export const InfoDenuncia = () => {
 						<i className="fas fa-paperclip mr-2"></i>
 						Adjuntar Pruebas
 					</label>
+					<div className="text-xs text-gray-500 mt-2 text-center">
+						Formatos permitidos: {ALLOWED_EXTENSIONS}
+					</div>
 					<input
 						type="file"
 						className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -139,6 +147,7 @@ export const InfoDenuncia = () => {
 							}
 						}}
 						hidden
+						accept={ALLOWED_EXTENSIONS}
 					/>
 					{formData.adjuntos.length > 0 && (
 						<div className="mt-4">
