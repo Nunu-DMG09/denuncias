@@ -8,7 +8,7 @@ import { useFormContext } from "../hooks/useFormContext";
 import { useMemo } from "react";
 
 export const InfoDenuncia = () => {
-	const { startDate, selectedReason, handleDate, handleReason } =
+	const { startDate,  handleDate } =
 		useDenuncias();
 	const { motivos, formData, updateFormData, addAdjunto, removeAdjunto } =
 		useFormContext();
