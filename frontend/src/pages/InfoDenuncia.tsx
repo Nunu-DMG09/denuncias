@@ -11,11 +11,7 @@ import { ReasonsList } from "../Components/ReasonsList";
 
 export const InfoDenuncia = () => {
 	const { startDate, handleDate } = useDenuncias();
-	const { formData, updateFormData } =
-		useFormContext();
-	
-	
-
+	const { formData, updateFormData } = useFormContext();
 	return (
 		<div className="space-y-6">
 			{/* Date Input */}
