@@ -29,8 +29,7 @@ class Database extends Config
         'hostname'     => 'localhost',
         'username'     => 'root',
         'password'     => '',
-        'database'     => 'Denuncias Jose Leonardo Ortiz',
-        //CALLA MRD, NO QUIERO TU CARAMELO CHOLA DE MRD, DEJA MI BENITO O BAJO Y TE SACO LA MRD NO ME PUEDES DENUNCIAR POR QUE NO VA PASAR NADA CHOLA DE MRD
+        'database'     => 'Denuncias jlo',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
