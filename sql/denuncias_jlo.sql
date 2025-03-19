@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-03-2025 a las 17:36:19
+-- Tiempo de generación: 19-03-2025 a las 22:25:10
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `denuncias jleon`
+-- Base de datos: `denuncias jlo`
 --
 
 -- --------------------------------------------------------
@@ -172,6 +172,7 @@ INSERT INTO `motivos` (`id`, `nombre`, `descripcion`) VALUES
 ('mo58aa06', 'Mantener intereses en conflicto ', 'Cuando el servidor mantiene vínculos familiares, comerciales, institucionales o laborales que podrían afectar el manejo imparcial de los asuntos a su cargo y las relaciones de la entidad con actores externos. '),
 ('mo58aa1e', 'Obstrucción al acceso a la información pública ', 'Cuando el servidor se rehúsa a entregar información pública solicitada por los conductos regulares que no sea reservada, confidencial o secreta, de acuerdo con las normas vigentes. '),
 ('mo58aa1f', 'Abuso de autoridad ', 'Cuando el servidor comete u ordena un acto arbitrario alegando el cumplimiento de sus funciones.'),
+('moac37b6', 'Otros', 'Cualquier acto contrario a la Ley del Código de Ética de la Función Pública o vinculado a otros actos de corrupción.'),
 ('mod4b288', 'Favorecimiento indebido ', 'Cuando el servidor utiliza su cargo para favorecer irregularmente a alguna persona por un interés particular o por un interés ajeno al cumplimiento de sus funciones.'),
 ('mod4b28c', 'Apropiación o uso indebido de recursos, bienes o información del Estado ', 'Cuando el servidor se adueña o utiliza de manera indebida dinero, recursos (incluyendo el tiempo asignado a la función pública), bienes o información del Estado. ');
 
@@ -198,7 +199,8 @@ CREATE TABLE `seguimiento_denuncias` (
   `denuncia_id` varchar(8) NOT NULL,
   `estado` varchar(100) NOT NULL,
   `comentario` text DEFAULT NULL,
-  `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp()
+  `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `administrador_dni` varchar(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -263,7 +265,8 @@ ALTER TABLE `motivos`
 --
 ALTER TABLE `seguimiento_denuncias`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_seguimiento_denuncia` (`denuncia_id`);
+  ADD KEY `fk_seguimiento_denuncia` (`denuncia_id`),
+  ADD KEY `fk_seguimiento_administrador` (`administrador_dni`);
 
 --
 -- Restricciones para tablas volcadas
@@ -287,7 +290,8 @@ ALTER TABLE `denuncias`
 -- Filtros para la tabla `seguimiento_denuncias`
 --
 ALTER TABLE `seguimiento_denuncias`
-  ADD CONSTRAINT `fk_seguimiento_denuncia` FOREIGN KEY (`denuncia_id`) REFERENCES `denuncias` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_seguimiento_denuncia` FOREIGN KEY (`denuncia_id`) REFERENCES `denuncias` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_seguimiento_administrador` FOREIGN KEY (`administrador_dni`) REFERENCES `administradores` (`dni_admin`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
