@@ -23,11 +23,11 @@ class AdjuntosModel extends Model
         'fecha_subida'
     ];
     // Dates
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
     protected $dateFormat = 'datetime';
     protected $createdField = 'fecha_subida';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    protected $updatedField  = false;
+    protected $deletedField  = false;
 
     // Validation
     protected $validationRules      = 

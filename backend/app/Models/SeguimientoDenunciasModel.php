@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Seguimiento_denunciasModel extends Model
+class SeguimientoDenunciasModel extends Model
 {
     protected $DBGroup = 'default';
     protected $table = 'seguimiento_denuncias';
@@ -22,11 +22,11 @@ class Seguimiento_denunciasModel extends Model
         'fecha_actualizacion'
     ];
     // Dates
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
+    protected $createdField  = false;
     protected $updatedField  = 'fecha_actualizacion';
-    protected $deletedField  = 'deleted_at';
+    protected $deletedField  = false;
 
     // Validation
     protected $validationRules      = 
