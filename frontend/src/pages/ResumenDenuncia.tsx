@@ -6,7 +6,9 @@ export const ResumenDenuncia = () => {
     const [copied, setCopied] = useState(false);
     
     // Supongamos que el código de seguimiento viene del contexto
-    const trackingCode = formData.trackingCode || "#123456";
+    const trackingCode = formData.tracking_code || "#123456";
+    console.log(formData);
+    console.log(trackingCode);
     
     const copyToClipboard = () => {
         navigator.clipboard.writeText(trackingCode);

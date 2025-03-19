@@ -201,7 +201,14 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		setError(null);
 		try {
 			const submissionData = prepareDataForSubmission();
+			console.log("Enviando al backend:", JSON.stringify(submissionData, null, 2));
 			const response = await api.post("/create", submissionData);
+			if (response.data?.tracking_code) {
+				setFormData((prev) => ({
+					...prev,
+					tracking_code: response.data.tracking_code,
+				}));
+			}
 			if (formData.adjuntos.length > 0 && response.data?.denuncia_id) {
 				const formDataFiles = new FormData();
 				formData.adjuntos.forEach((adjunto, index) => {
