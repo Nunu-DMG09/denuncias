@@ -47,10 +47,6 @@ class AdjuntosModel extends Model
         'file_type' =>[
             'label' => 'file_type',
             'rules' => 'required'
-        ],
-        'fecha_subida' =>[
-            'label' => 'fecha_subida',
-            'rules' => 'required'
         ]
     ];
     protected $validationMessages   = 
@@ -65,9 +61,6 @@ class AdjuntosModel extends Model
             'required' => 'El campo {field} es obligatorio'
         ],
         'file_type' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ],
-        'fecha_subida' =>[
             'required' => 'El campo {field} es obligatorio'
         ]
     ];

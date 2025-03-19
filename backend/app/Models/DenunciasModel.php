@@ -20,6 +20,7 @@ class DenunciasModel extends Model
         'es_animo',
         'denunciante_id',
         'motivo_id',
+        'motivo_otro',
         'descripcion',
         'denunciado_id',
         'fecha_registro',
