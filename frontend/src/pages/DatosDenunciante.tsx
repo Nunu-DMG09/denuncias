@@ -28,10 +28,13 @@ export const DatosDenunciante = () => {
 		updateFormData("es_anonimo", tipoDatos === "anonimo");
 		if (tipoDatos === "datos-personales") {
 			updateDenunciante({
+				...(denunciante || {}),
 				nombres: nombre,
 				tipo_documento: tipoDocumento,
 				numero_documento: numeroDocumento,
 				sexo,
+				email: denunciante?.email,
+				telefono: denunciante?.telefono
 			});
 		}
 	}, [tipoDatos, nombre, tipoDocumento, numeroDocumento, sexo]);
