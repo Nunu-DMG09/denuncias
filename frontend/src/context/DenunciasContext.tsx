@@ -155,10 +155,30 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 	};
 
 	const addAdjunto = (file: File) => {
+		if (formData.adjuntos.length >= 5) {
+			toast.error("Máximo 3 archivos adjuntos");
+			return;
+		}
+
+		const currentTotalSize = formData.adjuntos.reduce(
+			(tot, file) => tot + file.file.size,
+			0
+		);
+		const MB = 1048576;
+		const currentSizeMB = currentTotalSize / MB;
+		const newFileSizeMB = file.size / MB;
+		const totalSizeMB = currentSizeMB + newFileSizeMB;
+
+		if (totalSizeMB > 20) {
+			toast.error(`El archivo excede el límite de tamaño. Total permitido: 20MB. Total actual: ${currentSizeMB.toFixed(2)}MB. Tamaño del nuevo archivo: ${newFileSizeMB.toFixed(2)}MB`);
+			return;
+		}
+
 		setFormData((prev) => ({
 			...prev,
 			adjuntos: [...prev.adjuntos, { file, name: file.name }],
 		}));
+		toast.success(`Archivo adjuntado correctamente. Espacio restante: ${(20 - totalSizeMB).toFixed(2)}MB`);
 	};
 
 	const removeAdjunto = (index: number) => {
