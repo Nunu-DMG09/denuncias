@@ -155,7 +155,7 @@ export const InfoDenuncia = () => {
 										<button
 											type="button"
 											onClick={() => removeAdjunto(index)}
-											className="text-red-500 hover:text-red-700"
+											className="text-red-500 hover:text-red-700 cursor-pointer"
 										>
 											<i className="fas fa-trash"></i>
 										</button>
