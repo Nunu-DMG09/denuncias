@@ -4,6 +4,7 @@ import { InfoDenuncia } from "../pages/InfoDenuncia";
 import { useFormContext } from "../hooks/useFormContext";
 import { FormNavigator } from "./FormNavigator";
 import { FormProgressBar } from "./FormProgressBar";
+import { ResumenDenuncia } from "../pages/ResumenDenuncia";
 
 // import ResumenDenuncia from "../components/ResumenDenuncia";
 
@@ -22,8 +23,8 @@ const FormularioDenuncia: React.FC = () => {
 				return <DatosDenunciado />;
 			case 3:
 				return <DatosDenunciante />;
-			// case 4:
-			// 	// return <ResumenDenuncia />;
+			case 4:
+				return <ResumenDenuncia />;
 			default:
 				return <InfoDenuncia />;
 		}
