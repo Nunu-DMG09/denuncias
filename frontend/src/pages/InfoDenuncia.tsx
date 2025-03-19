@@ -10,8 +10,7 @@ import { FilesProgressBar } from "../Components/FilesProgressBar";
 import { calcTotalSize, MAX_SIZE_BYTES, MAX_FILES } from "../utils";
 
 export const InfoDenuncia = () => {
-	const { startDate,  handleDate } =
-		useDenuncias();
+	const { startDate, handleDate } = useDenuncias();
 	const { motivos, formData, updateFormData, addAdjunto, removeAdjunto } =
 		useFormContext();
 	const sortedMotivos = useMemo(() => {
@@ -109,15 +108,19 @@ export const InfoDenuncia = () => {
 				</div>
 
 				<div>
-					<h3 className="font-medium text-gray-900">
-						Archivos adjuntos
-					</h3>
-					<FilesProgressBar
-						currentSize={totalSize}
-						maxSize={MAX_SIZE_BYTES}
-						fileCount={formData.adjuntos.length}
-						maxFiles={MAX_FILES}
-					/>
+					{formData.adjuntos.length > 0 && (
+						<div className="space-y-4">
+							<h3 className="font-medium text-gray-900">
+								Archivos adjuntos
+							</h3>
+							<FilesProgressBar
+								currentSize={totalSize}
+								maxSize={MAX_SIZE_BYTES}
+								fileCount={formData.adjuntos.length}
+								maxFiles={MAX_FILES}
+							/>
+						</div>
+					)}
 					<label
 						className="flex items-center gap-4 md:gap-0 justify-center px-4 py-2 rounded-md text-white bg-(--secondary-color) hover:bg-(--primary-color) hover:scale-105 w-1/2 md:w-1/3 cursor-pointer mx-auto transition-all ease-out duration-300"
 						htmlFor="file"
