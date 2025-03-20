@@ -1,20 +1,12 @@
-import { useState } from "react";
 import { useFormContext } from "../hooks/useFormContext";
 import * as Icons from '../Components/Icons';
+import { useDenuncias } from "../hooks/useDenuncias";
 
 export const ResumenDenuncia = () => {
 	const { formData } = useFormContext();
-	const [copied, setCopied] = useState(false);
-	const trackingCode = formData.tracking_code || "#123456";
-	console.log(formData);
-	console.log(trackingCode);
-
-	const copyToClipboard = () => {
-		navigator.clipboard.writeText(trackingCode);
-		setCopied(true);
-		setTimeout(() => setCopied(false), 2000);
-	};
-
+	const trackingCode = formData.tracking_code || "Código no disponible";
+	const { copyToClipboard, copied } = useDenuncias();
+	
 	return (
 		<div id="confirmation-page" className="space-y-8 max-w-3xl mx-auto">
 			<div className="space-y-4 text-center">
@@ -40,7 +32,7 @@ export const ResumenDenuncia = () => {
 						</p>
 					</div>
 					<button
-						onClick={copyToClipboard}
+						onClick={() => copyToClipboard(trackingCode)}
 						className={`p-4 cursor-pointer ${
 							copied ? "bg-green-600 hover:bg-green-400" : "bg-(--secondary-color) hover:bg-(--primary-color)"
 						} text-white transition-colors duration-300 focus:outline-none flex items-center justify-center`}
