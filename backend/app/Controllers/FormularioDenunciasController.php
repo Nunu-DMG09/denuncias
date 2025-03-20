@@ -86,91 +86,91 @@ class FormularioDenunciasController extends ResourceController
                 'tipo_documento' => $denunciante['tipo_documento'],
                 'sexo' => $denunciante['sexo']
             ])) {
-                // log_message('info', 'Denunciante insertado correctamente con ID: ' . $id_denunciante);
-            }else{
+                log_message('info', 'Denunciante insertado correctamente con ID: ' . $id_denunciante);
+            } else {
                 return $this->response->setJSON([
                     'success' => false,
                     'message' => 'Error al registrar denunciante'
                 ]);
             }
-            // Insert denunciado
-            if ($denunciado) {
-                if ($this->denunciadosModel->insert([
-                    'id' => $id_denunciado,
-                    'nombre' => $denunciado['nombre'],
-                    'numero_documento' => $denunciado['numero_documento'],
-                    'tipo_documento' => $denunciado['tipo_documento'],
-                    'representante_legal' => $denunciado['representante_legal'],
-                    'razon_social' => $denunciado['razon_social'],
-                    'cargo' => $denunciado['cargo']
-                ])) {
-                    // log_message('info', 'Denunciado insertado correctamente con ID: ' . $id_denunciado);
-                }else{
-                    return $this->response->setJSON([
-                        'success' => false,
-                        'message' => 'Error al registrar denunciado'
-                    ]);
-                }
-            }
-            // Insert denuncia
-            if ($denuncia) {
-                if ($this->denunciasModel->insert([
-                    'id' => $id_denuncia,
-                    'tracking_code' => $code,
-                    'es_anonimo' => $denuncia['es_anonimo'],
-                    'denunciante_id' => $id_denunciante,
-                    'motivo_id' => $denuncia['motivo_id'],
-                    'motivo_otro' => $denuncia['motivo_otro'],
-                    'descripcion' => $denuncia['descripcion'],
-                    'denunciado_id' => $id_denunciado,
-                    'estado' => 'registrado'
-                ])) {
-                    // log_message('info', 'Denuncia insertada correctamente con ID: ' . $id_denuncia);
-                }else{
-                    return $this->response->setJSON([
-                        'success' => false,
-                        'message' => 'Error al registrar denuncia'
-                    ]);
-                }
-            }
-            if ($adjuntos) {
-                foreach ($adjuntos as $adjunto) {
-                    $id_adjunto = $this->generateId('adjuntos');
-                    if ($this->adjuntosModel->insert([
-                        'id' => $id_adjunto,
-                        'denuncia_id' => $id_denuncia,
-                        'file_path' => $adjunto['file_name'],
-                        'file_name' => $adjunto['file_name'],
-                        'file_type' => $adjunto['file_type']
-                    ])) {
-                        // log_message('info', 'Adjunto insertado correctamente: ' . $adjunto['file_name']);
-                    }else{
-                        return $this->response->setJSON([
-                            'success' => false,
-                            'message' => 'Error al registrar adjunto'
-                        ]);
-                    }
-                }
-            }
-            if ($this->seguimientoDenunciasModel->insert([
-                'id' => $id_seguimiento,
-                'denuncia_id' => $id_denuncia,
-                'estado' => 'registrado',
-                'comentario' => 'Denuncia registrada',
-                'fecha_actualizacion' => date('Y-m-d H:i:s')
+        }
+        // Insert denunciado
+        if ($denunciado) {
+            if ($this->denunciadosModel->insert([
+                'id' => $id_denunciado,
+                'nombre' => $denunciado['nombre'],
+                'numero_documento' => $denunciado['numero_documento'],
+                'tipo_documento' => $denunciado['tipo_documento'],
+                'representante_legal' => $denunciado['representante_legal'],
+                'razon_social' => $denunciado['razon_social'],
+                'cargo' => $denunciado['cargo']
             ])) {
-                // log_message('info', 'Seguimiento de denuncia insertado correctamente');
-            }else{
+                log_message('info', 'Denunciado insertado correctamente con ID: ' . $id_denunciado);
+            } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => 'Error al registrar seguimiento de denuncia'
+                    'message' => 'Error al registrar denunciado'
                 ]);
             }
-            return $this->response->setJSON([
-                'success' => true,
-                'message' => 'Denuncia registrada correctamente',
+        }
+        // Insert denuncia
+        if ($denuncia) {
+            if ($this->denunciasModel->insert([
+                'id' => $id_denuncia,
                 'tracking_code' => $code,
+                'es_anonimo' => $denuncia['es_anonimo'],
+                'denunciante_id' => $id_denunciante,
+                'motivo_id' => $denuncia['motivo_id'],
+                'motivo_otro' => $denuncia['motivo_otro'],
+                'descripcion' => $denuncia['descripcion'],
+                'denunciado_id' => $id_denunciado,
+                'estado' => 'registrado'
+            ])) {
+                log_message('info', 'Denuncia insertada correctamente con ID: ' . $id_denuncia);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Error al registrar denuncia'
+                ]);
+            }
+        }
+        if ($adjuntos) {
+            foreach ($adjuntos as $adjunto) {
+                $id_adjunto = $this->generateId('adjuntos');
+                if ($this->adjuntosModel->insert([
+                    'id' => $id_adjunto,
+                    'denuncia_id' => $id_denuncia,
+                    'file_path' => $adjunto['file_name'],
+                    'file_name' => $adjunto['file_name'],
+                    'file_type' => $adjunto['file_type']
+                ])) {
+                    log_message('info', 'Adjunto insertado correctamente: ' . $adjunto['file_name']);
+                } else {
+                    return $this->response->setJSON([
+                        'success' => false,
+                        'message' => 'Error al registrar adjunto'
+                    ]);
+                }
+            }
+        }
+        if ($this->seguimientoDenunciasModel->insert([
+            'id' => $id_seguimiento,
+            'denuncia_id' => $id_denuncia,
+            'estado' => 'registrado',
+            'comentario' => 'Denuncia registrada',
+            'fecha_actualizacion' => date('Y-m-d H:i:s')
+        ])) {
+            log_message('info', 'Seguimiento de denuncia insertado correctamente');
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Error al registrar seguimiento de denuncia'
             ]);
         }
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'Denuncia registrada correctamente',
+            'tracking_code' => $code,
+        ]);
     }
 }
