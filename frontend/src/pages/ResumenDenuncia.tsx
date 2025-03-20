@@ -106,11 +106,11 @@ export const ResumenDenuncia = () => {
 					posteriormente.
 				</p>
 			</div>
-			<div className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-lg shadow-sm">
+			<div className="bg-blue-50 border-l-4 border-(--primary-color) p-5 rounded-r-lg shadow-sm">
 				<div className="flex">
 					<div className="flex-shrink-0">
 						<svg
-							className="h-5 w-5 text-blue-400"
+							className="h-5 w-5 text-(--primary-color)"
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 20 20"
 							fill="currentColor"
