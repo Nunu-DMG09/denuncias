@@ -19,7 +19,8 @@ class SeguimientoDenunciasModel extends Model
         'denuncia_id',
         'estado',
         'comentario',
-        'fecha_actualizacion'
+        'fecha_actualizacion',
+        'dni_admin'
     ];
     // Dates
     protected $useTimestamps = false;
