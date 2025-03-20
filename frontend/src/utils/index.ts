@@ -1,5 +1,6 @@
 // Para validar tamaño de archivos y tipos de archivos permitidos
-import { Adjunto } from "../types";
+import { toast } from "sonner";
+import { Adjunto, FormData } from "../types";
 export const MB = 1048576;
 export const MAX_SIZE_BYTES = MB * 20;
 export const MAX_FILES = 5;
@@ -64,11 +65,118 @@ export const validateFileAddition = (
 		isValid: !isOverSizeLimit && !isOverFileLimit,
 		isOverSizeLimit,
 		isOverFileLimit,
-        isInvalidType: false,
+		isInvalidType: false,
 		currentSizeMB: bytesToMB(currentSize),
 		newFileSizeMB: bytesToMB(newFileSize),
 		totalSizeMB: bytesToMB(totalSize),
 		remainingSizeMB: 20 - bytesToMB(totalSize),
-        fileType: newFile.file.type,
+		fileType: newFile.file.type,
 	};
+};
+
+// Para validaciones entre páginas
+export const TOTAL_PAGES = 4;
+
+export const SUBMIT_PAGE = 3;
+
+export const validatePage = (pageNumber: number, formData : FormData): boolean => {
+	switch (pageNumber) {
+		case 1:
+			if (!formData.motivo_id) {
+				toast.error("Debes seleccionar un motivo de denuncia");
+				return false;
+			}
+			if (formData.motivo_id === "otro" && !formData.motivo_otro) {
+				toast.error("Debes especificar el motivo de la denuncia");
+				return false;
+			}
+			if (
+				!formData.descripcion ||
+				formData.descripcion.trim().length < 10
+			) {
+				toast.error("La descripción debe tener al menos N caracteres");
+				return false;
+			}
+			return true;
+		case 2:
+			if (!formData.denunciado.tipo_documento) {
+				toast.error("Debes seleccionar un tipo de documento");
+				return false;
+			}
+			if (!formData.denunciado.numero_documento) {
+				toast.error("Debes ingresar un número de documento");
+				return false;
+			}
+			if (
+				formData.denunciado.tipo_documento === "carnet-extranjeria" &&
+				!formData.denunciado.nombre
+			) {
+				toast.error("Debes ingresar el nombre del denunciado");
+				return false;
+			}
+			if (!formData.denunciado.cargo) {
+				toast.error("Debes ingresar el cargo del denunciado");
+				return false;
+			}
+			return true;
+		case 3:
+			if (!formData.es_anonimo) {
+				if (!formData.denunciante?.tipo_documento) {
+					toast.error("Debes seleccionar un tipo de documento");
+					return false;
+				}
+				if (!formData.denunciante?.numero_documento) {
+					toast.error("Debes ingresar un número de documento");
+					return false;
+				}
+				if (
+					formData.denunciado?.tipo_documento ===
+						"carjet-extranjeria" &&
+					!formData.denunciante?.nombres
+				) {
+					toast.error("Debes ingresar tu nombre completo");
+					return false;
+				}
+				if (
+					!formData.denunciante?.email &&
+					!formData.denunciante?.telefono
+				) {
+					toast.error("Debes ingresar al menos un medio de contacto");
+					return false;
+				}
+				if (!formData.denunciante?.email) {
+					toast.error("Debes ingresar un correo electrónico");
+					return false;
+				}
+				if (!formData.denunciante?.telefono) {
+					toast.error("Debes ingresar un número de teléfono");
+					return false;
+				}
+				if (
+					formData.denunciante?.email &&
+					!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+						formData.denunciante.email
+					)
+				) {
+					toast.error(
+						"El email ingresado no tiene un formato válido"
+					);
+					return false;
+				}
+				if (
+					formData.denunciante?.telefono &&
+					!/^\d{9}$/.test(formData.denunciante.telefono)
+				) {
+					toast.error("El teléfono debe tener 9 dígitos");
+					return false;
+				}
+				if (!formData.denunciante?.sexo) {
+					toast.error("Debes seleccionar un género");
+					return false;
+				}
+			}
+			return true;
+		default:
+			return true;
+	}
 };
