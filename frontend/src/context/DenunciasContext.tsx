@@ -201,7 +201,6 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		setError(null);
 		try {
 			const submissionData = prepareDataForSubmission();
-			console.log("Enviando al backend:", JSON.stringify(submissionData, null, 2));
 			const response = await api.post("/create", submissionData);
 			if (response.data?.tracking_code) {
 				setFormData((prev) => ({
@@ -222,12 +221,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 				});
 			}
 			toast.success("Denuncia enviada correctamente");
-			if (response.data?.tracking_code) {
-				toast.success(
-					`Tu código de seguimiento es: ${response.data.tracking_code}`
-				);
-			}
-			return true
+			return true;
 		} catch (err: unknown) {
 			const axiosError = err as AxiosError<{ message?: string }>;
 			const errorMsg =
@@ -236,7 +230,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 			setError(errorMsg);
 			toast.error(errorMsg);
 			console.error("Error al enviar formulario:", err);
-			return false
+			return false;
 		} finally {
 			setIsLoading(false);
 		}
