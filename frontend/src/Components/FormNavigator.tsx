@@ -1,23 +1,114 @@
 import { useFormContext } from "../hooks/useFormContext";
 import { Loader } from "./Loader";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 
 export const FormNavigator = () => {
-	const { currentPage, nextPage, prevPage, submitForm, isLoading } =
+	const { currentPage, nextPage, prevPage, submitForm, isLoading, formData } =
 		useFormContext();
 
 	const TOTAL_PAGES = 4;
 
 	const SUBMIT_PAGE = 3;
 
+	const validatePage = (pageNumber: number): boolean => {
+		switch (pageNumber) {
+			case 1:
+				if (!formData.motivo_id) {
+					toast.error("Debes seleccionar un motivo de denuncia");
+					return false;
+				}
+				if (formData.motivo_id === "otro" && !formData.motivo_otro) {
+					toast.error("Debes especificar el motivo de la denuncia");
+					return false;
+				}
+				if (
+					!formData.descripcion ||
+					formData.descripcion.trim().length < 10
+				) {
+					toast.error(
+						"La descripción debe tener al menos N caracteres"
+					);
+					return false;
+				}
+				return true;
+			case 2:
+				if (!formData.denunciado.tipo_documento) {
+					toast.error("Debes seleccionar un tipo de documento");
+					return false;
+				}
+				if (!formData.denunciado.numero_documento) {
+					toast.error("Debes ingresar un número de documento");
+					return false;
+				}
+				if (
+					formData.denunciado.tipo_documento ===
+						"carnet-extranjeria" &&
+					!formData.denunciado.nombre
+				) {
+					toast.error("Debes ingresar el nombre del denunciado");
+					return false;
+				}
+				if (!formData.denunciado.cargo) {
+					toast.error("Debes ingresar el cargo del denunciado");
+					return false;
+				}
+				return true;
+			case 3:
+				if (!formData.es_anonimo) {
+					if (!formData.denunciante?.tipo_documento) {
+						toast.error("Debes seleccionar un tipo de documento");
+						return false;
+					}
+					if (!formData.denunciante?.numero_documento) {
+						toast.error("Debes ingresar un número de documento");
+						return false;
+					}
+					if (formData.denunciado?.tipo_documento === "carjet-extranjeria" && !formData.denunciante?.nombres) {
+						toast.error("Debes ingresar tu nombre completo");
+						return false;
+					}
+					if (!formData.denunciante?.email && !formData.denunciante?.telefono) {
+						toast.error("Debes ingresar al menos un medio de contacto");
+						return false;
+					}
+					if (!formData.denunciante?.email){
+						toast.error("Debes ingresar un correo electrónico");
+						return false;
+					}
+					if (!formData.denunciante?.telefono){
+						toast.error("Debes ingresar un número de teléfono");
+						return false;
+					}
+					if (formData.denunciante?.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.denunciante.email)) {
+                        toast.error("El email ingresado no tiene un formato válido");
+                        return false;
+                    }
+					if (formData.denunciante?.telefono && !/^\d{9}$/.test(formData.denunciante.telefono)) {
+                        toast.error("El teléfono debe tener 9 dígitos");
+                        return false;
+                    }
+					if(!formData.denunciante?.sexo){
+						toast.error("Debes seleccionar un género");
+						return false;
+					}
+				}
+				return true
+			default:
+				return true;
+		}
+	};
+
 	const handleNext = () => {
-		// validaciones despues
-		nextPage();
+		if (validatePage(currentPage)){
+			nextPage();
+		}
 	};
 	const handleSubmit = async () => {
-		const success: boolean = await submitForm();
-		if (success) {
-			nextPage();
+		if (validatePage(currentPage)){
+			const success: boolean = await submitForm();
+			if (success) {
+				nextPage();
+			}
 		}
 	};
 	return (
