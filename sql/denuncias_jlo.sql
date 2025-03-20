@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-03-2025 a las 17:36:19
+-- Tiempo de generación: 20-03-2025 a las 02:16:58
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `denuncias jleon`
+-- Base de datos: `denuncias jlo`
 --
 
 -- --------------------------------------------------------
@@ -60,7 +60,7 @@ CREATE TABLE `administradores` (
   `password` varchar(255) NOT NULL,
   `categoria` varchar(100) NOT NULL,
   `estado` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -198,7 +198,8 @@ CREATE TABLE `seguimiento_denuncias` (
   `denuncia_id` varchar(8) NOT NULL,
   `estado` varchar(100) NOT NULL,
   `comentario` text DEFAULT NULL,
-  `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp()
+  `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `dni_admin` varchar(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -263,7 +264,8 @@ ALTER TABLE `motivos`
 --
 ALTER TABLE `seguimiento_denuncias`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_seguimiento_denuncia` (`denuncia_id`);
+  ADD KEY `fk_seguimiento_denuncia` (`denuncia_id`),
+  ADD KEY `fk_seguimiento_admin` (`dni_admin`);
 
 --
 -- Restricciones para tablas volcadas
@@ -287,6 +289,7 @@ ALTER TABLE `denuncias`
 -- Filtros para la tabla `seguimiento_denuncias`
 --
 ALTER TABLE `seguimiento_denuncias`
+  ADD CONSTRAINT `fk_seguimiento_admin` FOREIGN KEY (`dni_admin`) REFERENCES `administradores` (`dni_admin`),
   ADD CONSTRAINT `fk_seguimiento_denuncia` FOREIGN KEY (`denuncia_id`) REFERENCES `denuncias` (`id`) ON DELETE CASCADE;
 COMMIT;
 
