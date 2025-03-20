@@ -27,7 +27,7 @@ export const ResumenDenuncia = () => {
 				</p>
 				<div className="flex flex-col md:flex-row overflow-hidden rounded-lg shadow-sm border border-gray-200">
 					<div className="bg-blue-50 flex-grow p-4 flex items-center justify-center">
-						<p className="text-2xl font-mono font-semibold text-(--primary-color)">
+						<p className="text-[1.2rem] md:text-2xl font-mono font-semibold text-(--primary-color)">
 							{trackingCode}
 						</p>
 					</div>
