@@ -22,7 +22,9 @@ export const FormProgressBar = () => {
 			</div>
 			<div className="w-full bg-gray-200 h-2 rounded-full">
 				<div
-					className="bg-(--primary-color) h-2 rounded-full transition-all duration-300"
+					className={`${
+						currentPage === 4 ? 'bg-green-500' : 'bg-(--primary-color)'
+					} h-2 rounded-full transition-all duration-300`}
 					style={{ width: `${(currentPage / 4) * 100}%` }}
 				></div>
 			</div>
