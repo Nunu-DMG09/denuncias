@@ -51,14 +51,14 @@ export const FormNavigator = () => {
 					{isLoading ? <Loader isBtn={true} /> : "Enviar Denuncia"}
 				</button>
 			) : (
-				<div className="w-1/2 flex justify-center items-center my-0 mx-auto">
+				<div className="w-full md:w-1/2 flex justify-center items-center my-0 mx-auto">
 					<button
 						type="button"
 						onClick={() => (window.location.href = "/")}
-						className={`w-full px-4 md:px-8 py-4 border-4 border-solid border-(--secondary-color) text-(--secondary-color) rounded-md text-center hover:bg-(--primary-color) hover:text-white hover:border-(--primary-color) cursor-pointer text-lg hover:scale-105 transition-all ease-out duration-300`}
+						className={`w-full py-4 border-4 border-solid border-(--secondary-color) text-(--secondary-color) rounded-md text-center hover:bg-(--primary-color) hover:text-white hover:border-(--primary-color) cursor-pointer hover:scale-105 transition-all ease-out duration-300`}
 					>
-						<span className="flex items-center justify-center text-2xl font-semibold text-center h-full w-full">
-							<i className="fa-duotone fa-solid fa-file-pdf me-5"></i>
+						<span className="flex items-center justify-center text-xl font-semibold text-center h-full w-full">
+							<i className="fa-duotone fa-solid fa-file-pdf me-4 text-4xl"></i>
 							Descargar PDF
 						</span>
 					</button>
