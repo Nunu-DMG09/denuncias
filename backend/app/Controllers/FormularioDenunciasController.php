@@ -65,7 +65,6 @@ class FormularioDenunciasController extends ResourceController
     function create()
     {
         $formData = $this->request->getJSON(true);
-        log_message('info', 'Formulario de denuncia recibido: ' . json_encode($formData));
         $denunciante = $formData['denunciante'];
         $denunciado = $formData['denunciado'];
         $denuncia = $formData['denuncia'];
@@ -86,12 +85,6 @@ class FormularioDenunciasController extends ResourceController
                 'tipo_documento' => $denunciante['tipo_documento'],
                 'sexo' => $denunciante['sexo']
             ])) {
-                log_message('info', 'Denunciante insertado correctamente con ID: ' . $id_denunciante);
-            } else {
-                return $this->response->setJSON([
-                    'success' => false,
-                    'message' => 'Error al registrar denunciante'
-                ]);
             }
         }
         // Insert denunciado
@@ -105,12 +98,6 @@ class FormularioDenunciasController extends ResourceController
                 'razon_social' => $denunciado['razon_social'],
                 'cargo' => $denunciado['cargo']
             ])) {
-                log_message('info', 'Denunciado insertado correctamente con ID: ' . $id_denunciado);
-            } else {
-                return $this->response->setJSON([
-                    'success' => false,
-                    'message' => 'Error al registrar denunciado'
-                ]);
             }
         }
         // Insert denuncia
@@ -126,12 +113,6 @@ class FormularioDenunciasController extends ResourceController
                 'denunciado_id' => $id_denunciado,
                 'estado' => 'registrado'
             ])) {
-                log_message('info', 'Denuncia insertada correctamente con ID: ' . $id_denuncia);
-            } else {
-                return $this->response->setJSON([
-                    'success' => false,
-                    'message' => 'Error al registrar denuncia'
-                ]);
             }
         }
         if ($adjuntos) {
@@ -144,12 +125,6 @@ class FormularioDenunciasController extends ResourceController
                     'file_name' => $adjunto['file_name'],
                     'file_type' => $adjunto['file_type']
                 ])) {
-                    log_message('info', 'Adjunto insertado correctamente: ' . $adjunto['file_name']);
-                } else {
-                    return $this->response->setJSON([
-                        'success' => false,
-                        'message' => 'Error al registrar adjunto'
-                    ]);
                 }
             }
         }
@@ -160,12 +135,6 @@ class FormularioDenunciasController extends ResourceController
             'comentario' => 'Denuncia registrada',
             'fecha_actualizacion' => date('Y-m-d H:i:s')
         ])) {
-            log_message('info', 'Seguimiento de denuncia insertado correctamente');
-        } else {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Error al registrar seguimiento de denuncia'
-            ]);
         }
         return $this->response->setJSON([
             'success' => true,

@@ -12,8 +12,6 @@ class ConsultaApi extends ResourceController
     public function buscarDNI($dni)
     {
         $response = $this->consultarApi($this->apiUrlDNI, $dni);
-        log_message('debug', 'Respuesta API DNI: ' . json_encode($response));
-
         if (isset($response['data'])) {
             $result = [
                 'success' => true,
