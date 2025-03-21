@@ -3,6 +3,10 @@ import autoTable from "jspdf-autotable";
 import { FormData, Motivo } from "../types";
 import { formatDate } from "../utils";
 
+const PRIMARY_COLOR = '#2E8acb';
+const SECONDARY_COLOR = '#002F59'
+const BLACK = '#000000';
+
 export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 	const doc = new jsPDF();
 	const pageWidth = doc.internal.pageSize.getWidth();
@@ -13,7 +17,7 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 	doc.setFont("helvetica", "bold");
 	doc.setFontSize(16);
 
-	doc.setTextColor(24, 58, 110);
+	doc.setTextColor(BLACK);
 	doc.text("SISTEMA DE DENUNCIAS DE CORRUPCIÓN", pageWidth / 2, 20, {
 		align: "center",
 	});
@@ -31,22 +35,22 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 		align: "right",
 	});
 
-	doc.setDrawColor(24, 50, 110);
+	doc.setDrawColor(SECONDARY_COLOR);
 	doc.setLineWidth(0.5);
 	doc.line(14, 45, pageWidth - 14, 45);
 
 	doc.setFont("helvetica", "bold");
 	doc.setFontSize(14);
-	doc.setTextColor(24, 58, 110);
+	doc.setTextColor(BLACK);
 	doc.text("CÓDIGO DE SEGUIMIENTO", 14, 55);
 
 	doc.setFont("helvetica", "bold");
-	doc.setTextColor(231, 76, 60);
+	doc.setTextColor(PRIMARY_COLOR);
 	doc.text(formData.tracking_code || "No disponible", 80, 55);
 
 	doc.setFont("helvetica", "bold");
 	doc.setFontSize(12);
-	doc.setTextColor(24, 58, 110);
+	doc.setTextColor(BLACK);
 	doc.text("INFORMACIÓN DE LA DENUNCIA", 14, 70);
 
 	const motivoSeleccionado = motivos.find((m) => m.id === formData.motivo_id);
@@ -75,14 +79,14 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 		body: denunciaDetails,
 		theme: "striped",
 		headStyles: {
-			fillColor: [24, 58, 110],
+			fillColor: PRIMARY_COLOR,
 			textColor: 255,
 		},
 	});
 
 	doc.setFont("helvetica", "bold");
 	doc.setFontSize(12);
-	doc.setTextColor(24, 58, 110);
+	doc.setTextColor(BLACK);
 	doc.text("DESCRIPCIÓN DE LOS HECHOS", 14, doc.lastAutoTable.finalY + 15);
 
 	doc.setFont("helvetica", "normal");
@@ -100,7 +104,7 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 
 	doc.setFont("helvetica", "bold");
 	doc.setFontSize(12);
-	doc.setTextColor(24, 58, 110);
+	doc.setTextColor(BLACK);
 	doc.text("DATOS DEL DENUNCIADO", 14, yPosition);
 
 	const denunciadoDetails = [
@@ -128,7 +132,7 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 		body: denunciadoDetails,
 		theme: "striped",
 		headStyles: {
-			fillColor: [24, 58, 110],
+			fillColor: PRIMARY_COLOR,
 			textColor: 255,
 		},
 	});
@@ -138,7 +142,7 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 
 		doc.setFont("helvetica", "bold");
 		doc.setFontSize(12);
-		doc.setTextColor(24, 58, 110);
+		doc.setTextColor(BLACK);
 		doc.text("DATOS DEL DENUNCIANTE", 14, yPosition);
 
 		const denuncianteDetails = [
@@ -156,7 +160,7 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 			body: denuncianteDetails,
 			theme: "striped",
 			headStyles: {
-				fillColor: [24, 58, 110],
+				fillColor: SECONDARY_COLOR,
 				textColor: 255,
 			},
 		});
