@@ -3,7 +3,6 @@ import autoTable from "jspdf-autotable";
 import { FormData, Motivo } from "../types";
 import { formatDate } from "../utils";
 
-
 export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 	const doc = new jsPDF();
 	const pageWidth = doc.internal.pageSize.getWidth();
@@ -28,7 +27,9 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 	doc.setFont("helvetica", "normal");
 	doc.setFontSize(12);
 	doc.setTextColor(100);
-	doc.text(`Fecha de emisión: ${formattedDate}`, pageWidth - 20, 40, { align: 'right' });
+	doc.text(`Fecha de emisión: ${formattedDate}`, pageWidth - 20, 40, {
+		align: "right",
+	});
 
 	doc.setDrawColor(24, 50, 110);
 	doc.setLineWidth(0.5);
@@ -48,6 +49,12 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 	doc.setTextColor(24, 58, 110);
 	doc.text("INFORMACIÓN DE LA DENUNCIA", 14, 70);
 
+	const motivoSeleccionado = motivos.find((m) => m.id === formData.motivo_id);
+	const nombreMotivo = motivoSeleccionado
+		? motivoSeleccionado.nombre
+		: formData.motivo_id === "mo_otros"
+		? "Otros"
+		: "Desconocido";
 	const denunciaDetails = [
 		["Fecha del incidente", formData.fecha_incidente || "No especfícada"],
 		[
@@ -56,11 +63,9 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 		],
 		[
 			"Motivo de la denuncia",
-			formData.motivo_otro
-				? "Otro"
-				: formData.motivo_id
-				? motivos.find((m) => m.id === formData.motivo_id)?.nombre || "No disponible"
-				: "No disponible",
+			formData.motivo_id === "mo_otros"
+				? `Otros: ${formData.motivo_otro}`
+				: nombreMotivo,
 		],
 	];
 
@@ -111,7 +116,7 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 	];
 
 	if (formData.denunciado.tipo_documento === "ruc") {
-		denunciaDetails.push([
+		denunciadoDetails.push([
 			"Representante legal",
 			formData.denunciado.representante_legal || "No disponible",
 		]);
@@ -177,5 +182,5 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 		{ align: "center" }
 	);
 
-    doc.save(`Denuncia-${formData.tracking_code}.pdf`);
+	doc.save(`Denuncia-${formData.tracking_code}.pdf`);
 };
