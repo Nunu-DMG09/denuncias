@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useFormContext } from "./useFormContext";
-
+import { getDNIData, getRUCData } from "../services/apisDocs";
 
 
 export const useDenunciante = () => {
@@ -60,18 +60,8 @@ export const useDenunciante = () => {
 				setIsLoading(true);
 				setError(null);
 				try {
-					const response = await fetch(
-						`http://localhost/denuncias/backend/public/api/dni/${numeroDocumento}`
-					);
-					if (!response.ok) {
-						throw new Error(
-							`Error: ${response.status} - ${response.statusText}`
-						);
-					}
-					const data = await response.json();
-					if (data && data.success && data.data) {
-						const personaData = data.data;
-						const nombre = `${personaData.apellido_paterno} ${personaData.apellido_materno}, ${personaData.nombres}`;
+					const nombre = await getDNIData(numeroDocumento);
+					if (nombre) {
 						setNombre(nombre);
 					} else {
 						const errMsg = "No se pudo obtener la información del DNI"
@@ -103,18 +93,8 @@ export const useDenunciante = () => {
 				setIsLoading(true);
 				setError(null);
 				try {
-					const response = await fetch(
-						`http://localhost/denuncias/backend/public/api/ruc/${numeroDocumento}`
-					);
-					if (!response.ok) {
-						throw new Error(
-							`Error: ${response.status} - ${response.statusText}`
-						);
-					}
-					const data = await response.json();
-					if (data && data.success && data.data) {
-						const empresaData = data.data;
-						const nombre = empresaData.nombre_o_razon_social;
+					const nombre = await getRUCData(numeroDocumento);
+					if (nombre) {
 						setNombre(nombre);
 					} else {
 						const errMsg = "No se pudo obtener la información del RUC"
