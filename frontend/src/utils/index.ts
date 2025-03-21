@@ -86,6 +86,10 @@ export const validatePage = (pageNumber: number, formData : FormData): boolean =
 				toast.error("Debes seleccionar una fecha de incidente");
 				return false;
 			}
+			if (formData.fecha_incidente > new Date().toISOString().split("T")[0]) {
+				toast.error("La fecha de incidente no puede ser mayor a la fecha actual");
+				return false;
+			}
 			if (!formData.motivo_id) {
 				toast.error("Debes seleccionar un motivo de denuncia");
 				return false;
