@@ -110,6 +110,7 @@ class FormularioDenunciasController extends ResourceController
                 'motivo_id' => $denuncia['motivo_id'],
                 'motivo_otro' => $denuncia['motivo_otro'],
                 'descripcion' => $denuncia['descripcion'],
+                'fecha_incidente' => $denuncia['fecha_incidente'],
                 'denunciado_id' => $id_denunciado,
                 'estado' => 'registrado'
             ])) {

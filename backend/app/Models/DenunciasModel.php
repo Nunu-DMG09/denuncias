@@ -22,6 +22,7 @@ class DenunciasModel extends Model
         'motivo_id',
         'motivo_otro',
         'descripcion',
+        'fecha_incidente',
         'denunciado_id',
         'fecha_registro',
         'estado',
