@@ -78,27 +78,25 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		key: K,
 		value: FormData[K]
 	) => {
-		setFormData((prev) => ({
-			...prev,
-			[key]: value,
-		}));
-		if (key === "es_anonimo" && value === true) {
+		if (key === "es_anonimo") {
 			setFormData((prev) => ({
 				...prev,
-				denunciante: null,
+				[key]: value,
+				denunciante: value === true
+					? null
+					: {
+						nombres: "",
+						email: "",
+						telefono: "",
+						tipo_documento: "",
+						numero_documento: "",
+						sexo: "",
+					},
 			}));
-		}
-		if (key === "es_anonimo" && value === false) {
+		} else {
 			setFormData((prev) => ({
 				...prev,
-				denunciante: {
-					nombres: "",
-					email: "",
-					telefono: "",
-					tipo_documento: "",
-					numero_documento: "",
-					sexo: "",
-				},
+				[key]: value,
 			}));
 		}
 	};
