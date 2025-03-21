@@ -1,55 +1,22 @@
 import { useFormContext } from "../hooks/useFormContext";
 import { Loader } from "./Loader";
-import { validatePage, TOTAL_PAGES, SUBMIT_PAGE } from "../utils";
-import { generarDenunciaPDF } from "../services/pdfService";
-import { toast } from "sonner";
-import { useState } from "react";
+import { TOTAL_PAGES, SUBMIT_PAGE } from "../utils";
+import { useNavigation } from "../hooks/useNavigation";
 
 export const FormNavigator = () => {
 	const {
 		currentPage,
-		nextPage,
 		prevPage,
-		submitForm,
 		isLoading,
-		formData,
-		motivos,
 	} = useFormContext();
-	const handleNext = () => {
-		if (validatePage(currentPage, formData)) {
-			nextPage();
-		}
-	};
-	const handleSubmit = async () => {
-		if (validatePage(currentPage, formData)) {
-			const success: boolean = await submitForm();
-			if (success) {
-				nextPage();
-			}
-		}
-	};
-	const [isDownloading, setIsDownloading] = useState(false);
 
-	const handleDownload = () => {
-		setIsDownloading(true);
-
-		try {
-			generarDenunciaPDF(formData, motivos);
-
-			toast.success(
-				"PDF generado correctamente. Redirigiendo a la página principal..."
-			);
-
-			setTimeout(() => {
-				window.location.href = "/";
-			}, 3000);
-		} catch (error) {
-			console.error("Error al generar PDF:", error);
-			toast.error("Ocurrió un error al generar PDF");
-			setIsDownloading(false);
-		}
-	};
-
+	const {
+		handleNext,
+		handleDownload,
+		isDownloading,
+		handleSubmit,
+	} = useNavigation();
+	
 	return (
 		<div className="flex justify-end mt-8 w-full">
 			{currentPage > 1 && currentPage !== TOTAL_PAGES && (
