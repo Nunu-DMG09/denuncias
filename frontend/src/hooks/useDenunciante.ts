@@ -52,6 +52,9 @@ export const useDenunciante = () => {
 		if (tipoDocumento === "dni" && numeroDocumento.length !== 8) {
 			setNombre("");
 		}
+		if (tipoDocumento === "dni" && numeroDocumento.length === 8 && nombre) {
+            return
+        }
 		if (tipoDocumento === "dni" && numeroDocumento.length === 8) {
 			const fetchDniData = async () => {
 				setIsLoading(true);
@@ -88,6 +91,9 @@ export const useDenunciante = () => {
 		}
 		if (tipoDocumento === "ruc" && numeroDocumento.length !== 11) {
 			setNombre("");
+		}
+		if (tipoDocumento === "ruc" && numeroDocumento.length === 11 && nombre) {
+			return
 		}
 		if (tipoDocumento === 'ruc' && numeroDocumento.length === 11) {
 			const fetchRucData = async () => {
