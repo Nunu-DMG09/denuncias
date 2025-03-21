@@ -82,6 +82,10 @@ export const SUBMIT_PAGE = 3;
 export const validatePage = (pageNumber: number, formData : FormData): boolean => {
 	switch (pageNumber) {
 		case 1:
+			if (!formData.fecha_incidente) {
+				toast.error("Debes seleccionar una fecha de incidente");
+				return false;
+			}
 			if (!formData.motivo_id) {
 				toast.error("Debes seleccionar un motivo de denuncia");
 				return false;

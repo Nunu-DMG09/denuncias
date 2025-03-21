@@ -58,6 +58,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		motivo_id: "",
 		motivo_otro: "",
 		descripcion: "",
+		fecha_incidente: null,
 		adjuntos: [],
 	});
 
@@ -173,6 +174,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 				motivo_id: formData.motivo_id,
 				motivo_otro: formData.motivo_otro || null,
 				descripcion: formData.descripcion,
+				fecha_incidente: formData.fecha_incidente,
 				fecha_registro: new Date().toISOString().split("T")[0],
 			},
 			denunciante: !formData.es_anonimo

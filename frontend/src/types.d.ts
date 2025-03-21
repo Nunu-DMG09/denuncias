@@ -28,6 +28,7 @@ export interface FormData {
     motivo_id: string;
     motivo_otro: string;
     descripcion: string;
+    fecha_incidente: string | null;
     adjuntos: Adjunto[];
     tracking_code?: string;
 }
