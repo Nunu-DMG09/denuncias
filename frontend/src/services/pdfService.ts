@@ -1,9 +1,9 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { FormData } from "../types";
+import { FormData, Motivo } from "../types";
 
 
-export const generarDenunciaPDF = (formData: FormData, motivos) => {
+export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 	const doc = new jsPDF();
 	const pageWidth = doc.internal.pageSize.getWidth();
 
@@ -58,7 +58,7 @@ export const generarDenunciaPDF = (formData: FormData, motivos) => {
 			formData.motivo_otro
 				? "Otro"
 				: formData.motivo_id
-				? motivos.find((m) => m.id === formData.motivo_id)?.nombre
+				? motivos.find((m) => m.id === formData.motivo_id)?.nombre || "No disponible"
 				: "No disponible",
 		],
 	];

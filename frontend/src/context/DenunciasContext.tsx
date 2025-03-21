@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import api from "../utils/apiAxios";
 import { AxiosError } from "axios";
 import { validateFileAddition, ALLOWED_EXTENSIONS } from "../utils";
-import type { Denunciado, Denunciante, FormData } from "../types.d";
+import type { Denunciado, Denunciante, FormData, Motivo } from "../types.d";
 
 interface FormContextType {
 	currentPage: number;
@@ -34,9 +34,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 	const [currentPage, setCurrentPage] = useState(1);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [motivos, setMotivos] = useState<
-		Array<{ id: string; nombre: string; descripcion: string }>
-	>([]);
+	const [motivos, setMotivos] = useState<Motivo[]>([]);
 	const [formData, setFormData] = useState<FormData>({
 		es_anonimo: false,
 		denunciante: {
@@ -82,16 +80,17 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 			setFormData((prev) => ({
 				...prev,
 				[key]: value,
-				denunciante: value === true
-					? null
-					: {
-						nombres: "",
-						email: "",
-						telefono: "",
-						tipo_documento: "",
-						numero_documento: "",
-						sexo: "",
-					},
+				denunciante:
+					value === true
+						? null
+						: {
+								nombres: "",
+								email: "",
+								telefono: "",
+								tipo_documento: "",
+								numero_documento: "",
+								sexo: "",
+						  },
 			}));
 		} else {
 			setFormData((prev) => ({
