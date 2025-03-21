@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-03-2025 a las 02:16:58
+-- Tiempo de generación: 21-03-2025 a las 17:04:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -132,6 +132,7 @@ CREATE TABLE `denuncias` (
   `motivo_id` varchar(8) NOT NULL,
   `motivo_otro` varchar(255) DEFAULT NULL,
   `descripcion` text NOT NULL,
+  `fecha_incidente` date DEFAULT NULL,
   `denunciado_id` varchar(8) NOT NULL,
   `fecha_registro` datetime NOT NULL DEFAULT current_timestamp(),
   `estado` varchar(50) NOT NULL DEFAULT 'registrada',
@@ -173,7 +174,8 @@ INSERT INTO `motivos` (`id`, `nombre`, `descripcion`) VALUES
 ('mo58aa1e', 'Obstrucción al acceso a la información pública ', 'Cuando el servidor se rehúsa a entregar información pública solicitada por los conductos regulares que no sea reservada, confidencial o secreta, de acuerdo con las normas vigentes. '),
 ('mo58aa1f', 'Abuso de autoridad ', 'Cuando el servidor comete u ordena un acto arbitrario alegando el cumplimiento de sus funciones.'),
 ('mod4b288', 'Favorecimiento indebido ', 'Cuando el servidor utiliza su cargo para favorecer irregularmente a alguna persona por un interés particular o por un interés ajeno al cumplimiento de sus funciones.'),
-('mod4b28c', 'Apropiación o uso indebido de recursos, bienes o información del Estado ', 'Cuando el servidor se adueña o utiliza de manera indebida dinero, recursos (incluyendo el tiempo asignado a la función pública), bienes o información del Estado. ');
+('mod4b28c', 'Apropiación o uso indebido de recursos, bienes o información del Estado ', 'Cuando el servidor se adueña o utiliza de manera indebida dinero, recursos (incluyendo el tiempo asignado a la función pública), bienes o información del Estado. '),
+('mo_otros', 'Otros', 'Cualquier acto contrario a la Ley del Código de Ética de la Función Pública o conducta indebida no contemplada en las categorías anteriores, incluyendo irregularidades administrativas, conflictos de interés no declarados, u otros actos que comprometan la integridad de la función pública.');
 
 --
 -- Disparadores `motivos`
