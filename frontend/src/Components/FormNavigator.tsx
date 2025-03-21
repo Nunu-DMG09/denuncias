@@ -92,9 +92,6 @@ export const FormNavigator = () => {
 							{isDownloading ? (
 								<>
 									<Loader isBtn={true} />
-									<span className="ml-2">
-										Generando PDF...
-									</span>
 								</>
 							) : (
 								<>

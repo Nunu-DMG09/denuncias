@@ -3,13 +3,26 @@ import autoTable from "jspdf-autotable";
 import { FormData, Motivo } from "../types";
 import { formatDate } from "../utils";
 
-const PRIMARY_COLOR = '#2E8acb';
-const SECONDARY_COLOR = '#002F59'
-const BLACK = '#000000';
+const PRIMARY_COLOR = "#2E8acb";
+const SECONDARY_COLOR = "#002F59";
+const BLACK = "#000000";
 
 export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 	const doc = new jsPDF();
 	const pageWidth = doc.internal.pageSize.getWidth();
+
+	try {
+		const logoPath = "/logo.jpeg";
+
+		const logoWidth = 16;
+		const logoHeight = 20;
+		const logoX = 10;
+		const logoY = 5;
+
+		doc.addImage(logoPath, "JPEG", logoX, logoY, logoWidth, logoHeight);
+	} catch (error) {
+		console.error("Error al cargar el logo:", error);
+	}
 
 	const today = new Date();
 	const formattedDate = formatDate(today);
@@ -160,7 +173,7 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 			body: denuncianteDetails,
 			theme: "striped",
 			headStyles: {
-				fillColor: SECONDARY_COLOR,
+				fillColor: PRIMARY_COLOR,
 				textColor: 255,
 			},
 		});
