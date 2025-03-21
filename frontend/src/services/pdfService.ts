@@ -121,7 +121,7 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 	doc.text("DATOS DEL DENUNCIADO", 14, yPosition);
 
 	const denunciadoDetails = [
-		["Tipo de documento", formData.denunciado.tipo_documento],
+		["Tipo de documento", formData.denunciado.tipo_documento.toUpperCase()],
 		["Número de documento", formData.denunciado.numero_documento],
 		[
 			"Nombre / Razón Social",
@@ -159,10 +159,20 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 		doc.text("DATOS DEL DENUNCIANTE", 14, yPosition);
 
 		const denuncianteDetails = [
-			["Tipo de documento", formData.denunciante.tipo_documento],
+			[
+				"Tipo de documento",
+				formData.denunciante.tipo_documento.toUpperCase(),
+			],
 			["Número de documento", formData.denunciante.numero_documento],
 			["Nombre completo", formData.denunciante.nombres],
-			["Sexo", formData.denunciante.sexo || "No especificado"],
+			[
+				"Sexo",
+				formData.denunciante.sexo
+					? formData.denunciante.sexo === "M"
+						? "Masculino"
+						: "Femenino"
+					: "No especificado",
+			],
 			["Email", formData.denunciante.email || "No especificado"],
 			["Teléfono", formData.denunciante.telefono || "No especificado"],
 		];
