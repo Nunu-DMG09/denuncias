@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { FormData, Motivo } from "../types";
+import { formatDate } from "../utils";
 
 
 export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
@@ -8,7 +9,7 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 	const pageWidth = doc.internal.pageSize.getWidth();
 
 	const today = new Date();
-	// const formattedDate = formatDate(today);
+	const formattedDate = formatDate(today);
 
 	doc.setFont("helvetica", "bold");
 	doc.setFontSize(16);
@@ -27,7 +28,7 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 	doc.setFont("helvetica", "normal");
 	doc.setFontSize(12);
 	doc.setTextColor(100);
-	// doc.text(`Fecha de emisión: ${formattedDate}`, pageWidth - 20, 40, { align: 'right' });
+	doc.text(`Fecha de emisión: ${formattedDate}`, pageWidth - 20, 40, { align: 'right' });
 
 	doc.setDrawColor(24, 50, 110);
 	doc.setLineWidth(0.5);
