@@ -1,10 +1,10 @@
-import { DatosDenunciado } from "../pages/DatosDenunciado";
-import { DatosDenunciante } from "../pages/DatosDenunciante";
-import { InfoDenuncia } from "../pages/InfoDenuncia";
-import { useFormContext } from "../hooks/useFormContext";
+import { DatosDenunciado } from "../../pages/DatosDenunciado";
+import { DatosDenunciante } from "../../pages/DatosDenunciante";
+import { InfoDenuncia } from "../../pages/InfoDenuncia";
+import { useFormContext } from "../../hooks/useFormContext";
 import { FormNavigator } from "./FormNavigator";
 import { FormProgressBar } from "./FormProgressBar";
-import { ResumenDenuncia } from "../pages/ResumenDenuncia";
+import { ResumenDenuncia } from "../../pages/ResumenDenuncia";
 
 // import ResumenDenuncia from "../components/ResumenDenuncia";
 

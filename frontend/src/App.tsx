@@ -1,5 +1,5 @@
 import "./App.css";
-import FormularioDenuncia from "./Components/FormDenuncia";
+import FormularioDenuncia from "./Components/Form/FormDenuncia";
 import Header from "./Components/Header";
 import { FormProvider } from "./context/DenunciasContext";
 import { Toaster } from "sonner";

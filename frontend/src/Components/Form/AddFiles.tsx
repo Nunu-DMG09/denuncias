@@ -1,11 +1,11 @@
 import { FilesProgressBar } from "./FilesProgressBar";
-import { useFormContext } from "../hooks/useFormContext";
+import { useFormContext } from "../../hooks/useFormContext";
 import {
 	calcTotalSize,
 	MAX_SIZE_BYTES,
 	MAX_FILES,
 	ALLOWED_EXTENSIONS,
-} from "../utils";
+} from "../../utils";
 export const AddFiles = () => {
 	const { formData, addAdjunto, removeAdjunto } = useFormContext();
 	const totalSize = calcTotalSize(formData.adjuntos);
