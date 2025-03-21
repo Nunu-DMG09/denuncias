@@ -42,7 +42,7 @@ export const ReasonsList = () => {
 					</label>
 				</div>
 			))}
-			{formData.motivo_id === "moac37b6" && (
+			{formData.motivo_id === "mo_otros" && (
 				<div className="relative">
 					<input
 						type="text"
