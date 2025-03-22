@@ -1,18 +1,30 @@
 import "./App.css";
 import FormularioDenuncia from "./Components/Form/FormDenuncia";
 import Header from "./Components/Header";
-import { FormProvider } from "./context/DenunciasContext";
 import { Toaster } from "sonner";
-
+import { BrowserRouter, Route, Routes } from "react-router";
+import { Layout } from "./Components/Layout";
 function App() {
 	return (
-		<FormProvider>
-			<div className="min-h-screen">
-				<Header />
-				<FormularioDenuncia />
+		<BrowserRouter>
+			<Routes>
+				<Route path="/" element={<Layout />}>
+					<Route index element={<FormularioDenuncia />}></Route>
+					<Route
+						path="/tracking-denuncia"
+						element={<Header />}
+					></Route>
+				</Route>
 				<Toaster richColors closeButton />
-			</div>
-		</FormProvider>
+			</Routes>
+		</BrowserRouter>
+		// <FormProvider>
+		// 	<div className="min-h-screen">
+		// 		<Header />
+		// 		<FormularioDenuncia />
+		// 		<Toaster richColors closeButton />
+		// 	</div>
+		// </FormProvider>
 	);
 }
 
