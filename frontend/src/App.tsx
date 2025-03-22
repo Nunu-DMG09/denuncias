@@ -18,13 +18,6 @@ function App() {
 			</Routes>
 			<Toaster richColors closeButton />
 		</BrowserRouter>
-		// <FormProvider>
-		// 	<div className="min-h-screen">
-		// 		<Header />
-		// 		<FormularioDenuncia />
-		// 		<Toaster richColors closeButton />
-		// 	</div>
-		// </FormProvider>
 	);
 }
 
