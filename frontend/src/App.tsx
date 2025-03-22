@@ -15,8 +15,8 @@ function App() {
 						element={<Header />}
 					></Route>
 				</Route>
-				<Toaster richColors closeButton />
 			</Routes>
+			<Toaster richColors closeButton />
 		</BrowserRouter>
 		// <FormProvider>
 		// 	<div className="min-h-screen">
