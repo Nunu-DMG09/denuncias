@@ -3,12 +3,6 @@ import FormularioDenuncia from "./Components/Form/FormDenuncia";
 import Header from "./Components/Header";
 import { FormProvider } from "./context/DenunciasContext";
 import { Toaster } from "sonner";
-// interface Step {
-// 	id: number;
-// 	title: string;
-// 	isCompleted: boolean;
-// 	isActive: boolean;
-// }
 
 function App() {
 	return (
