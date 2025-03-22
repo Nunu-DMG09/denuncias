@@ -1,9 +1,9 @@
 import "./App.css";
 import FormularioDenuncia from "./Components/Form/FormDenuncia";
-import Header from "./Components/Header";
 import { Toaster } from "sonner";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { Layout } from "./Components/Layout";
+import { TrackingDenuncia } from "./pages/Tracking/TrackingDenuncia";
 function App() {
 	return (
 		<BrowserRouter>
@@ -12,7 +12,7 @@ function App() {
 					<Route index element={<FormularioDenuncia />}></Route>
 					<Route
 						path="/tracking-denuncia"
-						element={<Header />}
+						element={<TrackingDenuncia />}
 					></Route>
 				</Route>
 			</Routes>
