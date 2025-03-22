@@ -29,14 +29,14 @@ const Header = () => {
 					{isFormPage ? (
 						<Link
 							to="/tracking-denuncia"
-							className="bg-(--secondary-color) text-white font-semibold px-4 py-3 rounded-lg ml-17 cursor-pointer hover:scale-110 hover:bg-(--primary-color) transition-all ease-in-out duration-300"
+							className="bg-(--secondary-color) text-center text-white font-semibold px-4 py-3 rounded-lg ml-17 cursor-pointer hover:scale-110 hover:bg-(--primary-color) transition-all ease-in-out duration-300"
 						>
 							Ver Estado de denuncia
 						</Link>
 					) : (
 						<Link
 							to="/"
-							className="bg-(--secondary-color) text-white font-semibold px-4 py-3 rounded-lg ml-17 cursor-pointer hover:scale-110 hover:bg-(--primary-color) transition-all ease-in-out duration-300"
+							className="bg-(--secondary-color) text-center text-white font-semibold px-4 py-3 rounded-lg ml-17 cursor-pointer hover:scale-110 hover:bg-(--primary-color) transition-all ease-in-out duration-300"
 						>
 							Volver al Formulario
 						</Link>
