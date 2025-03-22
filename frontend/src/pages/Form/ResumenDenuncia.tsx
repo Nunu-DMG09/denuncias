@@ -1,6 +1,6 @@
-import { useFormContext } from "../hooks/useFormContext";
-import * as Icons from '../Components/Icons';
-import { useDenuncias } from "../hooks/useDenuncias";
+import { useFormContext } from "../../hooks/useFormContext";
+import * as Icons from '../../Components/Icons';
+import { useDenuncias } from "../../hooks/useDenuncias";
 
 export const ResumenDenuncia = () => {
 	const { formData } = useFormContext();

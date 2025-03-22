@@ -3,10 +3,10 @@ import { registerLocale } from "react-datepicker";
 import { es } from "date-fns/locale/es";
 registerLocale("es", es);
 import "react-datepicker/dist/react-datepicker.css";
-import { useDenuncias } from "../hooks/useDenuncias";
-import { useFormContext } from "../hooks/useFormContext";
-import { AddFiles } from "../Components/Form/AddFiles";
-import { ReasonsList } from "../Components/Form/ReasonsList";
+import { useDenuncias } from "../../hooks/useDenuncias";
+import { useFormContext } from "../../hooks/useFormContext";
+import { AddFiles } from "../../Components/Form/AddFiles";
+import { ReasonsList } from "../../Components/Form/ReasonsList";
 
 
 export const InfoDenuncia = () => {
