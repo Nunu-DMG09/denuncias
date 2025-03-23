@@ -26,6 +26,30 @@ export const TrackingDenuncia = () => {
 						<i className="fa-solid fa-magnifying-glass"></i>
 					</button>
 				</div>
+				<div className="space-y-6 mt-5">
+					<div className="flex justify-between items-center">
+						<p className="text-base text-gray-800 font-semibold">
+							Estado de la Denuncia
+						</p>
+						<p className="text-base text-gray-800 font-semibold">Fecha</p>
+						<p className="text-base">Comentarios</p>
+					</div>
+					<div className="flex justify-between items-center">
+						<p className="text-base text-gray-800">En Proceso</p>
+						<p className="text-base text-gray-800">10/10/2021</p>
+						<p className="text-base text-gray-800">En Proceso</p>
+					</div>
+					<div className="flex justify-between items-center">
+						<p className="text-base text-gray-800">En Proceso</p>
+						<p className="text-base text-gray-800">En Proceso</p>
+						<p className="text-base text-gray-800">10/10/2021</p>
+					</div>
+					<div className="flex justify-between items-center">
+						<p className="text-base text-gray-800">En Proceso</p>
+						<p className="text-base text-gray-800">En Proceso</p>
+						<p className="text-base text-gray-800">10/10/2021</p>
+					</div>
+				</div>
 			</form>
 		</div>
 	);
