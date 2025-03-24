@@ -19,3 +19,4 @@ $routes->group('form', function ($routes) {
     // $routes->post('query', 'FormularioDenunciasController::query');
     // $routes->options('query', 'FormularioDenunciasController::options');
 });
+$routes->post('upload', 'UploadController::upload');
