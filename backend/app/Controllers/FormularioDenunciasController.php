@@ -290,6 +290,9 @@ class FormularioDenunciasController extends ResourceController
             ->select('estado, comentario, fecha_actualizacion')
             ->orderBy('fecha_actualizacion', 'DESC')
             ->first();
-        return $this->response->setJSON($denuncia);
+        return $this->response->setJSON([
+            'success' => !empty($denuncia),
+            'data' => $denuncia
+        ]);
     }
 }
