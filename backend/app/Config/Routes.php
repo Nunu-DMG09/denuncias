@@ -15,4 +15,6 @@ $routes->group('form', function ($routes) {
     $routes->get('motivos', 'FormularioDenunciasController::index');
     $routes->post('create', 'FormularioDenunciasController::create');
     $routes->options('create', 'FormularioDenunciasController::options');
+    $routes->post('query', 'FormularioDenunciasController::query');
+    $routes->options('query', 'FormularioDenunciasController::options');
 });
