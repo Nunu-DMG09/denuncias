@@ -126,6 +126,35 @@ export const validatePage = (
 				toast.error("La descripción debe tener al menos N caracteres");
 				return false;
 			}
+			if (formData.adjuntos.length > 0) {
+				const invalidFiles = formData.adjuntos.filter(
+					(file) => !isFileTypeAllowed(file.file)
+				);
+				if (invalidFiles.length > 0) {
+					toast.error(
+						`Los siguientes archivos no son válidos: ${invalidFiles
+							.map((file) => file.name)
+							.join(
+								", "
+							)}. Los formatos permitidos son: ${ALLOWED_EXTENSIONS}`
+					);
+					return false;
+				}
+				const totalSize = calcTotalSize(formData.adjuntos);
+				if (totalSize > MAX_SIZE_BYTES) {
+					toast.error(
+						`El tamaño total de los archivos adjuntos excede el límite permitido (20MB). 
+						Por favor, elimina algunos archivos o sube archivos más ligeros.`
+					);
+					return false;
+				}
+				if (formData.adjuntos.length > MAX_FILES) {
+					toast.error(
+						`Solo puedes subir un máximo de ${MAX_FILES} archivos`
+					);
+					return false;
+				}
+			}
 			return true;
 		case 2:
 			if (!formData.denunciado.tipo_documento) {
