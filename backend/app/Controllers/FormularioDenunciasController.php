@@ -285,7 +285,6 @@ class FormularioDenunciasController extends ResourceController
     {
         $denuncia = $this->denunciasModel
             ->where('tracking_code', $code)
-            ->select('id')
             ->first();
         $datadenuncia = $this->seguimientoDenunciasModel
             ->where('denuncia_id', $denuncia['id'])
