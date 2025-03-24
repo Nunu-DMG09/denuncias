@@ -9,6 +9,9 @@ export const TrackingDenuncia = () => {
 		trackingData,
 		trackingLoading,
 		trackingError,
+		getStatusColor,
+		getStatusIcon,
+		formatDate,
 	} = useTracking();
 	return (
 		<div className="container mx-auto px-4 py-6 max-w-3xl">
@@ -67,32 +70,85 @@ export const TrackingDenuncia = () => {
 					{!trackingLoading &&
 						!trackingError &&
 						trackingData &&
-						trackingData.data &&
-						trackingData.data.map((tracking) => (
-							<div
-								key={tracking.fecha_actualizacion}
-								className="bg-white rounded-lg p-4 shadow-md"
-							>
-								<h3 className="text-lg font-semibold text-gray-800">
-									{tracking.estado}
-								</h3>
-								<p className="text-gray-600">
-									{tracking.comentario}
-								</p>
-								<p className="text-sm font-semibold text-gray-500">
-									{tracking.fecha_actualizacion}
-								</p>
+						trackingData.data && (
+							<div className="mt-2 relative">
+								{trackingData.data.length > 0 && (
+									<div className="bg-white rounded-lg p-5 shadow-md mb-8 border-l-4 border-blue-500">
+										<h3 className="text-lg font-bold text-gray-800 mb-2">
+											Información de la denuncia
+										</h3>
+										<div className="flex items-center">
+											<span className="text-sm font-medium bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-full">
+												{trackingCode}
+											</span>
+										</div>
+									</div>
+								)}
+								<div className="relative">
+									{trackingData.data.length > 1 && (
+										<div className="absolute left-8 top-6 bottom-0 w-0.5 bg-gradient-to-b from-(--primary-color) to-gray-200"></div>
+									)}
+									<div className="space-y-8">
+										{trackingData.data.map(
+											(tracking, index) => {
+												const statusColor = getStatusColor(tracking.estado);
+												const statusIcon = getStatusIcon(tracking.estado);
+												const isFirst = index === 0;
+												return (
+													// Contenedor
+													<div
+														key={tracking.fecha_actualizacion}
+														className={`relative pl-16 animate-fadeIn ${isFirst? "animate-pulse": ""}`}
+														style={{animationDelay: `${index * 150}ms`,}}
+													>
+														{/* icono */}
+														<div
+															className={`absolute left-[18px] top-3 w-8 h-8 rounded-full flex items-center justify-center ${statusColor.split(" ")[0]} border-2 ${statusColor.split(" ")[2]}`}
+														>
+															<i className={`fa-solid ${statusIcon} text-sm ${statusColor.split(" ")[1]}`}
+															></i>
+														</div>
+														<div className={`bg-transparent rounded-lg p-5 shadow-md border-l-4 ${statusColor.split(" ")[2]}`}
+														>
+															<div className="flex justify-between items-center mb-3">
+																<h3 className="text-lg font-semibold capitalize">
+																	{tracking.estado.replace(/_/g," ")}
+																</h3>
+																<span
+																	className={`px-3 py-1 rounded-full text-xs font-medium ${statusColor}`}
+																>
+																	{isFirst
+																		? "Actual"
+																		: "Anterior"}
+																</span>
+															</div>
+															<p className="text-gray-600 mb-3 whitespace-pre-line">
+																{tracking.comentario}
+															</p>
+															<div className="flex items-center text-sm text-gray-500">
+																<i className="fa-regular fa-calendar-check mr-2"></i>
+																<time>
+																	{formatDate(tracking.fecha_actualizacion)}
+																</time>
+															</div>
+														</div>
+													</div>
+												);
+											}
+										)}
+									</div>
+								</div>
+								{trackingData.data.length === 0 && (
+									<div className="bg-amber-50 rounded-lg p-4 text-amber-800 flex items-center">
+										<i className="fa-solid fa-exclamation-triangle mr-3"></i>
+										<p>
+											No hay información de seguimiento
+											disponible para esta denuncia.
+										</p>
+									</div>
+								)}
 							</div>
-						))}
-					{trackingData?.data && trackingData.data.length === 0 && (
-						<div className="bg-amber-50 rounded-lg p-4 text-amber-800 flex items-center">
-							<i className="fa-solid fa-exclamation-triangle mr-3"></i>
-							<p>
-								No hay información de seguimiento disponible
-								para esta denuncia.
-							</p>
-						</div>
-					)}
+						)}
 				</div>
 			</form>
 		</div>
