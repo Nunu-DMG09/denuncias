@@ -46,6 +46,7 @@ export const useTracking = () => {
 			case "en_proceso":
 				return "bg-blue-100 text-blue-800 border-blue-500";
 			case "finalizado":
+			case 'resuelto':
 				return "bg-green-100 text-green-800 border-green-500";
 			case "rechazado":
 				return "bg-red-100 text-red-800 border-red-500";
@@ -61,6 +62,7 @@ export const useTracking = () => {
 			case "en proceso":
 				return "fa-clock";
 			case "finalizado":
+			case 'resuelto':
 				return "fa-check-circle";
 			case "rechazado":
 				return "fa-times-circle";
