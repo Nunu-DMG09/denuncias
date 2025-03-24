@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Loader } from "../../Components/Loader";
+import { Loader } from "../../Components/Loaders/Loader";
 import { useDenunciante } from "../../hooks/useDenunciante";
 import { useFormContext } from "../../hooks/useFormContext";
 

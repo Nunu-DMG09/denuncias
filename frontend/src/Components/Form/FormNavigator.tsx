@@ -1,5 +1,5 @@
 import { useFormContext } from "../../hooks/useFormContext";
-import { Loader } from "../Loader";
+import { Loader } from "../Loaders/Loader";
 import { TOTAL_PAGES, SUBMIT_PAGE } from "../../utils";
 import { useNavigation } from "../../hooks/useNavigation";
 

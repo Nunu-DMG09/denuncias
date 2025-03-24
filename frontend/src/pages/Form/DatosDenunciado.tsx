@@ -1,6 +1,6 @@
 import { useDenunciado } from "../../hooks/useDenunciado";
 import { useFormContext } from "../../hooks/useFormContext";
-import { Loader } from "../../Components/Loader";
+import { Loader } from "../../Components/Loaders/Loader";
 import { useEffect } from "react";
 
 export const DatosDenunciado = () => {
