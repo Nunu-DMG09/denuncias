@@ -288,7 +288,6 @@ class FormularioDenunciasController extends ResourceController
             ->first();
         $datadenuncia = $this->seguimientoDenunciasModel
             ->where('denuncia_id', $denuncia['id'])
-            ->select('estado', 'comentario', 'fecha_actualizacion')
             ->orderBy('fecha_actualizacion', 'DESC')
             ->first();
         return $this->response->setJSON([
