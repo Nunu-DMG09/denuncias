@@ -286,13 +286,19 @@ class FormularioDenunciasController extends ResourceController
         $denuncia = $this->denunciasModel
             ->where('tracking_code', $code)
             ->first();
-        $datadenuncia = $this->seguimientoDenunciasModel
+        if (!$denuncia) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No se encontró la denuncia con el código proporcionado.'
+            ]);
+        }
+        $seguimientos = $this->seguimientoDenunciasModel
             ->where('denuncia_id', $denuncia['id'])
             ->orderBy('fecha_actualizacion', 'DESC')
-            ->first();
+            ->findAll();
         return $this->response->setJSON([
-            'success' => !empty($denuncia),
-            'data' => $datadenuncia
+            'success' => true,
+            'data' => $seguimientos
         ]);
     }
 }
