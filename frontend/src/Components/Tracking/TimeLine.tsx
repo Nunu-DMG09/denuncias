@@ -34,7 +34,7 @@ export const TimeLine = ({ trackingUtils }: TimeLineProps) => {
 								<div
 									className={`absolute left-[18px] top-3 w-8 h-8 rounded-full flex items-center justify-center ${
 										statusColor.split(" ")[0]
-									} border-2 ${isFirst ? 'animate-borderPulse' : statusColor.split(" ")[2]}`}
+									} border-2 ${isFirst ? '' : statusColor.split(" ")[2]}`}
 								>
 									<i
 										className={`fa-solid ${statusIcon} text-sm ${
