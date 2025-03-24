@@ -1,5 +1,6 @@
 import { useTracking } from "../../hooks/useTracking";
 import { LoaderWifi } from "../../Components/Loaders/LoaderWiFi";
+import { ErrorIcon } from "../../Components/Icons";
 export const TrackingDenuncia = () => {
 	const {
 		trackingCode,
@@ -50,7 +51,7 @@ export const TrackingDenuncia = () => {
 						<div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
 							<div className="flex">
 								<div className="flex-shrink-0">
-									
+									<ErrorIcon />
 								</div>
 								<div className="ml-3">
 									<p className="text-sm font-medium">
