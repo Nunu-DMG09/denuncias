@@ -9,6 +9,7 @@ interface TrackProps {
         trackingData: TrackingData | null;
         trackingLoading: boolean;
         trackingError: string | null;
+        displayTrackingCode: string;
         getStatusColor: (status: string) => string;
         getStatusIcon: (status: string) => string;
         formatDate: (date: string) => string;
@@ -17,10 +18,10 @@ interface TrackProps {
 
 export const Track = ({trackingUtils} : TrackProps) => {
     const {
-        trackingCode,
         trackingData,
         trackingLoading,
         trackingError,
+        displayTrackingCode,
 	} = trackingUtils;
 	return (
 		<div className="space-y-6 mt-5">
@@ -58,7 +59,7 @@ export const Track = ({trackingUtils} : TrackProps) => {
 								</h3>
 								<div className="flex items-center">
 									<span className="text-sm font-medium bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-full">
-										{trackingCode}
+										{displayTrackingCode}
 									</span>
 								</div>
 							</div>

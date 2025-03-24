@@ -6,6 +6,9 @@ export const useTracking = () => {
 	const [trackingCode, setTrackingCode] = useState<string>(
 		searchParams.get("codigo") || ""
 	);
+	const [displayTrackingCode, setDisplayTrackingCode] = useState<string>(
+		searchParams.get("codigo") || ""
+	);
 	const {
 		trackingData,
 		trackingLoading,
@@ -18,6 +21,7 @@ export const useTracking = () => {
 		const codigo = searchParams.get("codigo");
 		if (codigo && codigo.trim() !== "") {
 			setTrackingCode(codigo);
+			setDisplayTrackingCode(codigo);
 			consultarTracking(codigo);
 		}
 		return () => resetTracking();
@@ -28,8 +32,10 @@ export const useTracking = () => {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (await consultarTracking(trackingCode)) {
+		const success = await consultarTracking(trackingCode);
+		if (success) {
 			setSearchParams({ codigo: trackingCode });
+			setDisplayTrackingCode(trackingCode);
 		}
 	};
 	const getStatusColor = (status: string) => {
@@ -81,6 +87,7 @@ export const useTracking = () => {
 		trackingData,
 		trackingLoading,
 		trackingError,
-        formatDate
+        formatDate,
+		displayTrackingCode
 	};
 };
