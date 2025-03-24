@@ -150,13 +150,13 @@ export const TrackingDenuncia = () => {
 									</div>
 								</div>
 
-								{trackingData.data.comentarios && (
+								{trackingData.data.comentario && (
 									<div className="mt-4 p-4 bg-blue-50 rounded-lg">
 										<h4 className="text-sm font-bold text-blue-800 mb-1">
 											Observaciones:
 										</h4>
 										<p className="text-gray-700">
-											{trackingData.data.comentarios}
+											{trackingData.data.comentario}
 										</p>
 									</div>
 								)}
