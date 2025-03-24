@@ -7,6 +7,28 @@ const api = axios.create({
 	},
 	timeout: 5000,
 });
+export const apiTracking = axios.create({
+	baseURL: "http://localhost/denuncias/backend/public/api/",
+	headers: {
+		"Content-Type": "application/json",
+	},
+	timeout: 5000,
+})
+apiTracking.interceptors.response.use(
+	(response) => response,
+	(error) => {
+		if (error.code === "ECONNABORTED") {
+			console.error("Timeout error");
+		} else if (error.response) {
+			console.error(
+				`Error response: ${error.response.status} : ${error.response.data}`
+			);
+		} else {
+			console.error(`Error message: ${error.message}`);
+		}
+		return Promise.reject(error);
+	}
+)
 api.interceptors.response.use(
 	(response) => response,
 	(error) => {

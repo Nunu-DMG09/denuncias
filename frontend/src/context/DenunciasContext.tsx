@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
-import api from "../utils/apiAxios";
+import api, {apiTracking} from "../utils/apiAxios";
 import { AxiosError } from "axios";
 import { validateFileAddition, ALLOWED_EXTENSIONS } from "../utils";
 import type { Denunciado, Denunciante, FormData, Motivo, TrackingData } from "../types.d";
@@ -64,6 +64,9 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		fecha_incidente: null,
 		adjuntos: [],
 	});
+	const [trackingData, setTrackingData] = useState<TrackingData | null>(null);
+	const [trackingLoading, setTrackingLoading] = useState(false);
+	const [trackingError, setTrackingError] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchMotivos = async () => {
@@ -239,6 +242,47 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 			setIsLoading(false);
 		}
 	};
+
+	const consultarTracking = async (trackingCode: string) => {
+		if (!trackingCode.trim()) {
+			toast.error("Código de seguimiento inválido");
+			return false;
+		}
+
+		setTrackingLoading(true);
+		setTrackingError(null);
+
+		try {
+			const response = await apiTracking.get(`/tracking/${trackingCode}`);
+			const data = response.data;
+			if (data && data.success) {
+				setTrackingData(data);
+				return true;
+			} else {
+				const errorMsg = data?.message || "Error al consultar el código";
+				setTrackingError(errorMsg);
+				toast.error(errorMsg);
+				return false;
+			}
+		} catch (err: unknown) {
+			const axiosError = err as AxiosError<{ message?: string }>;
+			const errorMsg =
+				axiosError.response?.data?.message ||
+				"Error al consultar la denuncia";
+			setTrackingError(errorMsg);
+			toast.error(errorMsg);
+			console.error("Error al consultar tracking:", err);
+			return false;
+		} finally {
+			setTrackingLoading(false);
+		}
+	}
+
+	const resetTracking = () => {
+		setTrackingData(null);
+		setTrackingError(null);
+		setTrackingLoading(false);
+	}
 
 	const value: DenunciasContextType = {
 		currentPage,

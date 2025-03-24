@@ -281,12 +281,10 @@ class FormularioDenunciasController extends ResourceController
             'tracking_code' => $code,
         ]);
     }
-    function query()
+    function query($code)
     {
-        $dataquery = $this->request->getJSON(true);
-        $tracking_code = $dataquery['tracking_code'];
         $denuncia = $this->denunciasModel
-            ->where('tracking_code', $tracking_code)
+            ->where('tracking_code', $code)
             ->select('estado, comentario, fecha_actualizacion')
             ->orderBy('fecha_actualizacion', 'DESC')
             ->first();
