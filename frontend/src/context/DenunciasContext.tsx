@@ -3,14 +3,17 @@ import { toast } from "sonner";
 import api from "../utils/apiAxios";
 import { AxiosError } from "axios";
 import { validateFileAddition, ALLOWED_EXTENSIONS } from "../utils";
-import type { Denunciado, Denunciante, FormData, Motivo } from "../types.d";
+import type { Denunciado, Denunciante, FormData, Motivo, TrackingData } from "../types.d";
 
-interface FormContextType {
+interface DenunciasContextType {
 	currentPage: number;
 	formData: FormData;
 	isLoading: boolean;
 	error: string | null;
-	motivos: Array<{ id: string; nombre: string; descripcion: string }>;
+	motivos: Motivo[];
+	trackingData: TrackingData | null;
+	trackingLoading: boolean;
+	trackingError: string | null;
 	updateFormData: <K extends keyof FormData>(
 		key: K,
 		value: FormData[K]
@@ -22,9 +25,11 @@ interface FormContextType {
 	nextPage: () => void;
 	prevPage: () => void;
 	submitForm: () => Promise<boolean>;
+	consultarTracking: (trackingCode: string) => Promise<boolean>
+	resetTracking: () => void;
 }
 
-export const FormContext = createContext<FormContextType | undefined>(
+export const FormContext = createContext<DenunciasContextType | undefined>(
 	undefined
 );
 
@@ -235,7 +240,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		}
 	};
 
-	const value: FormContextType = {
+	const value: DenunciasContextType = {
 		currentPage,
 		formData,
 		isLoading,
@@ -249,6 +254,11 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		nextPage,
 		prevPage,
 		submitForm,
+		trackingData,
+		trackingLoading,
+		trackingError,
+		consultarTracking,
+		resetTracking,
 	};
 
 	return (
