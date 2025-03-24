@@ -182,6 +182,10 @@ export const validatePage = (pageNumber: number, formData : FormData): boolean =
 					toast.error("Debes seleccionar un género");
 					return false;
 				}
+				if(formData.denunciado && !formData.es_anonimo && formData.denunciante.numero_documento === formData.denunciado.numero_documento){
+					toast.error("El denunciante no puede ser el mismo que el denunciado");
+					return false;
+				}
 			}
 			return true;
 		default:
