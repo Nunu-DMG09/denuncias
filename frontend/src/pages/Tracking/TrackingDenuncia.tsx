@@ -101,67 +101,32 @@ export const TrackingDenuncia = () => {
 					{!trackingLoading &&
 						!trackingError &&
 						trackingData &&
-						trackingData.data && (
-							<div className="space-y-6">
-								<div className="flex justify-between items-center border-b pb-4">
-									<p className="text-base font-bold text-gray-800">
-										Estado de la Denuncia
-									</p>
-									<span
-										className={`px-3 py-1 rounded-full text-sm font-medium text-white ${
-											trackingData.data.estado ===
-											"registrado"
-												? "bg-yellow-500"
-												: trackingData.data.estado ===
-												  "en_proceso"
-												? "bg-blue-500"
-												: trackingData.data.estado ===
-												  "finalizado"
-												? "bg-green-500"
-												: "bg-gray-500"
-										}`}
-									>
-										{trackingData.data.estado.toUpperCase()}
-									</span>
-								</div>
-
-								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-									<div className="flex flex-col">
-										<span className="text-sm text-gray-500">
-											Última actualización
-										</span>
-										<span className="font-medium">
-											{trackingData.data
-												.fecha_actualizacion
-												? new Date(
-														trackingData.data.fecha_actualizacion
-												  ).toLocaleDateString(
-														"es-ES",
-														{
-															day: "2-digit",
-															month: "2-digit",
-															year: "numeric",
-															hour: "2-digit",
-															minute: "2-digit",
-														}
-												  )
-												: "No disponible"}
-										</span>
-									</div>
-								</div>
-
-								{trackingData.data.comentario && (
-									<div className="mt-4 p-4 bg-blue-50 rounded-lg">
-										<h4 className="text-sm font-bold text-blue-800 mb-1">
-											Observaciones:
-										</h4>
-										<p className="text-gray-700">
-											{trackingData.data.comentario}
-										</p>
-									</div>
-								)}
+						trackingData.data &&
+						trackingData.data.map((tracking) => (
+							<div
+								key={tracking.fecha_actualizacion}
+								className="bg-white rounded-lg p-4 shadow-md"
+							>
+								<h3 className="text-lg font-semibold text-gray-800">
+									{tracking.estado}
+								</h3>
+								<p className="text-gray-600">
+									{tracking.comentario}
+								</p>
+								<p className="text-sm font-semibold text-gray-500">
+									{tracking.fecha_actualizacion}
+								</p>
 							</div>
-						)}
+						))}
+					{trackingData?.data && trackingData.data.length === 0 && (
+						<div className="bg-amber-50 rounded-lg p-4 text-amber-800 flex items-center">
+							<i className="fa-solid fa-exclamation-triangle mr-3"></i>
+							<p>
+								No hay información de seguimiento disponible
+								para esta denuncia.
+							</p>
+						</div>
+					)}
 				</div>
 			</form>
 		</div>

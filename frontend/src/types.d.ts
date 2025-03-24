@@ -48,11 +48,13 @@ export interface Motivo {
 	descripcion: string;
 }
 
+interface Tracking {
+	estado: string;
+	fecha_actualizacion: string;
+	comentario: string;
+}
+
 export interface TrackingData {
 	success: boolean
-	data?: {
-		estado: string;
-		fecha_actualizacion: string;
-		comentario: string;
-	}
+	data?: Tracking[]
 }
