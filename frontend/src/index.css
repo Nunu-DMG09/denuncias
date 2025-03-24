@@ -1,59 +1,79 @@
 :root {
-  --primary-color: #2e8acb;
-  --secondary-color: #002f59;
-  --tertiary-color: #0dc1f2;
-  --white: #ffffff;
-  --gray: #333;
-  --gray-light: #4e4d4d9c;
-  --bg-body: #eaf0f9;
-  --titles: "Encode Sans Semi Expanded", serif;
-  --font: "Asap", serif;
-  --bg-radios: radial-gradient(circle, var(--white) 0%, var(--white) 35%, transparent 35%);
+	--primary-color: #2e8acb;
+	--secondary-color: #002f59;
+	--tertiary-color: #0dc1f2;
+	--white: #ffffff;
+	--gray: #333;
+	--gray-light: #4e4d4d9c;
+	--bg-body: #eaf0f9;
+	--titles: "Encode Sans Semi Expanded", serif;
+	--font: "Asap", serif;
+	--bg-radios: radial-gradient(
+		circle,
+		var(--white) 0%,
+		var(--white) 35%,
+		transparent 35%
+	);
+	--registrado-bg: 245, 158, 11;
+	--en_proceso-bg: 59, 130, 246;
+	--finalizado-bg: 34, 197, 94;
+	--rechazado-bg: 239, 68, 68;
+	--default-glow-bg: 13, 193, 242;
 }
-@import 'tailwindcss';
+@import "tailwindcss";
 @theme {
-  --animate-fadeIn: fadeIn 0.5s ease-in-out;
-  --animate-borderPulse: borderPulse 1.5s infinite;
-  --animate-glowShadow: glowShadow 1.5s infinite;
+	--animate-fadeIn: fadeIn 0.5s ease-in-out;
+	--animate-borderPulse: borderPulse 1.5s infinite;
+	--animate-glowShadow: glowShadow 1.5s infinite;
 
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  @keyframes borderPulse {
-    0%, 100% {
-      border-color: var(--primary-color);
-    }
-    50% {
-      border-color: var(--secondary-color);
-    }
-  }
-  @keyframes glowShadow {
-    0%, 100% {
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-    }
-    50% {
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
-    }
-  }
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+	@keyframes borderPulse {
+		0%,
+		100% {
+			border-color: var(--primary-color);
+		}
+		50% {
+			border-color: var(--secondary-color);
+		}
+	}
+	@keyframes glowShadow {
+		0%,
+		100% {
+			box-shadow: 0 0 10px
+				rgba(var(--glow-color-rgb, var(--default-glow-bg)), 0.3);
+		}
+		50% {
+			box-shadow: 0 0 20px
+				rgba(var(--glow-color-rgb, var(--default-glow-bg)), 0.6);
+		}
+	}
+	@keyframes ping {
+		75%,
+		100% {
+			transform: scale(1.8);
+			opacity: 0;
+		}
+	}
 }
-html{
-  background-color: var(--white);
+html {
+	background-color: var(--white);
 }
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-  font-family: var(--font);
-  background-image: 
-        radial-gradient(at 90% 75%, var(--white), transparent 95%),
-        radial-gradient(at 90% 95%, var(--primary-color), transparent 75%);
+	margin: 0;
+	display: flex;
+	place-items: center;
+	min-width: 320px;
+	min-height: 100vh;
+	font-family: var(--font);
+	background-image: radial-gradient(at 90% 75%, var(--white), transparent 95%),
+		radial-gradient(at 90% 95%, var(--primary-color), transparent 75%);
 }

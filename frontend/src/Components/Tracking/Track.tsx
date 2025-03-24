@@ -4,24 +4,25 @@ import { TimeLine } from "./TimeLine";
 import { TrackingData } from "../../types";
 
 interface TrackProps {
-    trackingUtils: {
-        trackingCode: string;
-        trackingData: TrackingData | null;
-        trackingLoading: boolean;
-        trackingError: string | null;
-        displayTrackingCode: string;
-        getStatusColor: (status: string) => string;
-        getStatusIcon: (status: string) => string;
-        formatDate: (date: string) => string;
-    }
+	trackingUtils: {
+		trackingCode: string;
+		trackingData: TrackingData | null;
+		trackingLoading: boolean;
+		trackingError: string | null;
+		displayTrackingCode: string;
+		getStatusColor: (status: string) => string;
+		getStatusIcon: (status: string) => string;
+		formatDate: (date: string) => string;
+		getGlowColorFromStatus: (status: string) => string;
+	};
 }
 
-export const Track = ({trackingUtils} : TrackProps) => {
-    const {
-        trackingData,
-        trackingLoading,
-        trackingError,
-        displayTrackingCode,
+export const Track = ({ trackingUtils }: TrackProps) => {
+	const {
+		trackingData,
+		trackingLoading,
+		trackingError,
+		displayTrackingCode,
 	} = trackingUtils;
 	return (
 		<div className="space-y-6 mt-5">
@@ -64,7 +65,7 @@ export const Track = ({trackingUtils} : TrackProps) => {
 								</div>
 							</div>
 						)}
-						<TimeLine trackingUtils = {trackingUtils} />
+						<TimeLine trackingUtils={trackingUtils} />
 						{trackingData.data.length === 0 && (
 							<div className="bg-amber-50 rounded-lg p-4 text-amber-800 flex items-center">
 								<i className="fa-solid fa-exclamation-triangle mr-3"></i>

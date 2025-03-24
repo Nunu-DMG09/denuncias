@@ -1,3 +1,4 @@
+import React from "react";
 import { TrackingData } from "../../types";
 
 interface TimeLineProps {
@@ -6,12 +7,19 @@ interface TimeLineProps {
 		getStatusColor: (status: string) => string;
 		getStatusIcon: (status: string) => string;
 		formatDate: (date: string) => string;
+		getGlowColorFromStatus: (status: string) => string;
 	};
 }
 
 export const TimeLine = ({ trackingUtils }: TimeLineProps) => {
-	const { trackingData, getStatusColor, getStatusIcon, formatDate } =
-		trackingUtils;
+	const {
+		trackingData,
+		getStatusColor,
+		getStatusIcon,
+		formatDate,
+		getGlowColorFromStatus,
+	} = trackingUtils;
+
 	return (
 		trackingData?.data && (
 			<div className="relative">
@@ -45,7 +53,17 @@ export const TimeLine = ({ trackingUtils }: TimeLineProps) => {
 								<div
 									className={`bg-transparent rounded-lg p-5 shadow-md border-l-4 ${
 										statusColor.split(" ")[2]
-									} ${isFirst ? 'animate-glowShadow' : ''}`}
+									} ${isFirst ? "animate-glowShadow" : ""}`}
+									style={
+										isFirst
+											? ({
+													"--glow-color-rgb":
+														getGlowColorFromStatus(
+															tracking.estado.toLowerCase()
+														),
+											  } as React.CSSProperties)
+											: {}
+									}
 								>
 									<div className="flex justify-between items-center mb-3">
 										<h3 className="text-lg font-semibold capitalize">
