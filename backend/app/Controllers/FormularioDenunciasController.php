@@ -63,6 +63,30 @@ class FormularioDenunciasController extends ResourceController
     {
         return $this->response->setStatusCode(200);
     }
+    public function correo($correo, $code)
+    {
+        $email = \Config\Services::email();
+        $email->setFrom('futboleraoficialsenati@gmail.com', 'Municipalidad Distrital de José Leonardo Ortiz');
+        $email->setTo($correo);
+        $email->setSubject('Código de Seguimiento de Denuncia');
+        $email->setMessage("
+            <html>
+            <head>
+                <title>Código de Seguimiento de Denuncia</title>
+            </head>
+            <body style='font-family: Arial, sans-serif;'>
+                <p>Estimado usuario,</p>
+                <p>Su denuncia ha sido registrada exitosamente. A continuación, le proporcionamos su código de seguimiento:</p>
+                <p style='font-size: 18px; font-weight: bold; color: #2E8ACB;'>$code</p>
+                <p>Por favor, conserve este código para futuras consultas.</p>
+                <p>Atentamente,</p>
+                <p><strong>Municipalidad Distrital de José Leonardo Ortiz</strong></p>
+            </body>
+            </html>
+        ");
+
+        return $email->send();
+    }
     public function pdf($code)
     {
         $formData = $this->request->getJSON(true);
@@ -74,46 +98,41 @@ class FormularioDenunciasController extends ResourceController
             ->get()
             ->getRow()
             ->descripcion;
-        $fileName = 'denuncia_' . uniqid() . '.pdf';
+        $fileName = 'denuncia_' . $code . '.pdf';
         $filePath = FCPATH . 'uploads/' . $fileName;
-
+        $motivoDescripcion = $denuncia['motivo_id'] === 'mo_otros' ? 'Otros: ' . $denuncia['motivo_otro'] : $motivo;
         $htmlContent = "
             <div style='font-family: Arial, sans-serif;'>
             <div style='display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #000; padding-bottom: 12px;'>
-            <div style='display: flex; align-items: center; justify-content: space-between;'>
-            <div style='display: flex; align-items: center; flex-grow: 1; margin-top: -30px;'>
-            <img src='" . base_url('/img/logo.jpeg') . "' alt='Logo' style='width: 50px; margin-right: 12px;' onerror=\"this.style.display='none';\" />
-            </div>
             <div style='text-align: center; flex-grow: 2;'>
-            <h1 style='margin: 0; font-size: 24px; margin-top: -20px;'>SISTEMA DE DENUNCIAS DE CORRUPCIÓN</h1>
-            <h2 style='margin: 0; font-size: 22px; margin-top: -12px;'>MUNICIPALIDAD DISTRITAL DE JOSÉ LEONARDO ORTIZ</h2>
-            </div>
+            <h1 style='margin: 0; font-size: 16px; margin-top: -20px;'>SISTEMA DE DENUNCIAS DE CORRUPCIÓN</h1>
+            <h1 style='margin: 0; font-size: 16px; margin-top: -2px;'>MUNICIPALIDAD DISTRITAL DE JOSÉ LEONARDO ORTIZ</h1>
             </div>
             <div style='text-align: right; margin: 25px;'>
-            <p style='margin: 0; font-size: 12px;'><strong>Fecha de emisión:</strong> " . date('Y-m-d') . "</p>
+            <p style='margin: 0; font-size: 12px;'>Fecha de emisión: " . date('Y-m-d') . "</p>
             </div>
             </div>
             <div style='margin-top: 20px; text-align: left;'>
-            <h3 style='color: #000000; font-size: 20px;'>CÓDIGO DE SEGUIMIENTO: <span style='color: #2E8ACB;'>$code</span></h3>
+            <h3 style='font-size: 14px;'>CÓDIGO DE SEGUIMIENTO: <span style='color: #2E8ACB;'>$code</span></h3>
             </div>
             <div style='margin-top: 20px;'>
-            <h4 style='font-size: 18px;'>INFORMACIÓN DE LA DENUNCIA</h4>
+            <h3 style='font-size: 14px;'>INFORMACIÓN DE LA DENUNCIA</h3>
             <table style='width: 100%; border-collapse: collapse;'>
             <tr style='background-color: #2E8ACB; color: #ffffff;'>
-            <td style='padding: 8px; font-size: 12px;'><strong>Campo</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Campo</td>
             <td style='padding: 8px; font-size: 12px;'>Detalle</td>
             </tr>
             <tr style='background-color:#f4f5f4;'>
-            <td style='padding: 8px; font-size: 12px;'><strong>Fecha del incidente:</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Fecha del incidente:</td>
             <td style='padding: 8px; font-size: 12px;'>{$denuncia['fecha_incidente']}</td>
             </tr>
             <tr>
-            <td style='padding: 8px; font-size: 12px;'><strong>Tipo de denuncia:</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Tipo de denuncia:</td>
             <td style='padding: 8px; font-size: 12px;'>" . ($denuncia['es_anonimo'] ? "Anónima" : "Con datos personales") . "</td>
             </tr>
             <tr style='background-color:#f4f5f4;'>
-            <td style='padding: 8px; font-size: 12px;'><strong>Motivo de la denuncia:</strong></td>
-            <td style='padding: 8px; font-size: 12px;'>$motivo</td>
+            <td style='padding: 8px; font-size: 12px;'>Motivo de la denuncia:</td>
+            <td style='padding: 8px; font-size: 12px;'>$motivoDescripcion</td>
             </tr>
             </table>
             </div>";
@@ -121,30 +140,30 @@ class FormularioDenunciasController extends ResourceController
         if (!$denuncia['es_anonimo']) {
             $htmlContent .= "
             <div style='margin-top: 20px;'>
-            <h4 style='font-size: 18px;'>DATOS DEL DENUNCIANTE</h4>
+            <h3 style='font-size: 14px;'>DATOS DEL DENUNCIANTE</h3>
             <table style='width: 100%; border-collapse: collapse;'>
             <tr style='background-color: #2E8ACB; color: #fff;'>
-            <td style='padding: 8px; font-size: 12px;'><strong>Campo</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Campo</td>
             <td style='padding: 8px; font-size: 12px;'>Detalle</td>
             </tr>
             <tr style='background-color: #f4f5f4;'>
-            <td style='padding: 8px; font-size: 12px;'><strong>Nombre:</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Nombre:</td>
             <td style='padding: 8px; font-size: 12px;'>{$denunciante['nombres']}</td>
             </tr>
             <tr>
-            <td style='padding: 8px; font-size: 12px;'><strong>Email:</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Email:</td>
             <td style='padding: 8px; font-size: 12px;'>{$denunciante['email']}</td>
             </tr>
             <tr style='background-color:#f4f5f4;'>
-            <td style='padding: 8px; font-size: 12px;'><strong>Teléfono:</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Teléfono:</td>
             <td style='padding: 8px; font-size: 12px;'>{$denunciante['telefono']}</td>
             </tr>
             <tr>
-            <td style='padding: 8px; font-size: 12px;'><strong>Tipo de documento:</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Tipo de documento:</td>
             <td style='padding: 8px; font-size: 12px;'>{$denunciante['tipo_documento']}</td>
             </tr>
             <tr style='background-color:#f4f5f4;'>
-            <td style='padding: 8px; font-size: 12px;'><strong>Número de documento:</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Número de documento:</td>
             <td style='padding: 8px; font-size: 12px;'>{$denunciante['numero_documento']}</td>
             </tr>
             </table>
@@ -153,30 +172,30 @@ class FormularioDenunciasController extends ResourceController
 
         $htmlContent .= "
             <div style='margin-top: 20px;'>
-            <h4 style='font-size: 18px;'>DESCRIPCIÓN DE LOS HECHOS</h4>
+            <h3 style='font-size: 14px;'>DESCRIPCIÓN DE LOS HECHOS</h3>
             <p style='font-size: 12px;'>{$denuncia['descripcion']}</p>
             </div>
             <div style='margin-top: 20px;'>
-            <h4 style='font-size: 12px;'>DATOS DEL DENUNCIADO</h4>
+            <h3 style='font-size: 14px;'>DATOS DEL DENUNCIADO</h3>
             <table style='width: 100%; border-collapse: collapse;'>
             <tr style='background-color: #2E8ACB; color: #fff;'>
-            <td style='padding: 8px; font-size: 12px;'><strong>Campo</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Campo</td>
             <td style='padding: 8px; font-size: 12px;'>Detalle</td>
             </tr>
             <tr style='background-color:#f4f5f4;'>
-            <td style='padding: 8px; font-size: 12px;'><strong>Tipo de documento:</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Tipo de documento:</td>
             <td style='padding: 8px; font-size: 12px;'>{$denunciado['tipo_documento']}</td>
             </tr>
             <tr>
-            <td style='padding: 8px; font-size: 12px;'><strong>Número de documento:</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Número de documento:</td>
             <td style='padding: 8px; font-size: 12px;'>{$denunciado['numero_documento']}</td>
             </tr>
             <tr style='background-color:#f4f5f4;'>
-            <td style='padding: 8px; font-size: 12px;'><strong>Nombre / Razón Social:</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Nombre / Razón Social:</td>
             <td style='padding: 8px; font-size: 12px;'>" . ($denunciado['nombre'] ?? $denunciado['razon_social'] ?? "No disponible") . "</td>
             </tr>
             <tr>
-            <td style='padding: 8px; font-size: 12px;'><strong>Cargo:</strong></td>
+            <td style='padding: 8px; font-size: 12px;'>Cargo:</td>
             <td style='padding: 8px; font-size: 12px;'>{$denunciado['cargo']}</td>
             </tr>
             </table>
@@ -209,6 +228,14 @@ class FormularioDenunciasController extends ResourceController
         $id_denunciado = $this->generateId('denunciados');
         $id_denuncia = $this->generateId('denuncias');
         $id_seguimiento = $this->generateId('seguimientoDenuncias');
+        //Mandar correo con el código de seguimiento
+        if (!$denuncia['es_anonimo']) {
+            if ($this->correo($denunciante['email'], $code)) {
+            log_message('info', "Correo enviado exitosamente a {$denunciante['email']} con el código de seguimiento {$code}.");
+            } else {
+            log_message('error', "Error al enviar el correo a {$denunciante['email']} con el código de seguimiento {$code}.");
+            }
+        }
         // Insert denunciante
         if ($denunciante) {
             if ($this->denunciantesModel->insert([
