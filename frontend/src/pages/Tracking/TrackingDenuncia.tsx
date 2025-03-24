@@ -1,7 +1,6 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router";
 import { useFormContext } from "../../hooks/useFormContext";
-import { formatDate } from "../../utils";
 export const TrackingDenuncia = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [trackingCode, setTrackingCode] = useState<string>(
@@ -24,7 +23,7 @@ export const TrackingDenuncia = () => {
 		return () => resetTracking();
 	}, []);
 
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => 
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
 		setTrackingCode(e.target.value);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,7 +31,7 @@ export const TrackingDenuncia = () => {
 		if (await consultarTracking(trackingCode)) {
 			setSearchParams({ codigo: trackingCode });
 		}
-	}
+	};
 
 	return (
 		<div className="container mx-auto px-4 py-6 max-w-3xl">
@@ -41,17 +40,19 @@ export const TrackingDenuncia = () => {
 			</h2>
 			<form
 				className="rounded-lg p-6 shadow-lg backdrop-blur-2xl backdrop-saturate-100 bg-[#3a46500d]"
-				onSubmit={(e) => e.preventDefault()}
+				onSubmit={handleSubmit}
 			>
 				<div className="space-y-2 relative">
 					<input
 						type="text"
 						className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
 						placeholder=" "
-						// value={numeroDocumento}
-						// onChange={handleDocumentoChange}
+						value={trackingCode}
+						onChange={handleInputChange}
 						minLength={20}
 						maxLength={20}
+						disabled={trackingLoading}
+						required
 					/>
 					<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 						Código de Seguimiento
@@ -62,30 +63,105 @@ export const TrackingDenuncia = () => {
 					</button>
 				</div>
 				<div className="space-y-6 mt-5">
-					<div className="flex justify-between items-center">
-						<p className="text-base text-gray-800 font-semibold">
-							Estado de la Denuncia
-						</p>
-						<p className="text-base text-gray-800 font-semibold">
-							Fecha
-						</p>
-						<p className="text-base">Comentarios</p>
-					</div>
-					<div className="flex justify-between items-center">
-						<p className="text-base text-gray-800">En Proceso</p>
-						<p className="text-base text-gray-800">10/10/2021</p>
-						<p className="text-base text-gray-800">En Proceso</p>
-					</div>
-					<div className="flex justify-between items-center">
-						<p className="text-base text-gray-800">En Proceso</p>
-						<p className="text-base text-gray-800">En Proceso</p>
-						<p className="text-base text-gray-800">10/10/2021</p>
-					</div>
-					<div className="flex justify-between items-center">
-						<p className="text-base text-gray-800">En Proceso</p>
-						<p className="text-base text-gray-800">En Proceso</p>
-						<p className="text-base text-gray-800">10/10/2021</p>
-					</div>
+					{trackingLoading && (
+						<div className="flex flex-col items-center justify-center py-6">
+							<div className="w-12 h-12 border-4 border-t-4 border-(--primary-color) border-t-transparent rounded-full animate-spin"></div>
+							<p className="mt-4 text-gray-600">
+								Buscando información...
+							</p>
+						</div>
+					)}
+					{trackingError && !trackingLoading && (
+						<div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
+							<div className="flex">
+								<div className="flex-shrink-0">
+									<svg
+										className="h-5 w-5 text-red-400"
+										viewBox="0 0 20 20"
+										fill="currentColor"
+									>
+										<path
+											fillRule="evenodd"
+											d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+											clipRule="evenodd"
+										/>
+									</svg>
+								</div>
+								<div className="ml-3">
+									<p className="text-sm font-medium">
+										No se encontró la denuncia
+									</p>
+									<p className="text-sm mt-1">
+										{trackingError}
+									</p>
+								</div>
+							</div>
+						</div>
+					)}
+					{!trackingLoading &&
+						!trackingError &&
+						trackingData &&
+						trackingData.data && (
+							<div className="space-y-6">
+								<div className="flex justify-between items-center border-b pb-4">
+									<p className="text-base font-bold text-gray-800">
+										Estado de la Denuncia
+									</p>
+									<span
+										className={`px-3 py-1 rounded-full text-sm font-medium text-white ${
+											trackingData.data.estado ===
+											"registrado"
+												? "bg-yellow-500"
+												: trackingData.data.estado ===
+												  "en_proceso"
+												? "bg-blue-500"
+												: trackingData.data.estado ===
+												  "finalizado"
+												? "bg-green-500"
+												: "bg-gray-500"
+										}`}
+									>
+										{trackingData.data.estado.toUpperCase()}
+									</span>
+								</div>
+
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+									<div className="flex flex-col">
+										<span className="text-sm text-gray-500">
+											Última actualización
+										</span>
+										<span className="font-medium">
+											{trackingData.data
+												.fecha_actualizacion
+												? new Date(
+														trackingData.data.fecha_actualizacion
+												  ).toLocaleDateString(
+														"es-ES",
+														{
+															day: "2-digit",
+															month: "2-digit",
+															year: "numeric",
+															hour: "2-digit",
+															minute: "2-digit",
+														}
+												  )
+												: "No disponible"}
+										</span>
+									</div>
+								</div>
+
+								{trackingData.data.comentarios && (
+									<div className="mt-4 p-4 bg-blue-50 rounded-lg">
+										<h4 className="text-sm font-bold text-blue-800 mb-1">
+											Observaciones:
+										</h4>
+										<p className="text-gray-700">
+											{trackingData.data.comentarios}
+										</p>
+									</div>
+								)}
+							</div>
+						)}
 				</div>
 			</form>
 		</div>
