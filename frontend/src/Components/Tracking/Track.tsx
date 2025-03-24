@@ -54,7 +54,7 @@ export const Track = ({ trackingUtils }: TrackProps) => {
 				trackingData.data && (
 					<div className="mt-2 relative">
 						{trackingData.data.length > 0 && (
-							<div className="bg-white rounded-lg p-5 shadow-md mb-8 border-l-4 border-blue-500">
+							<div className="bg-white rounded-lg p-5 shadow-md mb-8 border-l-4 border-(--primary-color)">
 								<h3 className="text-lg font-bold text-gray-800 mb-2">
 									Información de la denuncia
 								</h3>
