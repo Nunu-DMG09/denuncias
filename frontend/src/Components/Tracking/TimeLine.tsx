@@ -27,16 +27,14 @@ export const TimeLine = ({ trackingUtils }: TimeLineProps) => {
 							// Contenedor
 							<div
 								key={tracking.fecha_actualizacion}
-								className={`relative pl-16 animate-fadeIn ${
-									isFirst ? "animate-pulse" : ""
-								}`}
+								className={`relative pl-16 animate-fadeIn`}
 								style={{ animationDelay: `${index * 150}ms` }}
 							>
 								{/* icono */}
 								<div
 									className={`absolute left-[18px] top-3 w-8 h-8 rounded-full flex items-center justify-center ${
 										statusColor.split(" ")[0]
-									} border-2 ${statusColor.split(" ")[2]}`}
+									} border-2 ${isFirst ? 'animate-borderPulse' : statusColor.split(" ")[2]}`}
 								>
 									<i
 										className={`fa-solid ${statusIcon} text-sm ${
@@ -47,7 +45,7 @@ export const TimeLine = ({ trackingUtils }: TimeLineProps) => {
 								<div
 									className={`bg-transparent rounded-lg p-5 shadow-md border-l-4 ${
 										statusColor.split(" ")[2]
-									}`}
+									} ${isFirst ? 'animate-glowShadow' : ''}`}
 								>
 									<div className="flex justify-between items-center mb-3">
 										<h3 className="text-lg font-semibold capitalize">
