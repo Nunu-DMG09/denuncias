@@ -1,4 +1,39 @@
+import { useState, useEffect, use } from "react";
+import { useSearchParams } from "react-router";
+import { useFormContext } from "../../hooks/useFormContext";
+import { formatDate } from "../../utils";
 export const TrackingDenuncia = () => {
+	const [searchParams, setSearchParams] = useSearchParams();
+	const [trackingCode, setTrackingCode] = useState<string>(
+		searchParams.get("codigo") || ""
+	);
+	const {
+		trackingData,
+		trackingLoading,
+		trackingError,
+		resetTracking,
+		consultarTracking,
+	} = useFormContext();
+
+	useEffect(() => {
+		const codigo = searchParams.get("codigo");
+		if (codigo && codigo.trim() !== "") {
+			setTrackingCode(codigo);
+			consultarTracking(codigo);
+		}
+		return () => resetTracking();
+	}, []);
+
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => 
+		setTrackingCode(e.target.value);
+
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		if (await consultarTracking(trackingCode)) {
+			setSearchParams({ codigo: trackingCode });
+		}
+	}
+
 	return (
 		<div className="container mx-auto px-4 py-6 max-w-3xl">
 			<h2 className="text-2xl text-center font-bold mb-6 text-gray-800">
@@ -31,7 +66,9 @@ export const TrackingDenuncia = () => {
 						<p className="text-base text-gray-800 font-semibold">
 							Estado de la Denuncia
 						</p>
-						<p className="text-base text-gray-800 font-semibold">Fecha</p>
+						<p className="text-base text-gray-800 font-semibold">
+							Fecha
+						</p>
 						<p className="text-base">Comentarios</p>
 					</div>
 					<div className="flex justify-between items-center">
