@@ -83,16 +83,16 @@ export const useTracking = () => {
 	const getGlowColorFromStatus = (status: string): string => {
 		switch (status) {
 			case "registrado":
-				return "245, 158, 11";
+				return "var(--registrado-bg)";
 			case "en_proceso":
-				return "59, 130, 246";
+				return "var(--en_proceso-bg)";
 			case "finalizado":
 			case "resuelto":
-				return "34, 197, 94";
+				return "var(--finalizado-bg)";
 			case "rechazado":
-				return "239, 68, 68";
+				return "var(--rechazado-bg)";
 			default:
-				return "13, 193, 242";
+				return "var(--default-glow-bg)";
 		}
 	};
 	return {
