@@ -53,6 +53,6 @@ export interface TrackingData {
 	data?: {
 		estado: string;
 		fecha_actualizacion: string;
-		comentarios: string;
+		comentario: string;
 	}
 }
