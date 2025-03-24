@@ -82,11 +82,11 @@ class FormularioDenunciasController extends ResourceController
             <div style='display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #000; padding-bottom: 12px;'>
             <div style='display: flex; align-items: center; justify-content: space-between;'>
             <div style='display: flex; align-items: center; flex-grow: 1; margin-top: -30px;'>
-                <img src='" . base_url('/img/logo.jpeg') . "' alt='Logo' style='width: 50px; margin-right: 12px;' />
+            <img src='" . base_url('/img/logo.jpeg') . "' alt='Logo' style='width: 50px; margin-right: 12px;' onerror=\"this.style.display='none';\" />
             </div>
             <div style='text-align: center; flex-grow: 2;'>
-                <h1 style='margin: 0; font-size: 24px; margin-top: -20px;'>SISTEMA DE DENUNCIAS DE CORRUPCIÓN</h1>
-                <h2 style='margin: 0; font-size: 22px; margin-top: -12px;'>MUNICIPALIDAD DISTRITAL DE JOSÉ LEONARDO ORTIZ</h2>
+            <h1 style='margin: 0; font-size: 24px; margin-top: -20px;'>SISTEMA DE DENUNCIAS DE CORRUPCIÓN</h1>
+            <h2 style='margin: 0; font-size: 22px; margin-top: -12px;'>MUNICIPALIDAD DISTRITAL DE JOSÉ LEONARDO ORTIZ</h2>
             </div>
             </div>
             <div style='text-align: right; margin: 25px;'>
@@ -285,12 +285,16 @@ class FormularioDenunciasController extends ResourceController
     {
         $denuncia = $this->denunciasModel
             ->where('tracking_code', $code)
-            ->select('estado, comentario, fecha_actualizacion')
+            ->select('id')
+            ->first();
+        $datadenuncia = $this->seguimientoDenunciasModel
+            ->where('denuncia_id', $denuncia['id'])
+            ->select('estado', 'comentario', 'fecha_actualizacion')
             ->orderBy('fecha_actualizacion', 'DESC')
             ->first();
         return $this->response->setJSON([
             'success' => !empty($denuncia),
-            'data' => $denuncia
+            'data' => $datadenuncia
         ]);
     }
 }
