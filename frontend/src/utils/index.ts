@@ -40,7 +40,26 @@ export const validateFileAddition = (
 	currentFiles: Adjunto[],
 	newFile: Adjunto
 ) => {
+	const currentSize = calcTotalSize(currentFiles);
+	const newFileSize = newFile.file.size;
+	const totalSize = currentSize + newFileSize;
+
+	const isOverSizeLimit = totalSize > MAX_SIZE_BYTES;
+	const isOverFileLimit = currentFiles.length >= MAX_FILES;
 	const isValidFileType = isFileTypeAllowed(newFile.file);
+	if (isOverSizeLimit || isOverFileLimit) {
+		return {
+			isValid: false,
+			isOverSizeLimit,
+			isOverFileLimit,
+			isInvalidType: false,
+			currentSizeMB: bytesToMB(currentSize),
+			newFileSizeMB: bytesToMB(newFileSize),
+			totalSizeMB: bytesToMB(totalSize),
+			remainingSizeMB: 20 - bytesToMB(currentSize),
+			fileType: newFile.file.type,
+		};
+	}
 	if (!isValidFileType) {
 		return {
 			isValid: false,
@@ -54,17 +73,11 @@ export const validateFileAddition = (
 			fileType: newFile.file.type,
 		};
 	}
-	const currentSize = calcTotalSize(currentFiles);
-	const newFileSize = newFile.file.size;
-	const totalSize = currentSize + newFileSize;
-
-	const isOverSizeLimit = totalSize > MAX_SIZE_BYTES;
-	const isOverFileLimit = currentFiles.length >= MAX_FILES;
 
 	return {
-		isValid: !isOverSizeLimit && !isOverFileLimit,
-		isOverSizeLimit,
-		isOverFileLimit,
+		isValid: true,
+		isOverSizeLimit: false,
+		isOverFileLimit: false,
 		isInvalidType: false,
 		currentSizeMB: bytesToMB(currentSize),
 		newFileSizeMB: bytesToMB(newFileSize),
@@ -79,15 +92,23 @@ export const TOTAL_PAGES = 4;
 
 export const SUBMIT_PAGE = 3;
 
-export const validatePage = (pageNumber: number, formData : FormData): boolean => {
+export const validatePage = (
+	pageNumber: number,
+	formData: FormData
+): boolean => {
 	switch (pageNumber) {
 		case 1:
 			if (!formData.fecha_incidente) {
 				toast.error("Debes seleccionar una fecha de incidente");
 				return false;
 			}
-			if (formData.fecha_incidente > new Date().toISOString().split("T")[0]) {
-				toast.error("La fecha de incidente no puede ser mayor a la fecha actual");
+			if (
+				formData.fecha_incidente >
+				new Date().toISOString().split("T")[0]
+			) {
+				toast.error(
+					"La fecha de incidente no puede ser mayor a la fecha actual"
+				);
 				return false;
 			}
 			if (!formData.motivo_id) {
@@ -182,8 +203,15 @@ export const validatePage = (pageNumber: number, formData : FormData): boolean =
 					toast.error("Debes seleccionar un género");
 					return false;
 				}
-				if(formData.denunciado && !formData.es_anonimo && formData.denunciante.numero_documento === formData.denunciado.numero_documento){
-					toast.error("El denunciante no puede ser el mismo que el denunciado");
+				if (
+					formData.denunciado &&
+					!formData.es_anonimo &&
+					formData.denunciante.numero_documento ===
+						formData.denunciado.numero_documento
+				) {
+					toast.error(
+						"El denunciante no puede ser el mismo que el denunciado"
+					);
 					return false;
 				}
 			}
@@ -193,7 +221,7 @@ export const validatePage = (pageNumber: number, formData : FormData): boolean =
 	}
 };
 
-// Para formato de fechas 
+// Para formato de fechas
 export const formatDate = (date: Date) => {
 	if (!date) return "";
 
@@ -202,4 +230,4 @@ export const formatDate = (date: Date) => {
 	const year = date.getFullYear();
 
 	return `${day}/${month}/${year}`;
-}
+};

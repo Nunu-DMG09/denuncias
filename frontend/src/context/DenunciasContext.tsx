@@ -153,6 +153,9 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 					2
 				)}MB`
 			);
+			setTimeout(() => {
+				toast.info("Si tienes archivos demasiados pesados pero consideras que son necesarios, sube un archivo .txt con el link de algún repositorio o carpeta donde adjuntes todos los archivos.");
+			}, 3000);
 			return;
 		}
 
