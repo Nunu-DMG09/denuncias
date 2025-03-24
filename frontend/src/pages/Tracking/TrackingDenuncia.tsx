@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router";
 import { useFormContext } from "../../hooks/useFormContext";
+import { LoaderWifi } from "../../Components/Loaders/LoaderWiFi";
 export const TrackingDenuncia = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [trackingCode, setTrackingCode] = useState<string>(
@@ -65,10 +66,9 @@ export const TrackingDenuncia = () => {
 				<div className="space-y-6 mt-5">
 					{trackingLoading && (
 						<div className="flex flex-col items-center justify-center py-6">
-							<div className="w-12 h-12 border-4 border-t-4 border-(--primary-color) border-t-transparent rounded-full animate-spin"></div>
-							<p className="mt-4 text-gray-600">
-								Buscando información...
-							</p>
+							<div className="flex flex-col items-center justify-center py-6">
+								<LoaderWifi />
+							</div>
 						</div>
 					)}
 					{trackingError && !trackingLoading && (
