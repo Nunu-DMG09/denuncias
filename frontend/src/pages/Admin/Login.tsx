@@ -69,6 +69,9 @@ export const Login = () => {
                             Contraseña
                             <span className="text-red-500 font-black">*</span>
                         </label>
+                        <button className="absolute top-[45%] right-[.8em] px-1.5 py-0 bg-transparent text-(--primary-color) text-[1.3rem] cursor-pointer hover:text-(--secondary-color) transform -translate-y-1/2 transition-all duration-300 ease-in-out">
+                            <i className="fa-solid fa-eye"></i>
+                        </button>
                     </div>
                     <button className="w-full p-3.5 rounded-lg outline-none bg-(--secondary-color) cursor-pointer text-white text-lg transition-all duration-300 ease-in-out hover:bg-(--primary-color) hover:shadow-lg">
                         Iniciar Sesión
