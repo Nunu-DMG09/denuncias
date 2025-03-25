@@ -18,7 +18,7 @@ export const Unauthorized = () => {
 						Ir al inicio
 					</Link>
 					<Link
-						to="/admin-dashboard"
+						to="/admin/dashboard"
 						className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
 					>
 						Volver al panel
