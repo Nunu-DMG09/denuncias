@@ -1,12 +1,13 @@
 const logo = "/logo.jpeg";
 import { Link, useLocation } from "react-router";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { ConfirmLogout } from "./Admin/ConfirmLogout";
+import { useState } from "react";
 
 const Header = () => {
-	const { confirmLogout } = useAuthContext();
 	const location = useLocation();
 	const isFormPage = location.pathname === "/";
 	const isAdminSection = location.pathname.includes("/admin");
+	const [showLogoutModal, setShowLogoutModal] = useState(false);
 
 	return (
 		<header className="header shadow-md w-full bg-white py-4 px-4">
@@ -28,7 +29,7 @@ const Header = () => {
 					</Link>
 					{isAdminSection ? (
 						<button
-							// onClick={logout}
+							onClick={() => setShowLogoutModal(true)}
 							className="bg-red-400 text-sm md:text-base text-center text-white font-semibold px-4 py-3 rounded-lg ml-17 cursor-pointer hover:scale-110 hover:bg-red-800 transition-all ease-in-out duration-300"
 						>
 							Cerrar Sesión
@@ -47,6 +48,11 @@ const Header = () => {
 						>
 							Volver al Formulario
 						</Link>
+					)}
+					{showLogoutModal && (
+						<ConfirmLogout
+							onCancel={() => setShowLogoutModal(false)}
+						/>
 					)}
 				</div>
 			</nav>

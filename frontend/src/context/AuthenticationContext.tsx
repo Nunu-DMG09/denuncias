@@ -85,7 +85,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         }
     }
 	const confirmLogout = (confirmation: string) => {
-		if (confirmation === "s") {
+		if (confirmation === "si") {
 			logout();
 		}
 	}
