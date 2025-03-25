@@ -4,16 +4,18 @@ import { Toaster } from "sonner";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { Layout } from "./Components/Layout";
 import { TrackingDenuncia } from "./pages/Tracking/TrackingDenuncia";
+import { Login } from "./pages/Admin/Login";
 function App() {
 	return (
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<Layout />}>
-					<Route index element={<FormularioDenuncia />}></Route>
+					<Route index element={<FormularioDenuncia />} />
 					<Route
 						path="/tracking-denuncia"
 						element={<TrackingDenuncia />}
-					></Route>
+					/>
+					<Route path="/login" element={<Login />} />
 				</Route>
 			</Routes>
 			<Toaster richColors closeButton />
