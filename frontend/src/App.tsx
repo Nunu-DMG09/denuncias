@@ -25,28 +25,26 @@ function App() {
 							path="/unauthorized"
 							element={<Unauthorized />}
 						/>
+						<Route
+							path="/admin/dashboard"
+							element={
+								<ProtectedRoute
+									allowedRoles={["super_admin", "admin"]}
+								>
+									<DashboardAdmin />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path="/admin/users"
+							element={
+								<ProtectedRoute allowedRoles={["super_admin"]}>
+									{/* <UserManagement /> */}
+									<DashboardAdmin />
+								</ProtectedRoute>
+							}
+						/>
 					</Route>
-					<Route
-						path="/admin/dashboard"
-						element={
-							<ProtectedRoute
-								allowedRoles={["super_admin", "admin"]}
-							>
-								<DashboardAdmin />
-							</ProtectedRoute>
-						}
-					/>
-					<Route 
-						path="/admin/users"
-						element={
-							<ProtectedRoute
-								allowedRoles={["super_admin"]}
-							>
-								{/* <UserManagement /> */}
-								<DashboardAdmin />
-							</ProtectedRoute>
-						}
-					/>
 				</Routes>
 			</AuthProvider>
 			<Toaster richColors closeButton />
