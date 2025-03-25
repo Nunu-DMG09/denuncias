@@ -74,11 +74,19 @@ class FormularioDenunciasController extends ResourceController
             <head>
                 <title>Código de Seguimiento de Denuncia</title>
             </head>
-            <body style='font-family: Arial, sans-serif;'>
+            <body style='font-family: Asap, sans-serif;'>
                 <p>Estimado usuario,</p>
                 <p>Su denuncia ha sido registrada exitosamente. A continuación, le proporcionamos su código de seguimiento:</p>
-                <p style='font-size: 18px; font-weight: bold; color: #2E8ACB;'>$code</p>
+                <p 
+                    style=
+                    'font-size: 18px; 
+                    font-weight: bold; 
+                    color: #2E8ACB; 
+                    padding:15px; 
+                    background-color: #CDDFEC';>$code</p>
                 <p>Por favor, conserve este código para futuras consultas.</p>
+                <p>Para realizar el seguimiento de su denuncia, puede ingresar al siguiente enlace:</p>
+                <p><a href='http://localhost:5173/seguimiento/$code'>Seguimiento</a></p>
                 <p>Atentamente,</p>
                 <p><strong>Municipalidad Distrital de José Leonardo Ortiz</strong></p>
             </body>
@@ -231,9 +239,9 @@ class FormularioDenunciasController extends ResourceController
         //Mandar correo con el código de seguimiento
         if (!$denuncia['es_anonimo']) {
             if ($this->correo($denunciante['email'], $code)) {
-            log_message('info', "Correo enviado exitosamente a {$denunciante['email']} con el código de seguimiento {$code}.");
+                log_message('info', "Correo enviado exitosamente a {$denunciante['email']} con el código de seguimiento {$code}.");
             } else {
-            log_message('error', "Error al enviar el correo a {$denunciante['email']} con el código de seguimiento {$code}.");
+                log_message('error', "Error al enviar el correo a {$denunciante['email']} con el código de seguimiento {$code}.");
             }
         }
         // Insert denunciante
