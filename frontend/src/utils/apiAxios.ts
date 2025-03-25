@@ -44,4 +44,38 @@ api.interceptors.response.use(
 		return Promise.reject(error);
 	}
 );
+export const authApi = axios.create({
+	baseURL: "http://localhost/denuncias/backend/public/admin",
+	headers: {
+		"Content-Type": "application/json",
+	},
+	timeout: 5000,
+});
+authApi.interceptors.request.use(
+	(config) => {
+		const token = localStorage.getItem('auth_token')
+		if (token) {
+			config.headers['Authorization'] = `Bearer ${token}`
+		}
+		return config
+	}, 
+	(error) => {
+		return Promise.reject(error)
+	}
+)
+authApi.interceptors.response.use(
+	(response) => response,
+	(error) => {
+		if (error.code === "ECONNABORTED") {
+			console.error("Timeout error");
+		} else if (error.response) {
+			console.error(
+				`Error response: ${error.response.status} : ${error.response.data}`
+			);
+		} else {
+			console.error(`Error message: ${error.message}`);
+		}
+		return Promise.reject(error);
+	}
+);
 export default api;
