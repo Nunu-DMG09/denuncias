@@ -7,6 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 $routes->post('login', 'AdminController::login');
+$routes->options('login', 'FormularioDenunciasController::options');
 // Rutas para la API
 $routes->group('api', function ($routes) {
     $routes->get('dni/(:num)', 'ConsultaApi::buscarDNI/$1');

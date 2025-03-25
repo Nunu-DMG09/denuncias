@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class AdministradoresModel extends Model
 {
     protected $DBGroup = 'default';
-    protected $table = 'adminitradores';
+    protected $table = 'administradores';
     protected $primaryKey = 'dni_admin';
     protected $useAutoIncrement = false;
     protected $returnType = 'array';
