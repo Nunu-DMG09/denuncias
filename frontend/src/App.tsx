@@ -20,13 +20,29 @@ function App() {
 							path="/tracking-denuncia"
 							element={<TrackingDenuncia />}
 						/>
+						<Route path="/login" element={<Login />} />
+						<Route
+							path="/unauthorized"
+							element={<Unauthorized />}
+						/>
 					</Route>
-					<Route path="/login" element={<Login />} />
-					<Route path="/unauthorized" element={<Unauthorized />} />
 					<Route
 						path="/admin/dashboard"
 						element={
-							<ProtectedRoute>
+							<ProtectedRoute
+								allowedRoles={["super_admin", "admin"]}
+							>
+								<DashboardAdmin />
+							</ProtectedRoute>
+						}
+					/>
+					<Route 
+						path="/admin/users"
+						element={
+							<ProtectedRoute
+								allowedRoles={["super_admin"]}
+							>
+								{/* <UserManagement /> */}
 								<DashboardAdmin />
 							</ProtectedRoute>
 						}
