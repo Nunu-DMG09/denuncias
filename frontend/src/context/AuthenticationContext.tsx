@@ -12,6 +12,7 @@ interface AuthContextProps {
 	user: User | null;
 	login: (dni: string, password: string) => Promise<boolean>;
 	logout: () => void;
+	confirmLogout: (confirmation: string) => void;
 	loading: boolean;
 }
 
@@ -83,6 +84,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
             return false
         }
     }
+	const confirmLogout = (confirmation: string) => {
+		if (confirmation === "s") {
+			logout();
+		}
+	}
     const logout = () => {
         localStorage.removeItem('auth_token')
         setIsAuthenticated(false)
@@ -91,7 +97,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, login, logout, loading }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, login, logout, loading, confirmLogout }}>
             {children}
         </AuthContext.Provider>
     )
