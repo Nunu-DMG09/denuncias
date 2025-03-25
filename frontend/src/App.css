@@ -10,3 +10,7 @@
 	color: var(--primary-color);
 	background-color: #D2E2ED;
 }
+.form-part.white-bg-focus:focus + label,
+.form-part.white-bg-focus:not(:placeholder-shown) + label {
+	background-color: #e8eff4;
+}

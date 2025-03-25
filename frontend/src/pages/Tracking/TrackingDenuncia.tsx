@@ -16,7 +16,7 @@ export const TrackingDenuncia = () => {
 				<div className="space-y-2 relative">
 					<input
 						type="text"
-						className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
+						className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part white-bg-focus"
 						placeholder=" "
 						value={trackingCode}
 						onChange={handleInputChange}
