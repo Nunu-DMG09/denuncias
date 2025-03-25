@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "./useFormContext";
 import { getDNIData } from "../services/apisDocs";
 import { toast } from "sonner";
+import { useAuthContext } from "./useAuthContext";
 export const useLogin = () => {
 	const { formData } = useFormContext();
 	const [numeroDocumento, setNumeroDocumento] = useState<string>(
@@ -15,12 +16,15 @@ export const useLogin = () => {
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
     const [password, setPassword] = useState<string>("");
+    const [submitting, setSubmitting] = useState<boolean>(false);
+
+    const { login } = useAuthContext();
 
     const toggleVisibility = () => {
         setIsVisible(prev => !prev);
     }
 	const handleDocumentoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const documentoValue = e.target.value;
+		const documentoValue = e.target.value.replace(/\D/g, "");
 		setNumeroDocumento(documentoValue);
 	};
 	const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +35,28 @@ export const useLogin = () => {
         const passwordValue = e.target.value;
         setPassword(passwordValue);
     };
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        if (isDisabled || submitting) return;
+        setSubmitting(true);
+        setError(null);
+        try {
+            const success = await login(numeroDocumento, password);
+
+            if (success) {
+                toast.success("Inicio de sesión exitoso");
+            } else {
+                setError("Credenciales incorrectas");
+                toast.error("Credenciales incorrectas");
+            }
+        } catch (error) {
+            console.error(error);
+            setError("Ocurrió un error al iniciar sesión");
+            toast.error("Ocurrió un error al iniciar sesión");
+        } finally {
+            setSubmitting(false);
+        }
+    }
     useEffect(() => {
         const fetchDniData = async () => {
             setIsLoading(true);
@@ -77,5 +103,7 @@ export const useLogin = () => {
         isDisabled,
         handlePassword,
         password,
+        handleSubmit,
+        submitting
     }
 };

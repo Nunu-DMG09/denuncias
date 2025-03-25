@@ -1,5 +1,7 @@
 import { useLogin } from "../../hooks/useLogin";
 import { Loader } from "../../Components/Loaders/Loader";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import { Navigate } from "react-router";
 export const Login = () => {
 	const {
 		numeroDocumento,
@@ -9,19 +11,29 @@ export const Login = () => {
 		handleName,
 		toggleVisibility,
 		isVisible,
-        password,
-        handlePassword,
-        isDisabled
+		password,
+		handlePassword,
+		isDisabled,
+		submitting,
+		handleSubmit,
 	} = useLogin();
+	const { isAuthenticated, loading } = useAuthContext();
+	if (loading) {
+		return (
+			<div className="flex justify-center items-center h-screen">
+				<Loader isBtn={false} />
+			</div>
+		);
+	}
+	if (isAuthenticated) {
+		return <Navigate to="/admin/dashboard" />;
+	}
 	return (
 		<div className="container mx-auto my-10 px-4 py-6 max-w-2xl">
 			<h2 className="text-2xl text-center font-bold mb-6 text-gray-800 font-(family-name:--titles) animate__animated animate__fadeInDown">
 				Iniciar Sesión como Administrador
 			</h2>
-			<form
-				className="rounded-lg p-6"
-				// onSubmit={handleSubmit}
-			>
+			<form className="rounded-lg p-6" onSubmit={handleSubmit}>
 				<div className="space-y-6">
 					<div className="space-y-2 relative">
 						<input
@@ -87,15 +99,20 @@ export const Login = () => {
 							></i>
 						</button>
 					</div>
-					<button 
-                        className="w-full p-3.5 rounded-lg outline-none bg-(--secondary-color) cursor-pointer text-white text-lg transition-all duration-300 ease-in-out hover:bg-(--primary-color) hover:shadow-lg disabled:bg-(--gray-light) disabled:cursor-not-allowed"
-                        type="submit"
-                        disabled={isDisabled}
-                    >
-						Iniciar Sesión
+					<button
+						className="w-full p-3.5 rounded-lg outline-none bg-(--secondary-color) cursor-pointer text-white text-lg transition-all duration-300 ease-in-out hover:bg-(--primary-color) hover:shadow-lg disabled:bg-(--gray-light) disabled:cursor-not-allowed"
+						type="submit"
+						disabled={isDisabled || submitting}
+					>
+						{submitting ? (
+							<span className="flex items-center justify-center">
+								<Loader isBtn={true} /> Iniciando...
+							</span>
+						) : (
+							"Iniciar Sesión"
+						)}
 					</button>
 				</div>
-				{/* <Track trackingUtils={trackingUtils} /> */}
 			</form>
 		</div>
 	);
