@@ -12,15 +12,41 @@ class AdminController extends BaseController
     {
         $this->administradoresModel = new AdministradoresModel();
     }
+    public function registerPrueba()
+    {
+        // Primero verificamos si ya existe para evitar duplicados
+        $existingAdmin = $this->administradoresModel->find('74887540');
+        
+        if ($existingAdmin) {
+            return $this->response->setJSON([
+                'message' => 'Administrador ya existe', 
+                'admin' => $existingAdmin
+            ]);
+        }
+        
+        $data = [
+            'dni_admin' => '74887540',
+            'nombres' => 'CASTRO PASTOR, DIEGO ALBERTO',
+            'password' => password_hash('12345678', PASSWORD_DEFAULT),
+            'categoria' => 'super_admin',
+            'estado' => 'activo'
+        ];
+        
+        $success = $this->administradoresModel->insert($data);
+        
+        return $this->response->setJSON([
+            'message' => $success ? 'Administrador registrado' : 'Error al registrar',
+            'success' => $success,
+            'error' => $this->administradoresModel->errors()
+        ]);
+    }
     public function login()
     {
         $data = $this->request->getJSON(true);
-        $dni_admin = $data->dni_admin ?? '';
-        $password = $data->password ?? '';
-        $user = $this->administradoresModel
-        ->where('dni_admin', $dni_admin)
-        ->first();
-
+        $dni_admin = $data['dni_admin'] ?? $data->dni_admin ?? '';
+        $password = $data['password'] ?? $data->password ?? '';
+        $user = $this->administradoresModel->find($dni_admin);
+        
         if ($user && password_verify($password, $user['password'])) {
             $key = 'your-secret-key'; 
             $payload = [
@@ -28,10 +54,16 @@ class AdminController extends BaseController
                 'exp' => time() + 3600, 
                 'dni_admin' => $user['dni_admin'],
                 'categoria' => $user['categoria'],
+                'nombre' => $user['nombres'] ?? 'Admin'
             ];
             $token = JWT::encode($payload, $key, 'HS256');
             return $this->response->setJSON(['token' => $token]);
         }
-        return $this->response->setJSON(['error' => 'Credenciales incorrectas'], 401);
+        
+        // Mensaje de error más específico para depuración
+        $errorMsg = !$user ? 'Usuario no encontrado' : 'Contraseña incorrecta';
+        log_message('info', 'Error de login: ' . $errorMsg);
+        
+        return $this->response->setJSON(['error' => $errorMsg], 401);
     }
 }
