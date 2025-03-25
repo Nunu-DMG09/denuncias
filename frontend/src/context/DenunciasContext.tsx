@@ -211,24 +211,21 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		setError(null);
 		try {
 			const submissionData = prepareDataForSubmission();
-			const response = await api.post("/create", submissionData);
+			const formDataToSend = new FormData()
+			formDataToSend.append('data', JSON.stringify(submissionData))
+			formData.adjuntos.forEach((adjunto, i) => {
+				formDataToSend.append(`file${i}`, adjunto.file)
+			})
+			const response = await api.post("/create", formDataToSend, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
 			if (response.data?.tracking_code) {
 				setFormData((prev) => ({
 					...prev,
 					tracking_code: response.data.tracking_code,
 				}));
-			}
-			if (formData.adjuntos.length > 0 && response.data?.denuncia_id) {
-				const formDataFiles = new FormData();
-				formData.adjuntos.forEach((adjunto, index) => {
-					formDataFiles.append(`file${index}`, adjunto.file);
-				});
-				formDataFiles.append("denuncia_id", response.data.denuncia_id);
-				await api.post("/denuncias/adjuntos", formDataFiles, {
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-				});
 			}
 			toast.success("Denuncia enviada correctamente");
 			return true;
