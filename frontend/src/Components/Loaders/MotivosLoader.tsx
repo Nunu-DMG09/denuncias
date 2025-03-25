@@ -5,7 +5,7 @@ export const MotivosLoader = () => {
                 Identifique el motivo de la denuncia
             </h3>
             {/* Simulamos 5 elementos de motivos */}
-            {Array(5).fill(0).map((_, i) => (
+            {Array(8).fill(0).map((_, i) => (
                 <div
                     key={i}
                     className="flex items-start space-x-3 p-4 bg-gray-300 rounded-lg animate-pulse"
