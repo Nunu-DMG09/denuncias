@@ -20,6 +20,10 @@ export const ALLOWED_FILE_TYPES = {
 	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
 		".xlsx",
 	],
+	"video/mp4": [".mp4"],
+	"video/x-msvideo": [".avi"],
+	"video/x-matroska": [".mkv"],
+	"video/quicktime": [".mov"],
 };
 export const ALLOWED_EXTENSIONS = Object.values(ALLOWED_FILE_TYPES)
 	.flat()
