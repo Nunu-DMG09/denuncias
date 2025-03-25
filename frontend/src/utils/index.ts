@@ -24,6 +24,9 @@ export const ALLOWED_FILE_TYPES = {
 	"video/x-msvideo": [".avi"],
 	"video/x-matroska": [".mkv"],
 	"video/quicktime": [".mov"],
+	"audio/mpeg": [".mp3"],
+	"audio/wav": [".wav"],
+	"audio/ogg": [".ogg"],
 };
 export const ALLOWED_EXTENSIONS = Object.values(ALLOWED_FILE_TYPES)
 	.flat()
