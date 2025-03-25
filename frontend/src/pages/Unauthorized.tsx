@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 export const Unauthorized = () => {
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-gray-200">
+		<div className="container mx-auto my-30 px-4 py-6 max-w-2xl">
 			<div className="text-center p-8 bg-white rounded-lg shadow-md">
 				<h1 className="text-3xl font-bold text-red-500 mb-4">
 					Acceso denegado
@@ -12,14 +12,8 @@ export const Unauthorized = () => {
 				</p>
 				<div className="flex justify-center space-x-4">
 					<Link
-						to="/"
-						className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-					>
-						Ir al inicio
-					</Link>
-					<Link
 						to="/admin/dashboard"
-						className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
+						className="bg-gray-700 hover:bg-(--gray) transition-all duration-300 ease-in-out text-white p-4 rounded w-full"
 					>
 						Volver al panel
 					</Link>
