@@ -105,9 +105,7 @@ export const Login = () => {
 						disabled={isDisabled || submitting}
 					>
 						{submitting ? (
-							<span className="flex items-center justify-center">
-								<Loader isBtn={true} /> Iniciando...
-							</span>
+							<Loader isBtn={true} />
 						) : (
 							"Iniciar Sesión"
 						)}
