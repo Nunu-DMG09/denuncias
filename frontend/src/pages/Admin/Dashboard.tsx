@@ -6,7 +6,7 @@ export const DashboardAdmin = () => {
 			<h2 className="text-2xl text-center font-bold mb-6 text-gray-800 font-(family-name:--titles) animate__animated animate__fadeInDown">
 				Panel de Administración
 			</h2>
-            <main className="grid grid-cols-3 gap-14 group">
+            <main className="grid grid-cols-1 md:grid-cols-3 gap-14 group">
                 <Link
                     to="/admin-dashboard"
                     className="col-span-1 rounded-2xl text-(--secondary-color) shadow-lg backdrop-blur-2xl backdrop-saturate-100 bg-[#3a46500d] p-8 text-center flex flex-col items-center justify-center gap-5 transition-all duration-300 group-hover:opacity-50 hover:!opacity-100 hover:text-(--primary-color) hover:scale-105"
