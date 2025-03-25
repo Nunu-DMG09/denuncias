@@ -19,7 +19,7 @@ const Header = () => {
 							className="nav-logo w-12 h-16 object-contain"
 							src={logo}
 						/>
-						<h3 className="font-semibold flex flex-col text-lg text-gray-700">
+						<h3 className="font-semibold flex flex-col text-sm md:text-lg text-gray-700">
 							<span>Municipalidad Distrital de</span>
 							<span>José Leonardo Ortiz</span>
 						</h3>
@@ -27,7 +27,7 @@ const Header = () => {
 					{isFormPage ? (
 						<Link
 							to="/tracking-denuncia"
-							className="bg-(--secondary-color) text-center text-white font-semibold px-4 py-3 rounded-lg ml-17 cursor-pointer hover:scale-110 hover:bg-(--primary-color) transition-all ease-in-out duration-300"
+							className="bg-(--secondary-color) text-sm md:text-base text-center text-white font-semibold px-4 py-3 rounded-lg ml-17 cursor-pointer hover:scale-110 hover:bg-(--primary-color) transition-all ease-in-out duration-300"
 						>
 							Ver Estado de denuncia
 						</Link>
