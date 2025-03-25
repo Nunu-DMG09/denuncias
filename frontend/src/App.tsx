@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { Layout } from "./Components/Layout";
 import { TrackingDenuncia } from "./pages/Tracking/TrackingDenuncia";
 import { Login } from "./pages/Admin/Login";
+import { DashboardAdmin } from "./pages/Admin/Dashboard";
 function App() {
 	return (
 		<BrowserRouter>
@@ -16,6 +17,7 @@ function App() {
 						element={<TrackingDenuncia />}
 					/>
 					<Route path="/login" element={<Login />} />
+					<Route path="/admin-dashboard" element={<DashboardAdmin/>} />
 				</Route>
 			</Routes>
 			<Toaster richColors closeButton />
