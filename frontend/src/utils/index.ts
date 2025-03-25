@@ -24,6 +24,9 @@ export const ALLOWED_FILE_TYPES = {
 	"video/x-msvideo": [".avi"],
 	"video/x-matroska": [".mkv"],
 	"video/quicktime": [".mov"],
+	"audio/mpeg": [".mp3"],
+	"audio/wav": [".wav"],
+	"audio/ogg": [".ogg"],
 };
 export const ALLOWED_EXTENSIONS = Object.values(ALLOWED_FILE_TYPES)
 	.flat()
@@ -125,11 +128,16 @@ export const validatePage = (
 			}
 			if (
 				!formData.descripcion ||
-				formData.descripcion.trim().length < 10
+				formData.descripcion.trim().length < 50
 			) {
-				toast.error("La descripción debe tener al menos N caracteres");
+				toast.error("La descripción debe tener al menos 50 caracteres");
 				return false;
 			}
+			if (formData.descripcion.trim().length >= 250){
+				toast.error("La descripción no puede tener más de 250 caracteres");
+				return false
+			}
+
 			if (formData.adjuntos.length > 0) {
 				const invalidFiles = formData.adjuntos.filter(
 					(file) => !isFileTypeAllowed(file.file)
