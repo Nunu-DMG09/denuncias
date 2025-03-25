@@ -225,24 +225,25 @@ class FormularioDenunciasController extends ResourceController
     }
     function create()
     {
-        $formData = $this->request->getJSON(true);
+        //Obtener datos del formulario
+        $dataJson = $this->request->getPost('data');
+        $formData = json_decode($dataJson, true);
+        //Extraer datos del Json
         $denunciante = $formData['denunciante'];
         $denunciado = $formData['denunciado'];
         $denuncia = $formData['denuncia'];
         $adjuntos = $formData['adjuntos'];
+        //Generar id y tracking code
         $code = $this->generateTrackingCode();
-        $pdfPath = $this->pdf($code);
         $id_denunciante = $denuncia['es_anonimo'] ? null : $this->generateId('denunciantes');
         $id_denunciado = $this->generateId('denunciados');
         $id_denuncia = $this->generateId('denuncias');
         $id_seguimiento = $this->generateId('seguimientoDenuncias');
+        //Generar PDF
+        $pdfPath = $this->pdf($code);
         //Mandar correo con el código de seguimiento
         if (!$denuncia['es_anonimo']) {
-            if ($this->correo($denunciante['email'], $code)) {
-                log_message('info', "Correo enviado exitosamente a {$denunciante['email']} con el código de seguimiento {$code}.");
-            } else {
-                log_message('error', "Error al enviar el correo a {$denunciante['email']} con el código de seguimiento {$code}.");
-            }
+            $this->correo($denunciante['email'], $code);
         }
         // Insert denunciante
         if ($denunciante) {
@@ -287,18 +288,24 @@ class FormularioDenunciasController extends ResourceController
             ])) {
             }
         }
+        // Guardar archivo 
+        $files = $this->request->getFiles();
+        $uploadPath= FCPATH . 'uploads/'. $id_denuncia;
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
         // Insert adjuntos
-        if ($adjuntos) {
-            foreach ($adjuntos as $adjunto) {
-                $id_adjunto = $this->generateId('adjuntos');
-                if ($this->adjuntosModel->insert([
-                    'id' => $id_adjunto,
+        foreach ($files as $file) {
+            if ($file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+                $file->move($uploadPath, $newName);
+                $this->adjuntosModel->insert([
+                    'id' => $this->generateId('adjuntos'),
                     'denuncia_id' => $id_denuncia,
-                    'file_path' => $adjunto['file_name'],
-                    'file_name' => $adjunto['file_name'],
-                    'file_type' => $adjunto['file_type']
-                ])) {
-                }
+                    'file_path' => 'uploads/' . $id_denuncia . '/' . $newName,
+                    'file_name' => $file->getClientName(),
+                    'file_type' => $file->getMimeType(),
+                ]);
             }
         }
         // Insert seguimiento
@@ -318,6 +325,7 @@ class FormularioDenunciasController extends ResourceController
     }
     function query($code)
     {
+        //Buscar id de la denuncia
         $denuncia = $this->denunciasModel
             ->where('tracking_code', $code)
             ->first();
@@ -327,6 +335,7 @@ class FormularioDenunciasController extends ResourceController
                 'message' => 'No se encontró la denuncia con el código proporcionado.'
             ]);
         }
+        //Buscar seguimientos
         $seguimientos = $this->seguimientoDenunciasModel
             ->where('denuncia_id', $denuncia['id'])
             ->orderBy('fecha_actualizacion', 'DESC')
