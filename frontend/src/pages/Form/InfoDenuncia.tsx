@@ -7,11 +7,19 @@ import { useDenuncias } from "../../hooks/useDenuncias";
 import { useFormContext } from "../../hooks/useFormContext";
 import { AddFiles } from "../../Components/Form/AddFiles";
 import { ReasonsList } from "../../Components/Form/ReasonsList";
-
+import { useEffect, useState } from "react";
 
 export const InfoDenuncia = () => {
 	const { startDate, handleDate } = useDenuncias();
 	const { formData, updateFormData } = useFormContext();
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setIsLoading(false);
+		}, 1000);
+		return () => clearTimeout(timer);
+	}, []);
 	return (
 		<div className="space-y-6">
 			{/* Date Input */}
@@ -28,7 +36,10 @@ export const InfoDenuncia = () => {
 					locale={"es"}
 				/>
 			</div>
-			<ReasonsList />
+			<div className="motivos-container min-h-[200px] transition-all duration-300">
+				{isLoading ? <MotivosLoader /> : <ReasonsList />}
+			</div>
+
 			{/* Additional Details */}
 			<div className="space-y-4">
 				<div className="relative">
