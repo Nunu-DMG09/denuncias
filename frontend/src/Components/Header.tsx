@@ -10,11 +10,9 @@ const Header = () => {
 		<header className="header shadow-md w-full bg-white py-4 px-4">
 			<nav className="nav-container d-flex justify-between items-center">
 				<div className="nav-content flex items-center justify-between w-full">
-					<a
-						className="logo-section flex items-center gap-4"
-						href="https://www.munijlo.gob.pe/web/"
-						target="_blank"
-						rel="noreferrer"
+					<Link
+						className="logo-section flex items-center gap-4 font-(family-name:--titles)"
+						to="/"
 					>
 						<img
 							alt="Logo Municipal"
@@ -25,7 +23,7 @@ const Header = () => {
 							<span>Municipalidad Distrital de</span>
 							<span>José Leonardo Ortiz</span>
 						</h3>
-					</a>
+					</Link>
 					{isFormPage ? (
 						<Link
 							to="/tracking-denuncia"
