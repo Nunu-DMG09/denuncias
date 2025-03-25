@@ -8,18 +8,23 @@ import { useFormContext } from "../../hooks/useFormContext";
 import { AddFiles } from "../../Components/Form/AddFiles";
 import { ReasonsList } from "../../Components/Form/ReasonsList";
 import { useEffect, useState } from "react";
+import { MotivosLoader } from "../../Components/Loaders/MotivosLoader";
 
 export const InfoDenuncia = () => {
 	const { startDate, handleDate } = useDenuncias();
-	const { formData, updateFormData } = useFormContext();
+	const { formData, updateFormData, motivos } = useFormContext();
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	useEffect(() => {
-		const timer = setTimeout(() => {
+		if(motivos.length > 0) {
 			setIsLoading(false);
-		}, 1000);
-		return () => clearTimeout(timer);
-	}, []);
+		} else {
+			const timer = setTimeout(() => {
+				setIsLoading(false);
+			}, 3000);
+			return () => clearTimeout(timer);
+		}
+	}, [motivos]);
 	return (
 		<div className="space-y-6">
 			{/* Date Input */}

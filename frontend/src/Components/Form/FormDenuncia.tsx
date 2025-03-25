@@ -46,7 +46,7 @@ const FormularioDenuncia: React.FC = () => {
 
 			{/* Formulario */}
 			<form
-				className="rounded-lg p-6 shadow-lg backdrop-blur-2xl backdrop-saturate-100 bg-[#3a46500d]"
+				className="rounded-lg p-6 shadow-lg backdrop-blur-2xl backdrop-saturate-100 bg-[#3a46500d] animate__animated animate__fadeIn"
 				onSubmit={(e) => e.preventDefault()}
 			>
 				{renderPage()}
