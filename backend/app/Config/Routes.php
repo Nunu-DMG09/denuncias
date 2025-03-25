@@ -19,4 +19,3 @@ $routes->group('form', function ($routes) {
     // $routes->post('denuncias/adjuntos', 'UploadController::uploadDenunciaFiles');
     // $routes->options('denuncias/adjuntos', 'FormularioDenunciasController::options');
 });
-$routes->post('upload', 'UploadController::upload');
