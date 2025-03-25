@@ -7,6 +7,7 @@ interface ConfirmLogoutProps {
 export const ConfirmLogout: React.FC<ConfirmLogoutProps> = ({ onCancel }) => {
 	const { confirmLogout } = useAuthContext();
 	const handleLogout = () => {
+        onCancel();
 		confirmLogout("si");
 	};
 	return (
