@@ -6,20 +6,33 @@ import { Layout } from "./Components/Layout";
 import { TrackingDenuncia } from "./pages/Tracking/TrackingDenuncia";
 import { Login } from "./pages/Admin/Login";
 import { DashboardAdmin } from "./pages/Admin/Dashboard";
+import { AuthProvider } from "./context/AuthenticationContext";
+import { ProtectedRoute } from "./Components/ProtectedRoute";
+import { Unauthorized } from "./pages/Unauthorized";
 function App() {
 	return (
 		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<Layout />}>
-					<Route index element={<FormularioDenuncia />} />
-					<Route
-						path="/tracking-denuncia"
-						element={<TrackingDenuncia />}
-					/>
+			<AuthProvider>
+				<Routes>
+					<Route path="/" element={<Layout />}>
+						<Route index element={<FormularioDenuncia />} />
+						<Route
+							path="/tracking-denuncia"
+							element={<TrackingDenuncia />}
+						/>
+					</Route>
 					<Route path="/login" element={<Login />} />
-					<Route path="/admin-dashboard" element={<DashboardAdmin/>} />
-				</Route>
-			</Routes>
+					<Route path="/unauthorized" element={<Unauthorized />} />
+					<Route
+						path="/admin-dashboard"
+						element={
+							<ProtectedRoute>
+								<DashboardAdmin />
+							</ProtectedRoute>
+						}
+					/>
+				</Routes>
+			</AuthProvider>
 			<Toaster richColors closeButton />
 		</BrowserRouter>
 	);
