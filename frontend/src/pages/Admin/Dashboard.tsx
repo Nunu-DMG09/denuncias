@@ -44,7 +44,7 @@ export const DashboardAdmin = () => {
 						: "Administrador"}
 				</p>
 			</div>
-			<main className="grid grid-cols-1 md:grid-cols-3 gap-14 group">
+			<main className={`grid grid-cols-1 gap-14 group ${allowedMenuItems.length === 1 ? "place-items-center" : "md:grid-cols-3 "}`}>
 				{allowedMenuItems.map((item) => (
 					<Link
 						to={item.link}
