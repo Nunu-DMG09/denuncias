@@ -169,7 +169,7 @@ class FormularioDenunciasController extends ResourceController
             if ($file->isValid() && !$file->hasMoved()) {
                 $newName = $file->getRandomName();
                 $file->move($uploadPath, $newName);
-                $fileType = isset($adjuntos['file_type']) ? $adjuntos['file_type'] : 'desconocido';
+                $fileType = $file->getClientMimeType();
                 $this->adjuntosModel->insert([
                     'id' => $this->generateId('adjuntos'),
                     'denuncia_id' => $id_denuncia,
