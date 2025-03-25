@@ -13,6 +13,8 @@ export const useLogin = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
     const [isVisible, setIsVisible] = useState<boolean>(false);
+    const [isDisabled, setIsDisabled] = useState<boolean>(true);
+    const [password, setPassword] = useState<string>("");
 
     const toggleVisibility = () => {
         setIsVisible(prev => !prev);
@@ -25,6 +27,10 @@ export const useLogin = () => {
 		const nameValue = e.target.value;
 		setNombre(nameValue);
 	};
+    const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const passwordValue = e.target.value;
+        setPassword(passwordValue);
+    };
     useEffect(() => {
         const fetchDniData = async () => {
             setIsLoading(true);
@@ -51,6 +57,14 @@ export const useLogin = () => {
         }
     }, [numeroDocumento]);
 
+    useEffect(() => {
+        if (numeroDocumento.length === 8 && nombre && password.length >= 8) {
+            setIsDisabled(false);
+        } else {
+            setIsDisabled(true);
+        }
+    }, [numeroDocumento, nombre, password]);
+
     return {
         numeroDocumento,
         nombre,
@@ -59,6 +73,9 @@ export const useLogin = () => {
         handleDocumentoChange,
         handleName,
         isVisible,
-        toggleVisibility
+        toggleVisibility,
+        isDisabled,
+        handlePassword,
+        password,
     }
 };
