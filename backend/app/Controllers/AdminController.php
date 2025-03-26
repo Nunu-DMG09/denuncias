@@ -31,6 +31,7 @@ class AdminController extends BaseController
                 'nombre' => $user['nombres'] ?? 'Admin'
             ];
             $token = JWT::encode($payload, $key, 'HS256');
+            session()->set('token', $token);
             return $this->response->setJSON(['token' => $token]);
         }
         // Mensaje de error más específico para depuración
@@ -62,6 +63,7 @@ class AdminController extends BaseController
                     'nombre' => $user['nombres'] ?? 'Admin'
                 ];
                 $newToken = JWT::encode($payload, $key, 'HS256');
+                session()->set('token', $newToken);
                 return $this->response->setJSON([
                     'user' => [
                         'dni_admin' => $user['dni_admin'],
