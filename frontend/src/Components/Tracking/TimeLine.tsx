@@ -1,10 +1,8 @@
-import React from "react";
 import { TrackingData } from "../../types";
-
+import { getStatusColor } from "../../utils";
 interface TimeLineProps {
 	trackingUtils: {
 		trackingData: TrackingData | null;
-		getStatusColor: (status: string) => string;
 		getStatusIcon: (status: string) => string;
 		formatDate: (date: string) => string;
 		getGlowColorFromStatus: (status: string) => string;
@@ -14,7 +12,6 @@ interface TimeLineProps {
 export const TimeLine = ({ trackingUtils }: TimeLineProps) => {
 	const {
 		trackingData,
-		getStatusColor,
 		getStatusIcon,
 		formatDate,
 		getGlowColorFromStatus,

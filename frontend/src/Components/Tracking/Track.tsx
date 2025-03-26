@@ -10,7 +10,6 @@ interface TrackProps {
 		trackingLoading: boolean;
 		trackingError: string | null;
 		displayTrackingCode: string;
-		getStatusColor: (status: string) => string;
 		getStatusIcon: (status: string) => string;
 		formatDate: (date: string) => string;
 		getGlowColorFromStatus: (status: string) => string;
