@@ -43,6 +43,7 @@ class GestionController extends BaseController
         ')
             ->join('denunciantes', 'denuncias.denunciante_id = denunciantes.id', 'left')
             ->join('denunciados', 'denuncias.denunciado_id = denunciados.id')
+            ->where('denuncias.dni_admin', null)
             ->join('motivos', 'denuncias.motivo_id = motivos.id')
             ->where('denuncias.estado', ['registrado'])
             ->get()
