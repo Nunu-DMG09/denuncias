@@ -4,7 +4,7 @@ import { useLocation } from "react-router";
 export const useHeader = () => {
 	const location = useLocation();
 	const isFormPage = location.pathname === "/";
-	const isAdminSection = location.pathname.includes("/admin");
+	const isAdminSection = location.pathname.includes("/admin") && !location.pathname.includes("/admin/login");
 	const [showLogoutModal, setShowLogoutModal] = useState(false);
 	const openLogoutModal = useCallback(() => {
 		setShowLogoutModal(true);

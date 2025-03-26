@@ -20,7 +20,7 @@ export const DashboardAdmin = () => {
 		{
 			title: "Historial de Administradores",
 			icon: "fa-duotone fa-solid fa-rectangle-history-circle-user",
-			link: "/admin/administradores",
+			link: "/admin/historial-admins",
 			allowedRoles: ["super_admin"],
 		},
 	];

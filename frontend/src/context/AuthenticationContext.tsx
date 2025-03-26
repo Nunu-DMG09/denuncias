@@ -92,7 +92,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 		localStorage.removeItem("auth_token");
 		setIsAuthenticated(false);
 		setUser(null);
-		navigate("/login");
+		navigate("/admin/login");
 	};
 	const checkUserInfo = async () => {
 		try {
