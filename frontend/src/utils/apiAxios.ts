@@ -69,6 +69,12 @@ authApi.interceptors.response.use(
 		if (error.code === "ECONNABORTED") {
 			console.error("Timeout error");
 		} else if (error.response) {
+			if (error.response.status === 401) {
+				localStorage.removeItem('auth_token');
+				if (!window.location.pathname.includes('/admin/login')) {
+					window.location.href = "/admin/login";
+				}
+			}
 			console.error(
 				`Error response: ${error.response.status} : ${error.response.data}`
 			);
