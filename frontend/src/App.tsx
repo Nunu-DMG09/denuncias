@@ -10,6 +10,7 @@ import { AuthProvider } from "./context/AuthenticationContext";
 import { ProtectedRoute } from "./Components/ProtectedRoute";
 import { Unauthorized } from "./pages/Unauthorized";
 import { NotFound } from "./pages/404";
+import { Denuncias } from "./pages/Admin/Denuncias";
 function App() {
 	return (
 		<BrowserRouter>
@@ -52,6 +53,14 @@ function App() {
 								<ProtectedRoute allowedRoles={["super_admin"]}>
 									{/* <UserManagement /> */}
 									<DashboardAdmin />
+								</ProtectedRoute>
+							}
+						/>
+						<Route 
+							path="/admin/denuncias"
+							element={
+								<ProtectedRoute allowedRoles={["super_admin", "admin"]}>
+									<Denuncias />
 								</ProtectedRoute>
 							}
 						/>
