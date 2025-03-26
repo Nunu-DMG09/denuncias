@@ -27,5 +27,6 @@ $routes->group('form', function ($routes) {
 $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('recibidas', 'GestionController::receivedAdmin');
     $routes->get('denuncias', 'GestionController::dashboard');
+    $routes->options('denuncias', 'FormularioDenunciasController::options');
     $routes->group('', ['filter' => 'auth:superadmin'], function ($routes) {});
 });
