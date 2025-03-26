@@ -108,8 +108,8 @@ class Filters extends BaseFilters
      */
     public array $filters = [
         'cors' => [
-            'before' => ['api/*', 'form/*'],
-            'after'  => ['api/*', 'form/*'],
+            'before' => ['api/*', 'form/*','admin/*'],
+            'after'  => ['api/*', 'form/*','admin/*'],
         ],
         'auth' => [
             'before' => ['admin/*'],
