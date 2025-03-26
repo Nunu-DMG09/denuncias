@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-03-2025 a las 17:04:00
+-- Tiempo de generación: 26-03-2025 a las 15:48:53
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -61,6 +61,13 @@ CREATE TABLE `administradores` (
   `categoria` varchar(100) NOT NULL,
   `estado` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `administradores`
+--
+
+INSERT INTO `administradores` (`dni_admin`, `nombres`, `password`, `categoria`, `estado`) VALUES
+('76628500', 'BURGA BRACAMONTE, JULIAN', '$2y$10$tfjs0cx9/FFaNHMHnISyuuwX2rf9hQkiZWxVoAnmo2Yl/i6NYFaay', 'super_admin', 'activo');
 
 -- --------------------------------------------------------
 
@@ -134,8 +141,9 @@ CREATE TABLE `denuncias` (
   `descripcion` text NOT NULL,
   `fecha_incidente` date DEFAULT NULL,
   `denunciado_id` varchar(8) NOT NULL,
+  `dni_admin` varchar(8) DEFAULT NULL,
   `fecha_registro` datetime NOT NULL DEFAULT current_timestamp(),
-  `estado` varchar(50) NOT NULL DEFAULT 'registrada',
+  `estado` enum('registrado','en proceso','resuelto','rechazado') NOT NULL DEFAULT 'registrado',
   `pdf_path` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -253,7 +261,8 @@ ALTER TABLE `denuncias`
   ADD UNIQUE KEY `tracking_code` (`tracking_code`),
   ADD KEY `fk_denuncias_motivo` (`motivo_id`),
   ADD KEY `fk_denuncias_denunciado` (`denunciado_id`),
-  ADD KEY `fk_denuncias_denunciante` (`denunciante_id`);
+  ADD KEY `fk_denuncias_denunciante` (`denunciante_id`),
+  ADD KEY `dni_admin` (`dni_admin`);
 
 --
 -- Indices de la tabla `motivos`
@@ -283,6 +292,7 @@ ALTER TABLE `adjuntos`
 -- Filtros para la tabla `denuncias`
 --
 ALTER TABLE `denuncias`
+  ADD CONSTRAINT `denuncias_ibfk_1` FOREIGN KEY (`dni_admin`) REFERENCES `administradores` (`dni_admin`),
   ADD CONSTRAINT `fk_denuncias_denunciado` FOREIGN KEY (`denunciado_id`) REFERENCES `denunciados` (`id`),
   ADD CONSTRAINT `fk_denuncias_denunciante` FOREIGN KEY (`denunciante_id`) REFERENCES `denunciantes` (`id`),
   ADD CONSTRAINT `fk_denuncias_motivo` FOREIGN KEY (`motivo_id`) REFERENCES `motivos` (`id`);
