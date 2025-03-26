@@ -7,7 +7,7 @@ interface ConfirmLogoutProps {
 export const ConfirmLogout: React.FC<ConfirmLogoutProps> = ({ onCancel }) => {
 	const { confirmLogout } = useAuthContext();
 	const handleLogout = () => {
-        onCancel();
+		onCancel();
 		confirmLogout("si");
 	};
 	return (
@@ -18,13 +18,13 @@ export const ConfirmLogout: React.FC<ConfirmLogoutProps> = ({ onCancel }) => {
 				</h2>
 				<div className="flex justify-evenly items-center">
 					<button
-						className="bg-(--primary-color) text-white p-5 rounded-sm hover:bg-(--secondary-color) cursor-pointer hover:scale-110 transition-all duration-300 ease-in-out"
+						className="bg-(--primary-color) cursor-pointer text-white p-5 rounded-sm hover:bg-(--secondary-color) hover:scale-110 transition-all duration-300 ease-in-out"
 						onClick={onCancel}
 					>
 						Cancelar
 					</button>
 					<button
-						className="bg-transparent border-3 border-red-400 text-red-400 p-4 rounded-sm cursor-pointer hover:bg-red-400 hover:text-white transition-all duration-300 ease-in-out"
+						className="bg-transparent border-3 cursor-pointer border-red-400 text-red-400 p-4 rounded-sm hover:bg-red-400 hover:text-white transition-all duration-300 ease-in-out"
 						onClick={handleLogout}
 					>
 						Cerrar sesión

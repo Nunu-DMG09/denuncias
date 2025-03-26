@@ -1,13 +1,16 @@
 const logo = "/logo.jpeg";
-import { Link, useLocation } from "react-router";
+import { Link } from "react-router";
 import { ConfirmLogout } from "./Admin/ConfirmLogout";
-import { useState } from "react";
+import { useHeader } from "../hooks/useHeaderLogic";
 
 const Header = () => {
-	const location = useLocation();
-	const isFormPage = location.pathname === "/";
-	const isAdminSection = location.pathname.includes("/admin");
-	const [showLogoutModal, setShowLogoutModal] = useState(false);
+	const {
+		isFormPage,
+		isAdminSection,
+		showLogoutModal,
+		openLogoutModal,
+		closeLogoutModal,
+	} = useHeader();
 
 	return (
 		<header className="header shadow-md w-full bg-white py-4 px-4">
@@ -29,7 +32,7 @@ const Header = () => {
 					</Link>
 					{isAdminSection ? (
 						<button
-							onClick={() => setShowLogoutModal(true)}
+							onClick={openLogoutModal}
 							className="bg-red-400 text-sm md:text-base text-center text-white font-semibold px-4 py-3 rounded-lg ml-17 cursor-pointer hover:scale-110 hover:bg-red-800 transition-all ease-in-out duration-300"
 						>
 							Cerrar Sesión
@@ -51,7 +54,7 @@ const Header = () => {
 					)}
 					{showLogoutModal && (
 						<ConfirmLogout
-							onCancel={() => setShowLogoutModal(false)}
+							onCancel={closeLogoutModal}
 						/>
 					)}
 				</div>
