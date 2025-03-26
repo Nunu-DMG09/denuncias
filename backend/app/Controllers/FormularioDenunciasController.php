@@ -32,10 +32,6 @@ class FormularioDenunciasController extends ResourceController
         $data = $this->motivosModel->findAll();
         return $this->response->setJSON($data);
     }
-    public function options()
-    {
-        return $this->response->setStatusCode(200);
-    }
     public function generateId($table)
     {
         $prefixes = [
