@@ -20,7 +20,7 @@ function App() {
 							path="/tracking-denuncia"
 							element={<TrackingDenuncia />}
 						/>
-						<Route path="/login" element={<Login />} />
+						<Route path="/admin/login" element={<Login />} />
 						<Route
 							path="/unauthorized"
 							element={<Unauthorized />}
