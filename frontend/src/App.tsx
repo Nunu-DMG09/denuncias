@@ -13,6 +13,7 @@ import { NotFound } from "./pages/404";
 import { Denuncias } from "./pages/Admin/Denuncias";
 import { UsersManagement } from "./pages/Admin/UsersManagement";
 import { AdminsHistorial } from "./pages/Admin/AdminsHistorial";
+import { DenunciasLayout } from "./Components/DenunciasLayout";
 function App() {
 	return (
 		<BrowserRouter>
@@ -69,10 +70,13 @@ function App() {
 							path="/admin/denuncias"
 							element={
 								<ProtectedRoute allowedRoles={["super_admin", "admin"]}>
-									<Denuncias />
+									<DenunciasLayout />
 								</ProtectedRoute>
 							}
-						/>
+						>
+							<Route index element={<Denuncias />} />
+							<Route path="recibidos" element={<Denuncias />} />
+						</Route>
 						<Route path="*" element={<NotFound />} />
 					</Route>
 				</Routes>
