@@ -20,14 +20,10 @@ $routes->group('api', function ($routes) {
 $routes->group('form', function ($routes) {
     $routes->get('motivos', 'FormularioDenunciasController::index');
     $routes->post('create', 'FormularioDenunciasController::create');
-    $routes->options('create', 'FormularioDenunciasController::options');
-    // $routes->post('denuncias/adjuntos', 'UploadController::uploadDenunciaFiles');
-    // $routes->options('denuncias/adjuntos', 'FormularioDenunciasController::options');
+    $routes->options('create', 'FormularioDenunciasController::options');   
 });
 // Rutas para el administrador
 $routes->group('admin', ['filter' => 'auth'], function ($routes) {
-    // Rutas accesibles para admin y superadmin
-
-    // Rutas exclusivas para superadmin
+    $routes->get('denuncias', 'GestionController::dashboard');
     $routes->group('', ['filter' => 'auth:superadmin'], function ($routes) {});
 });
