@@ -9,6 +9,7 @@ import { DashboardAdmin } from "./pages/Admin/Dashboard";
 import { AuthProvider } from "./context/AuthenticationContext";
 import { ProtectedRoute } from "./Components/ProtectedRoute";
 import { Unauthorized } from "./pages/Unauthorized";
+import { NotFound } from "./pages/404";
 function App() {
 	return (
 		<BrowserRouter>
@@ -54,6 +55,7 @@ function App() {
 								</ProtectedRoute>
 							}
 						/>
+						<Route path="*" element={<NotFound />} />
 					</Route>
 				</Routes>
 			</AuthProvider>
