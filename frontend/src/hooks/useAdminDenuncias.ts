@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { authApi } from "../utils/apiAxios";
 import { toast } from "sonner";
+import { useAuthContext } from "./useAuthContext";
 
 interface Denuncia {
 	tracking_code: string;
@@ -18,6 +19,7 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 	const [error, setError] = useState<string | null>(null);
 	const [totalPages, setTotalPages] = useState(0);
 	const [currentPage, setCurrentPage] = useState(1);
+	const { user } = useAuthContext();
 
 	const fetchDenuncias = useCallback(async () => {
 		try {
@@ -74,7 +76,34 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 			setCurrentPage(page);
 		}
 	};
-	// asignar denuncia aqui
+
+	const recibirDenuncia = async (dni: string, tracking_code: string) => {
+		const adminDni = dni || user?.dni_admin|| "";
+		if (!adminDni) {
+			toast.error("Error de autenticación", {
+				description: "No se pudo identificar al administrador actual"
+			});
+			return;
+		}
+		try {
+			await authApi.post(`/denuncias/mandar`, {
+				dni_admin: dni,
+				tracking_code: tracking_code,
+			});
+			setDenuncias((prev) =>
+				prev.filter(
+					(denuncia) => denuncia.tracking_code !== tracking_code
+				)
+			);
+			toast.success("Denuncia recibida correctamente");
+		} catch (error) {
+			console.error("Error al recibir la denuncia:", error);
+			toast.error("Error al recibir la denuncia", {
+				description:
+					"Ocurrió un error al recibir la denuncia, por favor intenta de nuevo",
+			});
+		}
+	};
 
 	const denunciasPaginadas = denuncias.slice(
 		(currentPage - 1) * itemsPerPage,
@@ -86,11 +115,9 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 			let pageNum;
 			if (currentPage <= 3) {
 				pageNum = i + 1;
-			}
-			else if (currentPage >= totalPages - 2) {
+			} else if (currentPage >= totalPages - 2) {
 				pageNum = totalPages - 4 + i;
-			}
-			else {
+			} else {
 				pageNum = currentPage - 2 + i;
 			}
 			if (pageNum <= 0 || pageNum > totalPages) {
@@ -110,6 +137,7 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 		denunciasPaginadas,
 		handleCurrentPage,
 		handlePageChange,
-		getVisiblePageNumbers
+		getVisiblePageNumbers,
+		recibirDenuncia
 	};
 };

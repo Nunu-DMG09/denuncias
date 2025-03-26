@@ -1,5 +1,6 @@
 import { useAdminDenuncias } from "../../hooks/useAdminDenuncias";
 import { getStatusColor } from "../../utils";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 export const Denuncias = () => {
 	const itemsPerPage = 10;
@@ -10,8 +11,10 @@ export const Denuncias = () => {
 		currentPage,
 		handleCurrentPage,
 		getVisiblePageNumbers,
-		handlePageChange
+		handlePageChange,
+		recibirDenuncia
 	} = useAdminDenuncias(itemsPerPage);
+	const { user } = useAuthContext();
 	return (
 		<div className="container mx-auto my-8 px-4">
 			<div className="flex justify-between items-center mb-6">
@@ -139,9 +142,8 @@ export const Denuncias = () => {
 										</td>
 										<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 											<button
-												// onClick={() =>
-												// 	// asignarDenuncia(denuncia.id)
-												// }
+												onClick={() =>
+													recibirDenuncia( user?.dni_admin || '',denuncia.tracking_code)}
 												className="bg-(--secondary-color) cursor-pointer text-white px-3 py-1.5 rounded hover:bg-(--primary-color) transition duration-300 ease-in-out flex items-center"
 											>
 												<i className="fas fa-plus mr-1.5"></i>
@@ -153,8 +155,6 @@ export const Denuncias = () => {
 							</tbody>
 						</table>
 					</div>
-
-					{/* Paginación */}
 					<div className="flex justify-between items-center mt-6">
 						<div className="text-sm text-gray-600">
 							Página {currentPage} de {totalPages}
@@ -167,8 +167,6 @@ export const Denuncias = () => {
 							>
 								Anterior
 							</button>
-
-							{/* Números de página */}
 							<div className="hidden sm:flex space-x-1">
 								{getVisiblePageNumbers().map((pageNum) => (
 									<button
