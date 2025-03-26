@@ -11,6 +11,7 @@ import { ProtectedRoute } from "./Components/ProtectedRoute";
 import { Unauthorized } from "./pages/Unauthorized";
 import { NotFound } from "./pages/404";
 import { Denuncias } from "./pages/Admin/Denuncias";
+import { UsersManagement } from "./pages/Admin/UsersManagement";
 function App() {
 	return (
 		<BrowserRouter>
@@ -51,8 +52,7 @@ function App() {
 							path="/admin/users"
 							element={
 								<ProtectedRoute allowedRoles={["super_admin"]}>
-									{/* <UserManagement /> */}
-									<DashboardAdmin />
+									<UsersManagement />
 								</ProtectedRoute>
 							}
 						/>
