@@ -24,6 +24,7 @@ class DenunciasModel extends Model
         'descripcion',
         'fecha_incidente',
         'denunciado_id',
+        'dni_admin',
         'fecha_registro',
         'estado',
         'pdf_path'
