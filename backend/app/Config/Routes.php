@@ -9,6 +9,8 @@ $routes->get('/', 'Home::index');
 $routes->post('login', 'AdminController::login');
 $routes->options('login', 'FormularioDenunciasController::options');
 $routes->get('register', 'AdminController::registerPrueba');
+$routes->get('admin-info', 'AdminController::getAdminInfo');
+$routes->options('admin-info', 'FormularioDenunciasController::options');
 // Rutas para la API
 $routes->group('api', function ($routes) {
     $routes->get('dni/(:num)', 'ConsultaApi::buscarDNI/$1');
@@ -27,6 +29,5 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     // Rutas accesibles para admin y superadmin
 
     // Rutas exclusivas para superadmin
-    $routes->group('', ['filter' => 'auth:superadmin'], function ($routes) {
-    });
+    $routes->group('', ['filter' => 'auth:superadmin'], function ($routes) {});
 });
