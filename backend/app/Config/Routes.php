@@ -5,6 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+
 $routes->get('/', 'Home::index');
 $routes->post('login', 'AdminController::login');
 $routes->options('login', 'FormularioDenunciasController::options');
@@ -24,6 +25,7 @@ $routes->group('form', function ($routes) {
 });
 // Rutas para el administrador
 $routes->group('admin', ['filter' => 'auth'], function ($routes) {
+    $routes->get('recibidas', 'GestionController::receivedAdmin');
     $routes->get('denuncias', 'GestionController::dashboard');
     $routes->group('', ['filter' => 'auth:superadmin'], function ($routes) {});
 });
