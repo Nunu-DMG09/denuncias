@@ -12,6 +12,7 @@ import { Unauthorized } from "./pages/Unauthorized";
 import { NotFound } from "./pages/404";
 import { Denuncias } from "./pages/Admin/Denuncias";
 import { UsersManagement } from "./pages/Admin/UsersManagement";
+import { AdminsHistorial } from "./pages/Admin/AdminsHistorial";
 function App() {
 	return (
 		<BrowserRouter>
@@ -53,6 +54,14 @@ function App() {
 							element={
 								<ProtectedRoute allowedRoles={["super_admin"]}>
 									<UsersManagement />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path="/admin/historial-admins"
+							element={
+								<ProtectedRoute allowedRoles={["super_admin"]}>
+									<AdminsHistorial />
 								</ProtectedRoute>
 							}
 						/>
