@@ -1,7 +1,7 @@
 import "./App.css";
 import FormularioDenuncia from "./Components/Form/FormDenuncia";
 import { Toaster } from "sonner";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import { Layout } from "./Components/Layout";
 import { TrackingDenuncia } from "./pages/Tracking/TrackingDenuncia";
 import { Login } from "./pages/Admin/Login";
@@ -24,6 +24,16 @@ function App() {
 						<Route
 							path="/unauthorized"
 							element={<Unauthorized />}
+						/>
+						<Route
+							path="/admin"
+							element={
+								<ProtectedRoute
+									allowedRoles={["super_admin", "admin"]}
+								>
+									<Navigate to="/admin/dashboard" replace />
+								</ProtectedRoute>
+							}
 						/>
 						<Route
 							path="/admin/dashboard"
