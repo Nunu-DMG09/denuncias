@@ -9,7 +9,8 @@ export const Denuncias = () => {
 		totalPages,
 		currentPage,
 		handleCurrentPage,
-		handlePageChange,
+		getVisiblePageNumbers,
+		handlePageChange
 	} = useAdminDenuncias(itemsPerPage);
 	return (
 		<div className="container mx-auto my-8 px-4">
@@ -169,43 +170,21 @@ export const Denuncias = () => {
 
 							{/* Números de página */}
 							<div className="hidden sm:flex space-x-1">
-								{Array.from(
-									{ length: Math.min(5, totalPages) },
-									(_, i) => {
-										let pageNum;
-										if (currentPage <= 3) {
-											pageNum = i + 1;
-										} else if (
-											currentPage >=
-											totalPages - 2
-										) {
-											pageNum = totalPages - 4 + i;
-										} else {
-											pageNum = currentPage - 2 + i;
+								{getVisiblePageNumbers().map((pageNum) => (
+									<button
+										key={pageNum}
+										onClick={() =>
+											handlePageChange(pageNum)
 										}
-										if (
-											pageNum <= 0 ||
-											pageNum > totalPages
-										)
-											return null;
-
-										return (
-											<button
-												key={pageNum}
-												onClick={() =>
-													handlePageChange(pageNum)
-												}
-												className={`px-3 py-2 border rounded-md text-sm font-medium ${
-													pageNum === currentPage
-														? "bg-(--primary-color) text-white border-(--primary-color)"
-														: "text-gray-700 border-gray-300 hover:bg-gray-50"
-												}`}
-											>
-												{pageNum}
-											</button>
-										);
-									}
-								)}
+										className={`px-3 py-2 border rounded-md text-sm font-medium ${
+											pageNum === currentPage
+												? "bg-(--primary-color) text-white border-(--primary-color)"
+												: "text-gray-700 border-gray-300 hover:bg-gray-50"
+										}`}
+									>
+										{pageNum}
+									</button>
+								))}
 							</div>
 
 							<button
