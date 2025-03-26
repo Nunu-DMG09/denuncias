@@ -52,7 +52,7 @@ class GestionController extends BaseController
     }
     public function receiveAdmin()
     {
-        $data = $this->request->getJSON(true);
+        $data = $this->request->getGet();
         $code = $data['tracking_code'];
         $dni_admin = $data['dni_admin'];
         $update = $this->denunciasModel
@@ -73,7 +73,7 @@ class GestionController extends BaseController
     }
     public function receivedAdmin()
     {
-        $data = $this->request->getJSON(true);
+        $data = $this->request->getGet();
         $dni_admin = $data['dni_admin'];
         $db = \Config\Database::connect();
         $denuncias = $db->table('denuncias')
