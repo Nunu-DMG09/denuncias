@@ -100,7 +100,7 @@ export const Login = () => {
 						</button>
 					</div>
 					<button
-						className="w-full p-3.5 rounded-lg outline-none bg-(--secondary-color) cursor-pointer text-white text-lg transition-all duration-300 ease-in-out hover:bg-(--primary-color) hover:shadow-lg disabled:bg-(--gray-light) disabled:cursor-not-allowed"
+						className="w-full p-3.5 rounded-lg outline-none bg-(--secondary-color) cursor-pointer text-white text-lg transition-all duration-300 ease-in-out hover:bg-(--primary-color) hover:shadow-lg disabled:bg-(--gray-light) disabled:cursor-not-allowed flex justify-center items-center"
 						type="submit"
 						disabled={isDisabled || submitting}
 					>
