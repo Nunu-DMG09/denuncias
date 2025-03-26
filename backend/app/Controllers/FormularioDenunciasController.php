@@ -58,7 +58,6 @@ class FormularioDenunciasController extends ResourceController
         } while ($this->denunciasModel->where('tracking_code', $trackingCode)->first());
         return $trackingCode;
     }
-    
     public function correo($correo, $code)
     {
         $email = \Config\Services::email();
