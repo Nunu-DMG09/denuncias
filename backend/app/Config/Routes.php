@@ -24,7 +24,7 @@ $routes->group('form', function ($routes) {
 // Rutas para el administrador
 $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('denuncias', 'GestionController::dashboard');
-    $routes->post('recibida', 'GestionController::receivedAdmin');
-    $routes->post('mandar', 'GestionController::receiveAdmin');
+    $routes->get('recibida', 'GestionController::receivedAdmin');
+    $routes->get('mandar', 'GestionController::receiveAdmin');
     $routes->group('', ['filter' => 'auth:superadmin'], function ($routes) {});
 });
