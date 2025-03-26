@@ -111,5 +111,8 @@ class Filters extends BaseFilters
             'before' => ['api/*', 'form/*'],
             'after'  => ['api/*', 'form/*'],
         ],
+        'auth' => [
+            'before' => ['admin/*'],
+        ],
     ];
 }

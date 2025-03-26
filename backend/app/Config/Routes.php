@@ -24,7 +24,7 @@ $routes->group('form', function ($routes) {
     $routes->options('create', 'FormularioDenunciasController::options');   
 });
 // Rutas para el administrador
-$routes->group('admin', /*['filter' => 'auth'],*/ function ($routes) {
+$routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('denuncias', 'GestionController::dashboard');
     $routes->options('denuncias', 'FormularioDenunciasController::options');
     $routes->get('recibidas', 'GestionController::receivedAdmin');
