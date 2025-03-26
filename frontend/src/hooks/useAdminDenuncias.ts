@@ -86,9 +86,11 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 			return;
 		}
 		try {
-			await authApi.post(`/mandar`, {
-				dni_admin: dni,
-				tracking_code: tracking_code,
+			await authApi.get(`/mandar`, {
+				params: {
+					dni_admin: adminDni,
+					tracking_code: tracking_code
+				}
 			});
 			setDenuncias((prev) =>
 				prev.filter(
