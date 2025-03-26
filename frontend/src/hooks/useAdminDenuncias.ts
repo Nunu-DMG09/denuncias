@@ -86,7 +86,7 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 			return;
 		}
 		try {
-			await authApi.post(`/denuncias/mandar`, {
+			await authApi.post(`/mandar`, {
 				dni_admin: dni,
 				tracking_code: tracking_code,
 			});
