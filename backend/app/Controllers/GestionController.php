@@ -80,13 +80,20 @@ class GestionController extends BaseController
             ->where('tracking_code', $code)
             ->get()
             ->getRowArray()['id'];
-        $this->seguimientoDenunciasModel->insert([
+        $seguimientoData = [
             'id' => $this->generateId('seguimientoDenuncias'),
             'denuncia_id' => $id_denuncias,
             'dni_admin' => $dni_admin,
             'estado' => 'recibida',
             'fecha_actualizacion' => (new \DateTime('now', new \DateTimeZone('America/Lima')))->format('Y-m-d H:i:s')
-        ]);
+        ];
+
+        if (!$this->seguimientoDenunciasModel->insert($seguimientoData)) {
+            return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error al registrar el seguimiento de la denuncia'
+            ]);
+        }
         $update = $this->denunciasModel
             ->where('tracking_code', $code)
             ->set([
