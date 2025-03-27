@@ -70,6 +70,8 @@ export const useTracking = () => {
 		switch (status) {
 			case "registrado":
 				return "var(--registrado-bg)";
+			case 'recibida':
+				return "var(--recibida-bg)";
 			case "en_proceso":
 				return "var(--en_proceso-bg)";
 			case "finalizado":
