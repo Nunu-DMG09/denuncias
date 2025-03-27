@@ -95,7 +95,7 @@ class GestionController extends BaseController
             ->join('denunciados', 'denuncias.denunciado_id = denunciados.id')
             ->join('motivos', 'denuncias.motivo_id = motivos.id')
             ->where('denuncias.dni_admin', $dni_admin)
-            ->whereNotIn('denuncias.estado', ['rechazado', 'resuelto'])
+            ->whereIn('denuncias.estado', ['en proceso', 'recibida'])
             ->get()
             ->getResult();
 
