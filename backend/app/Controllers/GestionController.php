@@ -58,7 +58,10 @@ class GestionController extends BaseController
         $dni_admin = $data['dni_admin'];
         $update = $this->denunciasModel
             ->where('tracking_code', $code)
-            ->set('dni_admin', $dni_admin)
+            ->set([
+            'dni_admin' => $dni_admin,
+            'estado' => 'recibida'
+            ])
             ->update();
         if ($update) {
             return $this->response->setJSON([
