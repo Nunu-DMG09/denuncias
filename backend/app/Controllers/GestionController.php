@@ -51,11 +51,42 @@ class GestionController extends BaseController
 
         return $this->response->setJSON($denuncias);
     }
+    public function generateId($table)
+    {
+        $prefixes = [
+            'denuncias' => 'de',
+            'denunciantes' => 'dn',
+            'denunciados' => 'de',
+            'adjuntos' => 'ad',
+            'seguimientoDenuncias' => 'sd'
+        ];
+        if (!isset($prefixes[$table])) {
+            throw new \InvalidArgumentException("Invalid table name: $table");
+        }
+        $model = $this->{$table . 'Model'};
+        $prefix = $prefixes[$table];
+        do {
+            $uuid = $prefix . substr(bin2hex(random_bytes(6)), 0, 6);
+        } while ($model->where('id', $uuid)->first());
+        return $uuid;
+    }
     public function receiveAdmin()
     {
         $data = $this->request->getGet();
         $code = $data['tracking_code'];
         $dni_admin = $data['dni_admin'];
+        $id_denuncias = $this->denunciasModel
+            ->select('id')
+            ->where('tracking_code', $code)
+            ->get()
+            ->getRowArray()['id'];
+        $this->seguimientoDenunciasModel->insert([
+            'id' => $this->generateId('seguimientoDenuncias'),
+            'denuncia_id' => $id_denuncias,
+            'dni_admin' => $dni_admin,
+            'estado' => 'recibida',
+            'fecha_actualizacion' => (new \DateTime('now', new \DateTimeZone('America/Lima')))->format('Y-m-d H:i:s')
+        ]);
         $update = $this->denunciasModel
             ->where('tracking_code', $code)
             ->set([
