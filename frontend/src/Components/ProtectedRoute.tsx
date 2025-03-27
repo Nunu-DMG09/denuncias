@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from "react-router";
-import { useAuthContext } from "../hooks/useAuthContext";
+import { useAuthContext } from "../hooks/Admin/useAuthContext";
 import { Loader } from "./Loaders/Loader";
 
 interface ProtectedRouteProps {

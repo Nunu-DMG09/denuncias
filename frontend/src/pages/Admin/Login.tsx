@@ -1,6 +1,6 @@
 import { useLogin } from "../../hooks/Admin/useLogin";
 import { Loader } from "../../Components/Loaders/Loader";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useAuthContext } from "../../hooks/Admin/useAuthContext";
 import { Navigate } from "react-router";
 export const Login = () => {
 	const {

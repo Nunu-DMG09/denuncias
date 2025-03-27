@@ -1,7 +1,7 @@
 import { DatosDenunciado } from "../../pages/Form/DatosDenunciado";
 import { DatosDenunciante } from "../../pages/Form/DatosDenunciante";
 import { InfoDenuncia } from "../../pages/Form/InfoDenuncia";
-import { useFormContext } from "../../hooks/useFormContext";
+import { useFormContext } from "../../hooks/Form/useFormContext";
 import { FormNavigator } from "./FormNavigator";
 import { FormProgressBar } from "./FormProgressBar";
 import { ResumenDenuncia } from "../../pages/Form/ResumenDenuncia";

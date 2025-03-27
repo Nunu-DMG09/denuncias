@@ -1,5 +1,5 @@
 import { FilesProgressBar } from "./FilesProgressBar";
-import { useFormContext } from "../../hooks/useFormContext";
+import { useFormContext } from "../../hooks/Form/useFormContext";
 import {
 	calcTotalSize,
 	MAX_SIZE_BYTES,

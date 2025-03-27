@@ -1,4 +1,4 @@
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useAuthContext } from "../../hooks/Admin/useAuthContext";
 
 interface ConfirmLogoutProps {
 	onCancel: () => void;
