@@ -10,7 +10,7 @@ import { ReasonsList } from "../../Components/Form/ReasonsList";
 import { MotivosLoader } from "../../Components/Loaders/MotivosLoader";
 
 export const InfoDenuncia = () => {
-	const { startDate, handleDate, isLoading } = useDenuncias();
+	const { startDate, handleDate, isLoading, error } = useDenuncias();
 	const { formData, updateFormData } = useFormContext();
 	return (
 		<div className="space-y-6">
@@ -29,7 +29,40 @@ export const InfoDenuncia = () => {
 				/>
 			</div>
 			<div className="motivos-container min-h-[200px] transition-all duration-300">
-				{isLoading ? <MotivosLoader /> : <ReasonsList />}
+				{isLoading ? (
+					<MotivosLoader />
+				) : error ? (
+					<div className="flex flex-col items-center justify-center h-64 text-center">
+						<div className="text-red-600 mb-4">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className="h-12 w-12 mx-auto"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={2}
+									d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+								/>
+							</svg>
+							<h3 className="text-lg font-medium mt-2">
+								Error de carga
+							</h3>
+						</div>
+						<p className="text-gray-600 mb-4">{error}</p>
+						<button
+							onClick={() => window.location.reload()}
+							className="px-4 py-2 bg-(--primary-color) text-white rounded hover:bg-(--secondary-color) transition-all cursor-pointer duration-300 ease"
+						>
+							Reintentar
+						</button>
+					</div>
+				) : (
+					<ReasonsList />
+				)}
 			</div>
 
 			{/* Additional Details */}

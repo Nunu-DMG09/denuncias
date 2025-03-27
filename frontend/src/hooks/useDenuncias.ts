@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useFormContext } from "./useFormContext";
+import { toast } from "sonner";
 
 export const useDenuncias = () => {
 	const [startDate, setStartDate] = useState<Date | null>(null);
 	const { updateFormData, motivos } = useFormContext();
 	const [copied, setCopied] = useState(false);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [error, setError] = useState<string | null>(null);
 
 	const handleDate = (date: Date | null) => {
 		setStartDate(date);
@@ -24,19 +26,28 @@ export const useDenuncias = () => {
 	useEffect(() => {
 		if (motivos.length > 0) {
 			setIsLoading(false);
-		} else {
-			const timer = setTimeout(() => {
-				setIsLoading(false);
-			}, 3000);
-			return () => clearTimeout(timer);
+			setError(null);
 		}
-	}, [motivos]);
+		const timeoutId = setTimeout(() => {
+			if (isLoading && motivos.length === 0) {
+				setIsLoading(false);
+				setError("No se pudieron cargar los motivos de denuncia.");
+				toast.error("Error de carga", {
+					description:
+						"No se pudieron cargar los motivos de denuncia.",
+				});
+			}
+		}, 10000); // 10 segundos de timeout
+
+		return () => clearTimeout(timeoutId);
+	}, [motivos, isLoading]);
 
 	return {
 		startDate,
 		handleDate,
 		copyToClipboard,
 		copied,
-		isLoading
+		isLoading,
+		error
 	};
 };
