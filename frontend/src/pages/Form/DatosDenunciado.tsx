@@ -1,5 +1,5 @@
-import { useDenunciado } from "../../hooks/useDenunciado";
-import { useFormContext } from "../../hooks/useFormContext";
+import { useDenunciado } from "../../hooks/Form/useDenunciado";
+import { useFormContext } from "../../hooks/Form/useFormContext";
 import { Loader } from "../../Components/Loaders/Loader";
 import { useEffect } from "react";
 

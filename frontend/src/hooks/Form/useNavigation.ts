@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { validatePage } from "../utils";
+import { validatePage } from "../../utils";
 import { useFormContext } from "./useFormContext";
-import { generarDenunciaPDF } from "../services/pdfService";
+import { generarDenunciaPDF } from "../../services/pdfService";
 import { toast } from "sonner";
 
 export const useNavigation = () => {

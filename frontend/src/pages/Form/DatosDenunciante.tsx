@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Loader } from "../../Components/Loaders/Loader";
-import { useDenunciante } from "../../hooks/useDenunciante";
-import { useFormContext } from "../../hooks/useFormContext";
+import { useDenunciante } from "../../hooks/Form/useDenunciante";
+import { useFormContext } from "../../hooks/Form/useFormContext";
 
 export const DatosDenunciante = () => {
 	const {

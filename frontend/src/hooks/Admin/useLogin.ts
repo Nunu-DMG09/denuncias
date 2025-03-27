@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getDNIData } from "../services/apisDocs";
+import { getDNIData } from "../../services/apisDocs";
 import { toast } from "sonner";
 import { useAuthContext } from "./useAuthContext";
 export const useLogin = () => {

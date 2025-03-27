@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useAuthContext } from "../../hooks/Admin/useAuthContext";
 
 export const DashboardAdmin = () => {
 	const { user } = useAuthContext();

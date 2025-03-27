@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useFormContext } from "./useFormContext";
 import { toast } from "sonner";
-import { getRUCData, getDNIData } from "../services/apisDocs";
+import { getRUCData, getDNIData } from "../../services/apisDocs";
 
 export const useDenunciado = () => {
 	const { formData } = useFormContext();

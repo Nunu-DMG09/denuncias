@@ -1,7 +1,7 @@
 import { useFormContext } from "../../hooks/useFormContext";
 import { Loader } from "../Loaders/Loader";
 import { TOTAL_PAGES, SUBMIT_PAGE } from "../../utils";
-import { useNavigation } from "../../hooks/useNavigation";
+import { useNavigation } from "../../hooks/Form/useNavigation";
 
 export const FormNavigator = () => {
 	const {

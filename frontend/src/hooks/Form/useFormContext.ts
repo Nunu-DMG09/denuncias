@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { FormContext } from "../context/DenunciasContext";
+import { FormContext } from "../../context/DenunciasContext";
 
 export const useFormContext = () => {
 	const context = useContext(FormContext);

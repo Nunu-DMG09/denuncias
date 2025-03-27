@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { authApi } from "../utils/apiAxios";
+import { authApi } from "../../../utils/apiAxios";
 import { toast } from "sonner";
-import { useAuthContext } from "./useAuthContext";
+import { useAuthContext } from "../useAuthContext";
 
 interface Denuncia {
 	tracking_code: string;

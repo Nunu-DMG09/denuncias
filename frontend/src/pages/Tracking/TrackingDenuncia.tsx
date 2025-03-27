@@ -1,4 +1,4 @@
-import { useTracking } from "../../hooks/useTracking";
+import { useTracking } from "../../hooks/Tracking/useTracking";
 import { Track } from "../../Components/Tracking/Track";
 export const TrackingDenuncia = () => {
 	const trackingUtils = useTracking();

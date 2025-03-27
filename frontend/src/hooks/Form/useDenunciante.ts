@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useFormContext } from "./useFormContext";
-import { getDNIData, getRUCData } from "../services/apisDocs";
+import { getDNIData, getRUCData } from "../../services/apisDocs";
 
 
 export const useDenunciante = () => {

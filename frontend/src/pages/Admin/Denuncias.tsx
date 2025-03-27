@@ -1,6 +1,6 @@
-import { useAdminDenuncias } from "../../hooks/useAdminDenuncias";
+import { useAdminDenuncias } from "../../hooks/Admin/Denuncias/useAdminDenuncias";
 import { getStatusColor } from "../../utils";
-import { useAuthContext } from "../../hooks/useAuthContext";
+import { useAuthContext } from "../../hooks/Admin/useAuthContext";
 import { DenunciasWarn } from "../../Components/Errors/DenunciasWarn";
 
 export const Denuncias = () => {
