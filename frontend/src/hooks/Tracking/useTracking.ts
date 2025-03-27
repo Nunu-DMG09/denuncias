@@ -42,6 +42,8 @@ export const useTracking = () => {
 		switch (status.toLowerCase()) {
 			case "registrado":
 				return "fa-file-circle-check";
+			case "recibido":
+				return "fa-inbox";
 			case "en_proceso":
 			case "en proceso":
 				return "fa-clock";
