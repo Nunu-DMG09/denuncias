@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-03-2025 a las 15:48:53
+-- Tiempo de generación: 27-03-2025 a las 01:38:41
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -86,6 +86,20 @@ CREATE TABLE `denunciados` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
+-- Volcado de datos para la tabla `denunciados`
+--
+
+INSERT INTO `denunciados` (`id`, `nombre`, `numero_documento`, `tipo_documento`, `representante_legal`, `razon_social`, `cargo`) VALUES
+('de0001', 'Empresa ABC', '20123456789', 'RUC', 'Juan Perez', 'Empresa ABC S.A.', 'Gerente'),
+('de0002', 'Empresa XYZ', '20198765432', 'RUC', 'Maria Lopez', 'Empresa XYZ S.A.', 'Directora'),
+('de0003', 'Gobierno Local', '12345678', 'DNI', 'Carlos Sanchez', 'Municipalidad', 'Alcalde'),
+('de0004', 'Compañía LMN', '20111222333', 'RUC', 'Ana Garcia', 'Compañía LMN Ltda.', 'CEO'),
+('de0005', 'Instituto QRS', '87654321', 'DNI', 'Luis Ramirez', 'Instituto QRS', 'Director'),
+('de6ca417', 'BURGA BRACAMONTE, JULIAN', '76628500', 'DNI', NULL, NULL, 'idiota profesional'),
+('de78fe36', 'BURGA BRACAMONTE, JULIAN', '76628500', 'DNI', NULL, NULL, 'nose'),
+('ded4fec0', 'BURGA BRACAMONTE, JULIAN', '76628500', 'DNI', NULL, NULL, 'nose');
+
+--
 -- Disparadores `denunciados`
 --
 DELIMITER $$
@@ -112,6 +126,22 @@ CREATE TABLE `denunciantes` (
   `tipo_documento` enum('DNI','Carnet Extranjeria','RUC') DEFAULT 'DNI',
   `sexo` enum('M','F') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `denunciantes`
+--
+
+INSERT INTO `denunciantes` (`id`, `nombres`, `email`, `telefono`, `numero_documento`, `tipo_documento`, `sexo`) VALUES
+('dn0001', 'Pedro Martinez', 'pedro@example.com', '987654321', '12345678', 'DNI', 'M'),
+('dn0002', 'Laura Gomez', 'laura@example.com', '912345678', '87654321', 'DNI', 'F'),
+('dn0003', 'Carlos Ruiz', 'carlos@example.com', '998877665', '11223344', 'DNI', 'M'),
+('dn0004', 'Sofia Rojas', 'sofia@example.com', '977665544', '22334455', 'DNI', 'F'),
+('dn0005', 'Andres Lopez', 'andres@example.com', '966554433', '33445566', 'DNI', 'M'),
+('dn0006', 'Marta Diaz', 'marta@example.com', '955443322', '44556677', 'DNI', 'F'),
+('dn0007', 'Jorge Perez', 'jorge@example.com', '944332211', '55667788', 'DNI', 'M'),
+('dn0008', 'Valeria Mendez', 'valeria@example.com', '933221100', '66778899', 'DNI', 'F'),
+('dn0009', 'Ricardo Silva', 'ricardo@example.com', '922110099', '77889900', 'DNI', 'M'),
+('dn0010', 'Camila Torres', 'camila@example.com', '911009988', '88990011', 'DNI', 'F');
 
 --
 -- Disparadores `denunciantes`
@@ -143,9 +173,67 @@ CREATE TABLE `denuncias` (
   `denunciado_id` varchar(8) NOT NULL,
   `dni_admin` varchar(8) DEFAULT NULL,
   `fecha_registro` datetime NOT NULL DEFAULT current_timestamp(),
-  `estado` enum('registrado','en proceso','resuelto','rechazado') NOT NULL DEFAULT 'registrado',
+  `estado` enum('registrado','recibida','en proceso','resuelto','rechazado') NOT NULL DEFAULT 'registrado',
   `pdf_path` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `denuncias`
+--
+
+INSERT INTO `denuncias` (`id`, `tracking_code`, `es_anonimo`, `denunciante_id`, `motivo_id`, `motivo_otro`, `descripcion`, `fecha_incidente`, `denunciado_id`, `dni_admin`, `fecha_registro`, `estado`, `pdf_path`) VALUES
+('de0d4112', 'TD2E9BBB10F2E1A309FD', 1, NULL, 'mod4b28c', NULL, 'gaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '2025-03-07', 'de78fe36', '76628500', '2025-03-26 12:30:06', 'registrado', NULL),
+('dea14169', 'TDDE5551700C5253B68E', 1, NULL, 'mod4b28c', NULL, 'no me acuerdo a la firme pe mano, estoy escribiendo esto como webon y a la firme ya quiero acabar ', '2025-03-12', 'de6ca417', NULL, '2025-03-26 19:37:50', 'registrado', NULL),
+('dnc00001', 'TRK0001', 1, 'dn0001', 'mo221768', NULL, 'Descripción de la denuncia número 1: incidente relacionado con ventajas indebidas.', '2025-03-01', 'de0001', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
+('dnc00002', 'TRK0002', 0, 'dn0002', 'mo22176a', NULL, 'Descripción de la denuncia número 2: uso indebido de influencias.', '2025-03-02', 'de0002', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL),
+('dnc00003', 'TRK0003', 1, 'dn0003', 'mo58aa06', NULL, 'Descripción de la denuncia número 3: conflicto de intereses en gestión pública.', '2025-03-03', 'de0003', '76628500', '2025-03-26 11:45:33', 'resuelto', NULL),
+('dnc00004', 'TRK0004', 0, 'dn0004', 'mo58aa1e', NULL, 'Descripción de la denuncia número 4: obstrucción en el acceso a información.', '2025-03-04', 'de0004', '76628500', '2025-03-26 11:45:33', 'rechazado', NULL),
+('dnc00005', 'TRK0005', 1, 'dn0005', 'mo58aa1f', NULL, 'Descripción de la denuncia número 5: abuso de autoridad detectado en la institución.', '2025-03-05', 'de0005', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
+('dnc00006', 'TRK0006', 0, 'dn0006', 'mod4b288', NULL, 'Descripción de la denuncia número 6: favorecimiento indebido en contratos.', '2025-03-06', 'de0001', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL),
+('dnc00007', 'TRK0007', 1, 'dn0007', 'mod4b28c', NULL, 'Descripción de la denuncia número 7: uso indebido de recursos estatales.', '2025-03-07', 'de0002', '76628500', '2025-03-26 11:45:33', 'resuelto', NULL),
+('dnc00008', 'TRK0008', 0, 'dn0008', 'mo_otros', 'Otro motivo en denuncia 8: situación particular no clasificada.', 'Descripción de la denuncia número 8: incidente atípico.', '2025-03-08', 'de0003', '76628500', '2025-03-26 11:45:33', 'rechazado', NULL),
+('dnc00009', 'TRK0009', 1, 'dn0009', 'mo221768', NULL, 'Descripción de la denuncia número 9: análisis de ventajas indebidas.', '2025-03-09', 'de0004', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
+('dnc00010', 'TRK0010', 0, 'dn0010', 'mo22176a', NULL, 'Descripción de la denuncia número 10: irregularidades en el uso de influencias.', '2025-03-10', 'de0005', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL),
+('dnc00011', 'TRK0011', 1, 'dn0001', 'mo58aa06', NULL, 'Descripción de la denuncia número 11: conflicto de intereses detectado.', '2025-03-11', 'de0001', '76628500', '2025-03-26 11:45:33', 'resuelto', NULL),
+('dnc00012', 'TRK0012', 0, 'dn0002', 'mo58aa1e', NULL, 'Descripción de la denuncia número 12: información restringida sin justificación.', '2025-03-12', 'de0002', '76628500', '2025-03-26 11:45:33', 'rechazado', NULL),
+('dnc00013', 'TRK0013', 1, 'dn0003', 'mo58aa1f', NULL, 'Descripción de la denuncia número 13: abuso de poder en gestión de recursos.', '2025-03-13', 'de0003', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
+('dnc00014', 'TRK0014', 0, 'dn0004', 'mod4b288', NULL, 'Descripción de la denuncia número 14: favorecimiento indebido en asignación de proyectos.', '2025-03-14', 'de0004', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL),
+('dnc00015', 'TRK0015', 1, 'dn0005', 'mod4b28c', NULL, 'Descripción de la denuncia número 15: mal uso de bienes públicos detectado.', '2025-03-15', 'de0005', '76628500', '2025-03-26 11:45:33', 'resuelto', NULL),
+('dnc00016', 'TRK0016', 0, 'dn0006', 'mo_otros', 'Otro motivo en denuncia 16: situación excepcional no categorizada.', 'Descripción de la denuncia número 16: caso especial.', '2025-03-16', 'de0001', '76628500', '2025-03-26 11:45:33', 'rechazado', NULL),
+('dnc00017', 'TRK0017', 1, 'dn0007', 'mo221768', NULL, 'Descripción de la denuncia número 17: revisión de posibles sobornos.', '2025-03-17', 'de0002', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
+('dnc00018', 'TRK0018', 0, 'dn0008', 'mo22176a', NULL, 'Descripción de la denuncia número 18: injerencia indebida en procesos.', '2025-03-18', 'de0003', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL),
+('dnc00019', 'TRK0019', 1, 'dn0009', 'mo58aa06', NULL, 'Descripción de la denuncia número 19: conflicto de intereses en contratación.', '2025-03-19', 'de0004', '76628500', '2025-03-26 11:45:33', 'resuelto', NULL),
+('dnc00020', 'TRK0020', 0, 'dn0010', 'mo58aa1e', NULL, 'Descripción de la denuncia número 20: bloqueo injustificado de información.', '2025-03-20', 'de0005', '76628500', '2025-03-26 11:45:33', 'rechazado', NULL),
+('dnc00021', 'TRK0021', 1, 'dn0001', 'mo58aa1f', NULL, 'Descripción de la denuncia número 21: abuso de autoridad en gestión local.', '2025-03-21', 'de0001', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
+('dnc00022', 'TRK0022', 0, 'dn0002', 'mod4b288', NULL, 'Descripción de la denuncia número 22: favorecimiento en licitaciones públicas.', '2025-03-22', 'de0002', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL),
+('dnc00023', 'TRK0023', 1, 'dn0003', 'mod4b28c', NULL, 'Descripción de la denuncia número 23: uso indebido de recursos durante gestión.', '2025-03-23', 'de0003', '76628500', '2025-03-26 11:45:33', 'resuelto', NULL),
+('dnc00024', 'TRK0024', 0, 'dn0004', 'mo_otros', 'Otro motivo en denuncia 24: situación particular de este caso.', 'Descripción de la denuncia número 24: caso atípico.', '2025-03-24', 'de0004', '76628500', '2025-03-26 11:45:33', 'rechazado', NULL),
+('dnc00025', 'TRK0025', 1, 'dn0005', 'mo221768', NULL, 'Descripción de la denuncia número 25: revisión de manejo indebido de ventajas.', '2025-03-25', 'de0005', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
+('dnc00026', 'TRK0026', 0, 'dn0006', 'mo22176a', NULL, 'Descripción de la denuncia número 26: injerencia en procesos de contratación.', '2025-03-26', 'de0001', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL),
+('dnc00027', 'TRK0027', 1, 'dn0007', 'mo58aa06', NULL, 'Descripción de la denuncia número 27: conflicto de intereses en adjudicaciones.', '2025-03-27', 'de0002', '76628500', '2025-03-26 11:45:33', 'resuelto', NULL),
+('dnc00028', 'TRK0028', 0, 'dn0008', 'mo58aa1e', NULL, 'Descripción de la denuncia número 28: negativa injustificada de información.', '2025-03-28', 'de0003', '76628500', '2025-03-26 11:45:33', 'rechazado', NULL),
+('dnc00029', 'TRK0029', 1, 'dn0009', 'mo58aa1f', NULL, 'Descripción de la denuncia número 29: abuso de autoridad en el sector público.', '2025-03-29', 'de0004', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
+('dnc00030', 'TRK0030', 0, 'dn0010', 'mod4b288', NULL, 'Descripción de la denuncia número 30: favorecimiento indebido en asignaciones.', '2025-03-30', 'de0005', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL),
+('dnc00031', 'TRK0031', 1, 'dn0001', 'mod4b28c', NULL, 'Descripción de la denuncia número 31: uso irregular de recursos públicos.', '2025-03-31', 'de0001', '76628500', '2025-03-26 11:45:33', 'resuelto', NULL),
+('dnc00032', 'TRK0032', 0, 'dn0002', 'mo_otros', 'Otro motivo en denuncia 32: situación no clasificada previamente.', 'Descripción de la denuncia número 32: caso particular.', '2025-04-01', 'de0002', '76628500', '2025-03-26 11:45:33', 'rechazado', NULL),
+('dnc00033', 'TRK0033', 1, 'dn0003', 'mo221768', NULL, 'Descripción de la denuncia número 33: revisión de sobornos en gestiones.', '2025-04-02', 'de0003', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
+('dnc00034', 'TRK0034', 0, 'dn0004', 'mo22176a', NULL, 'Descripción de la denuncia número 34: irregularidades en uso de influencias.', '2025-04-03', 'de0004', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL),
+('dnc00035', 'TRK0035', 1, 'dn0005', 'mo58aa06', NULL, 'Descripción de la denuncia número 35: conflicto de intereses en procesos licitatorios.', '2025-04-04', 'de0005', '76628500', '2025-03-26 11:45:33', 'resuelto', NULL),
+('dnc00036', 'TRK0036', 0, 'dn0006', 'mo58aa1e', NULL, 'Descripción de la denuncia número 36: retención indebida de información pública.', '2025-04-05', 'de0001', '76628500', '2025-03-26 11:45:33', 'rechazado', NULL),
+('dnc00037', 'TRK0037', 1, 'dn0007', 'mo58aa1f', NULL, 'Descripción de la denuncia número 37: abuso de autoridad en procesos internos.', '2025-04-06', 'de0002', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
+('dnc00038', 'TRK0038', 0, 'dn0008', 'mod4b288', NULL, 'Descripción de la denuncia número 38: favorecimiento indebido en contrataciones.', '2025-04-07', 'de0003', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL),
+('dnc00039', 'TRK0039', 1, 'dn0009', 'mod4b28c', NULL, 'Descripción de la denuncia número 39: uso inadecuado de recursos estatales.', '2025-04-08', 'de0004', '76628500', '2025-03-26 11:45:33', 'resuelto', NULL),
+('dnc00040', 'TRK0040', 0, 'dn0010', 'mo_otros', 'Otro motivo en denuncia 40: circunstancia excepcional no clasificada.', 'Descripción de la denuncia número 40: caso particular.', '2025-04-09', 'de0005', '76628500', '2025-03-26 11:45:33', 'rechazado', NULL),
+('dnc00041', 'TRK0041', 1, 'dn0001', 'mo221768', NULL, 'Descripción de la denuncia número 41: revisión de posibles irregularidades en sobornos.', '2025-04-10', 'de0001', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
+('dnc00042', 'TRK0042', 0, 'dn0002', 'mo22176a', NULL, 'Descripción de la denuncia número 42: análisis de influencia indebida en contratos.', '2025-04-11', 'de0002', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL),
+('dnc00043', 'TRK0043', 1, 'dn0003', 'mo58aa06', NULL, 'Descripción de la denuncia número 43: conflicto de intereses en la adjudicación de proyectos.', '2025-04-12', 'de0003', '76628500', '2025-03-26 11:45:33', 'resuelto', NULL),
+('dnc00044', 'TRK0044', 0, 'dn0004', 'mo58aa1e', NULL, 'Descripción de la denuncia número 44: obstrucción al acceso de información esencial.', '2025-04-13', 'de0004', '76628500', '2025-03-26 11:45:33', 'rechazado', NULL),
+('dnc00045', 'TRK0045', 1, 'dn0005', 'mo58aa1f', NULL, 'Descripción de la denuncia número 45: abuso de autoridad detectado en el sector público.', '2025-04-14', 'de0005', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
+('dnc00046', 'TRK0046', 0, 'dn0006', 'mod4b288', NULL, 'Descripción de la denuncia número 46: favorecimiento en asignaciones de contratos.', '2025-04-15', 'de0001', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL),
+('dnc00047', 'TRK0047', 1, 'dn0007', 'mod4b28c', NULL, 'Descripción de la denuncia número 47: uso indebido de recursos durante gestión administrativa.', '2025-04-16', 'de0002', '76628500', '2025-03-26 11:45:33', 'resuelto', NULL),
+('dnc00048', 'TRK0048', 0, 'dn0008', 'mo_otros', 'Otro motivo en denuncia 48: situación irregular no clasificada.', 'Descripción de la denuncia número 48: caso especial.', '2025-04-17', 'de0003', '76628500', '2025-03-26 11:45:33', 'rechazado', NULL),
+('dnc00049', 'TRK0049', 1, 'dn0009', 'mo221768', NULL, 'Descripción de la denuncia número 49: revisión de sobornos y ventajas indebidas.', '2025-04-18', 'de0004', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
+('dnc00050', 'TRK0050', 0, 'dn0010', 'mo22176a', NULL, 'Descripción de la denuncia número 50: análisis de influencias indebidas en la gestión pública.', '2025-04-19', 'de0005', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL);
 
 --
 -- Disparadores `denuncias`
@@ -211,6 +299,14 @@ CREATE TABLE `seguimiento_denuncias` (
   `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp(),
   `dni_admin` varchar(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `seguimiento_denuncias`
+--
+
+INSERT INTO `seguimiento_denuncias` (`id`, `denuncia_id`, `estado`, `comentario`, `fecha_actualizacion`, `dni_admin`) VALUES
+('sd8ce483', 'de0d4112', 'registrado', 'Denuncia registrada', '2025-03-26 17:30:06', NULL),
+('sdc3d84d', 'dea14169', 'registrado', 'Denuncia registrada', '2025-03-27 00:37:50', NULL);
 
 --
 -- Disparadores `seguimiento_denuncias`
