@@ -1,6 +1,7 @@
 import { useFormContext } from "../../hooks/Form/useFormContext";
 import * as Icons from '../../Components/Icons';
 import { useDenuncias } from "../../hooks/Form/useDenuncias";
+import { Link } from "react-router";
 
 export const ResumenDenuncia = () => {
 	const { formData } = useFormContext();
@@ -67,9 +68,9 @@ export const ResumenDenuncia = () => {
 							compartiste tu correo y/o número de celular,
 							recibirás notificaciones sobre el avance de tu caso.
 							De lo contrario, puedes{" "}
-							<span className="font-medium text-(--primary-color)">
+							<Link to='/tracking-denuncia' className="font-medium text-(--primary-color)">
 								conocer su estado
-							</span>{" "}
+							</Link>{" "}
 							con tu código de seguimiento.
 						</p>
 					</div>
