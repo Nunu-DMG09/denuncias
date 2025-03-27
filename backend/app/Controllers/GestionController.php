@@ -89,13 +89,15 @@ class GestionController extends BaseController
             'fecha_actualizacion' => date('Y-m-d H:i:s'),
             'dni_admin' => $dni_admin
         ])) {
-            $update = $this->denunciasModel
-                ->where('tracking_code', $code)
-                ->set([
-                    'dni_admin' => $dni_admin,
-                    'estado' => 'recibida'
-                ])
-                ->update();
+        }
+        if ($update = $this->denunciasModel
+            ->where('tracking_code', $code)
+            ->set([
+                'dni_admin' => $dni_admin,
+                'estado' => 'recibida'
+            ])
+            ->update()
+        ) {
         } else {
             return $this->response->setJSON([
                 'success' => false,
@@ -106,11 +108,6 @@ class GestionController extends BaseController
             return $this->response->setJSON([
                 'success' => true,
                 'message' => 'La denuncia recibida'
-            ]);
-        } else {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Erorr al recibir la denuncia'
             ]);
         }
     }
