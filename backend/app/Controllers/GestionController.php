@@ -75,24 +75,33 @@ class GestionController extends BaseController
         $data = $this->request->getGet();
         $code = $data['tracking_code'];
         $dni_admin = $data['dni_admin'];
+        $id = $this->generateId('seguimientoDenuncias');
+
         $id_denuncias = $this->denunciasModel
-            ->select('id')
             ->where('tracking_code', $code)
-            ->get()
-            ->getRowArray()['id'];
-        $this->seguimientoDenunciasModel->insert([
-            'denuncia_id' => $id_denuncias,
-            'dni_admin' => $dni_admin,
+            ->first();
+
+        if ($this->seguimientoDenunciasModel->insert([
+            'id' => $id,
+            'denuncia_id' => $id_denuncias['id'],
             'estado' => 'recibida',
-            'fecha' => date('Y-m-d H:i:s', strtotime('-5 hours'))
-        ]);
-        $update = $this->denunciasModel
-            ->where('tracking_code', $code)
-            ->set([
-            'dni_admin' => $dni_admin,
-            'estado' => 'recibida'
-            ])
-            ->update();
+            'comentario' => 'La denuncia ha sido recibida por el administrador',
+            'fecha_actualizacion' => date('Y-m-d H:i:s'),
+            'dni_admin' => $dni_admin
+        ])) {
+            $update = $this->denunciasModel
+                ->where('tracking_code', $code)
+                ->set([
+                    'dni_admin' => $dni_admin,
+                    'estado' => 'recibida'
+                ])
+                ->update();
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Error al insertar el seguimiento de la denuncia'
+            ]);
+        }
         if ($update) {
             return $this->response->setJSON([
                 'success' => true,
