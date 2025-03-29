@@ -122,7 +122,7 @@ class GestionController extends BaseController
             denuncias.estado, 
             denuncias.fecha_registro, 
             denuncias.fecha_incidente,
-            denuncias.descripcion
+            denuncias.descripcion,
             COALESCE(denunciantes.nombres, "Anónimo") as denunciante_nombre, 
             COALESCE(denunciantes.numero_documento, "00000000") as denunciante_dni, 
             denunciados.nombre as denunciado_nombre, 

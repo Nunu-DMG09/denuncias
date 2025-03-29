@@ -242,37 +242,50 @@ export const DenunciasRecibidas = () => {
 																</ul>
 															</div>
 														</div>
-
-														<div className="mt-4">
+														<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+															<div>
+																<h5 className="font-semibold text-gray-600">
+																	Información de la denuncia
+																</h5>
+																<ul className="mt-2 space-y-1 text-sm">
+																	<li>
+																		<span className="font-medium">
+																			Fecha del incidente:
+																		</span>{" "}
+																		{
+																			denuncia.fecha_incidente
+																		}
+																	</li>
+																	<li>
+																		<span className="font-medium">
+																			Descripción brindada:
+																		</span>{" "}
+																		{
+																			denuncia.descripcion
+																		}
+																	</li>
+																</ul>
+															</div>
+														</div>
+														<div>
+															{/* acá debe ir un mejor historial */}
 															<h5 className="font-semibold text-gray-600">
-																Historial de la
-																denuncia
+																Historial de la denuncia
 															</h5>
-															{/* Aquí podrías agregar una tabla o lista con el historial */}
 															<p className="text-sm text-gray-500 mt-2">
 																La denuncia fue
 																registrada el{" "}
-																{new Date(
-																	denuncia.fecha_registro
-																).toLocaleDateString()}{" "}
+																{new Date(denuncia.fecha_registro).toLocaleDateString()}{" "}
 																y actualmente se
 																encuentra en
 																estado "
-																{denuncia.estado.replace(
-																	"_",
-																	" "
-																)}
+																{denuncia.estado.replace("_"," ")}
 																".
 															</p>
 														</div>
-
 														<div className="mt-4 flex justify-end">
 															<button
-																onClick={() =>
-																	toggleRowExpansion(
-																		denuncia.tracking_code
-																	)
-																}
+																onClick={() => toggleRowExpansion(denuncia.tracking_code)}
 																className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
 															>
 																Cerrar detalles
