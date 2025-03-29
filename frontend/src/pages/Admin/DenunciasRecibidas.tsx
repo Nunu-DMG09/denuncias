@@ -96,11 +96,7 @@ export const DenunciasRecibidas = () => {
 									<React.Fragment key={denuncia.tracking_code}>
 										<RecievedRows
 											denuncia={denuncia}
-											isExpanded={
-												!!expandedRows[
-													denuncia.tracking_code
-												]
-											}
+											isExpanded={!!expandedRows[denuncia.tracking_code]}
 											onToggle={toggleRowExpansion}
 										/>
 										{expandedRows[
