@@ -11,6 +11,8 @@ export const DenunciasRecibidas = () => {
 		handleCurrentPage,
 		getVisiblePageNumbers,
 		handlePageChange,
+		expandedRows,
+		toggleRowExpansion,
 	} = useAdminDenunciasRecibidas(itemsPerPage);
 
 	return (
@@ -60,7 +62,7 @@ export const DenunciasRecibidas = () => {
 						<table className="min-w-full divide-y divide-gray-200">
 							<thead className="bg-(--primary-color) bg-opacity-10">
 								<tr>
-									<th
+									<th 
 										scope="col"
 										className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
 									>
@@ -92,7 +94,7 @@ export const DenunciasRecibidas = () => {
 									</th>
 									<th
 										scope="col"
-										className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+										className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
 									>
 										Acción
 									</th>
@@ -100,65 +102,187 @@ export const DenunciasRecibidas = () => {
 							</thead>
 							<tbody className="bg-white divide-y divide-gray-200">
 								{denunciasPaginadas.map((denuncia) => (
-									<tr
-										key={denuncia.tracking_code}
-										className="hover:bg-gray-50 transition duration-150"
-									>
-										<td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-											{denuncia.tracking_code}
-										</td>
-										<td className="px-6 py-4">
-											<div className="text-sm font-medium text-gray-900">
-												{denuncia.motivo}
-											</div>
-											<div className="text-sm text-gray-500 truncate max-w-xs">
-												Contra:{" "}
-												{denuncia.denunciado_nombre}
-											</div>
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{new Date(
-												denuncia.fecha_registro
-											).toLocaleDateString()}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap">
-											<span
-												className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
-													denuncia.estado
-												)}`}
+									<>
+										<tr
+											key={denuncia.tracking_code}
+											className="hover:bg-gray-50 transition duration-150"
+										>
+											<td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+												{denuncia.tracking_code}
+											</td>
+											<td className="px-6 py-4">
+												<div className="text-sm font-medium text-gray-900">
+													{denuncia.motivo}
+												</div>
+												<div className="text-sm text-gray-500 truncate max-w-xs">
+													Contra:{" "}
+													{denuncia.denunciado_nombre}
+												</div>
+											</td>
+											<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+												{new Date(denuncia.fecha_registro).toLocaleDateString()}
+											</td>
+											<td className="px-6 py-4 whitespace-nowrap">
+												<span
+													className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+														denuncia.estado
+													)}`}
+												>
+													{denuncia.estado.replace(
+														"_",
+														" "
+													)}
+												</span>
+											</td>
+											<td className="px-6 capitalize py-4 whitespace-nowrap text-sm text-gray-500">
+												{denuncia.denunciante_nombre}
+											</td>
+											<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+												<div className="flex space-x-2">
+													<button
+														onClick={() =>
+															toggleRowExpansion(denuncia.tracking_code)
+														}
+														className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded hover:bg-indigo-100 transition duration-300 ease-in-out flex items-center cursor-pointer"
+													>
+														<i
+															className={`fas ${
+																expandedRows[
+																	denuncia
+																		.tracking_code
+																]
+																	? "fa-eye-slash"
+																	: "fa-eye"
+															} mr-1.5`}
+														></i>
+														{expandedRows[
+															denuncia
+																.tracking_code
+														]
+															? "Ocultar"
+															: "Detalles"}
+													</button>
+													<button
+														onClick={() => {
+															/* Implementar edición */
+														}}
+														className="bg-(--secondary-color) cursor-pointer text-white px-3 py-1.5 rounded hover:bg-(--primary-color) transition duration-300 ease-in-out flex items-center"
+													>
+														<i className="fas fa-edit mr-1.5"></i>
+														Editar
+													</button>
+												</div>
+											</td>
+										</tr>
+										{expandedRows[
+											denuncia.tracking_code
+										] && (
+											<tr
+												key={`details-${denuncia.tracking_code}`}
+												className="bg-indigo-50"
 											>
-												{denuncia.estado.replace(
-													"_",
-													" "
-												)}
-											</span>
-										</td>
-										<td className="px-6 capitalize py-4 whitespace-nowrap text-sm text-gray-500">
-											{denuncia.denunciante_nombre}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-											<div className="flex space-x-2">
-												<button
-													onClick={() => {
-														/* Implementar ver detalles */
-													}}
-													className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded hover:bg-indigo-100 transition duration-300 ease-in-out flex items-center"
+												<td
+													colSpan={6}
+													className="px-6 py-4"
 												>
-													<i className="fas fa-eye mr-1.5"></i>
-													Detalles
-												</button>
-												<button
-													onClick={() => {
-														/* Implementar edición */
-													}}
-													className="bg-(--secondary-color) cursor-pointer text-white px-3 py-1.5 rounded hover:bg-(--primary-color) transition duration-300 ease-in-out flex items-center"
-												>
-													<i className="fas fa-edit mr-1.5"></i>
-													Editar
-												</button>
-											</div>
-										</td>
-									</tr>
+													<div className="animate-fadeIn">
+														<h4 className="text-lg font-semibold mb-3">
+															Detalles de la
+															denuncia
+														</h4>
+														<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+															<div>
+																<h5 className="font-semibold text-gray-600">
+																	Información
+																	del
+																	denunciante
+																</h5>
+																<ul className="mt-2 space-y-1 text-sm">
+																	<li>
+																		<span className="font-medium">
+																			Nombre:
+																		</span>{" "}
+																		{
+																			denuncia.denunciante_nombre
+																		}
+																	</li>
+																	<li>
+																		<span className="font-medium">
+																			DNI:
+																		</span>{" "}
+																		{
+																			denuncia.denunciante_dni
+																		}
+																	</li>
+																</ul>
+															</div>
+															<div>
+																<h5 className="font-semibold text-gray-600">
+																	Información
+																	del
+																	denunciado
+																</h5>
+																<ul className="mt-2 space-y-1 text-sm">
+																	<li>
+																		<span className="font-medium">
+																			Nombre:
+																		</span>{" "}
+																		{
+																			denuncia.denunciado_nombre
+																		}
+																	</li>
+																	<li>
+																		<span className="font-medium">
+																			DNI:
+																		</span>{" "}
+																		{
+																			denuncia.denunciado_dni
+																		}
+																	</li>
+																</ul>
+															</div>
+														</div>
+
+														<div className="mt-4">
+															<h5 className="font-semibold text-gray-600">
+																Historial de la
+																denuncia
+															</h5>
+															{/* Aquí podrías agregar una tabla o lista con el historial */}
+															<p className="text-sm text-gray-500 mt-2">
+																La denuncia fue
+																registrada el{" "}
+																{new Date(
+																	denuncia.fecha_registro
+																).toLocaleDateString()}{" "}
+																y actualmente se
+																encuentra en
+																estado "
+																{denuncia.estado.replace(
+																	"_",
+																	" "
+																)}
+																".
+															</p>
+														</div>
+
+														<div className="mt-4 flex justify-end">
+															<button
+																onClick={() =>
+																	toggleRowExpansion(
+																		denuncia.tracking_code
+																	)
+																}
+																className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+															>
+																Cerrar detalles
+															</button>
+														</div>
+													</div>
+												</td>
+											</tr>
+										)}
+									</>
 								))}
 							</tbody>
 						</table>

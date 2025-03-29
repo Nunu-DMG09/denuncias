@@ -18,6 +18,7 @@ export const useAdminDenunciasRecibidas = (itemsPerPage : number = 10) => {
     const [error, setError] = useState<string | null>(null);
     const [totalPages, setTotalPages] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
+    const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
 
     const { user } = useAuthContext();
 
@@ -112,6 +113,12 @@ export const useAdminDenunciasRecibidas = (itemsPerPage : number = 10) => {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
+    const toggleRowExpansion = (tracking_code: string) => {
+        setExpandedRows((prev) => ({
+            ...prev,
+            [tracking_code]: !prev[tracking_code]
+        }));
+    }
     return {
         denuncias,
         denunciasPaginadas,
@@ -121,6 +128,8 @@ export const useAdminDenunciasRecibidas = (itemsPerPage : number = 10) => {
         currentPage,
         handleCurrentPage,
         handlePageChange,
-        getVisiblePageNumbers
+        getVisiblePageNumbers,
+        toggleRowExpansion,
+        expandedRows,
     }
 }
