@@ -2,18 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { useAuthContext } from "../useAuthContext";
 import { authApi } from "../../../utils/apiAxios";
 import { toast } from "sonner";
-interface DenunciaRecibida {
-    tracking_code: string;
-    estado: string;
-    fecha_registro: string;
-    denunciante_nombre: string;
-    denunciante_dni: string;
-    denunciado_nombre: string;
-    denunciado_dni: string;
-    motivo: string;
-    descripcion: string;
-    fecha_incidente: string;
-}
+import { DenunciaRecibida } from "../../../types";
+
 export const useAdminDenunciasRecibidas = (itemsPerPage : number = 10) => {
     const [denuncias, setDenuncias] = useState<DenunciaRecibida[]>([]);
     const [loading, setLoading] = useState(true);

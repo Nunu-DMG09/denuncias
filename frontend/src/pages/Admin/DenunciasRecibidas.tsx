@@ -1,6 +1,6 @@
+import { RecievedRows } from "../../Components/Admin/RecievedRows";
 import { DocumentIcon } from "../../Components/Icons";
 import { useAdminDenunciasRecibidas } from "../../hooks/Admin/Denuncias/useAdminDenunciasRecibidas";
-import { getStatusColor } from "../../utils";
 
 export const DenunciasRecibidas = () => {
 	const itemsPerPage = 10;
@@ -51,7 +51,7 @@ export const DenunciasRecibidas = () => {
 						<table className="min-w-full divide-y divide-gray-200">
 							<thead className="bg-(--primary-color) bg-opacity-10">
 								<tr>
-									<th 
+									<th
 										scope="col"
 										className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
 									>
@@ -92,77 +92,16 @@ export const DenunciasRecibidas = () => {
 							<tbody className="bg-white divide-y divide-gray-200">
 								{denunciasPaginadas.map((denuncia) => (
 									<>
-										<tr
+										<RecievedRows
 											key={denuncia.tracking_code}
-											className="hover:bg-gray-50 transition duration-150"
-										>
-											<td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-												{denuncia.tracking_code}
-											</td>
-											<td className="px-6 py-4">
-												<div className="text-sm font-medium text-gray-900">
-													{denuncia.motivo}
-												</div>
-												<div className="text-sm text-gray-500 truncate max-w-xs">
-													Contra:{" "}
-													{denuncia.denunciado_nombre}
-												</div>
-											</td>
-											<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-												{new Date(denuncia.fecha_registro).toLocaleDateString()}
-											</td>
-											<td className="px-6 py-4 whitespace-nowrap">
-												<span
-													className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
-														denuncia.estado
-													)}`}
-												>
-													{denuncia.estado.replace(
-														"_",
-														" "
-													)}
-												</span>
-											</td>
-											<td className="px-6 capitalize py-4 whitespace-nowrap text-sm text-gray-500">
-												{denuncia.denunciante_nombre}
-											</td>
-											<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-												<div className="flex space-x-2">
-													<button
-														onClick={() =>
-															toggleRowExpansion(denuncia.tracking_code)
-														}
-														className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded hover:bg-indigo-100 transition duration-300 ease-in-out flex items-center cursor-pointer"
-													>
-														<i
-															className={`fas ${
-																expandedRows[
-																	denuncia
-																		.tracking_code
-																]
-																	? "fa-eye-slash"
-																	: "fa-eye"
-															} mr-1.5`}
-														></i>
-														{expandedRows[
-															denuncia
-																.tracking_code
-														]
-															? "Ocultar"
-															: "Detalles"}
-													</button>
-													<button
-														onClick={() => {
-															/* Implementar edición */
-														}}
-														className="bg-(--secondary-color) cursor-pointer text-white px-3 py-1.5 rounded hover:bg-(--primary-color) transition duration-300 ease-in-out flex items-center"
-													>
-														<i className="fas fa-edit mr-1.5"></i>
-														Editar
-													</button>
-												</div>
-											</td>
-										</tr>
+											denuncia={denuncia}
+											isExpanded={
+												!!expandedRows[
+													denuncia.tracking_code
+												]
+											}
+											onToggle={toggleRowExpansion}
+										/>
 										{expandedRows[
 											denuncia.tracking_code
 										] && (
@@ -234,12 +173,16 @@ export const DenunciasRecibidas = () => {
 														<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
 															<div>
 																<h5 className="font-semibold text-gray-600">
-																	Información de la denuncia
+																	Información
+																	de la
+																	denuncia
 																</h5>
 																<ul className="mt-2 space-y-1 text-sm">
 																	<li>
 																		<span className="font-medium">
-																			Fecha del incidente:
+																			Fecha
+																			del
+																			incidente:
 																		</span>{" "}
 																		{
 																			denuncia.fecha_incidente
@@ -247,7 +190,8 @@ export const DenunciasRecibidas = () => {
 																	</li>
 																	<li>
 																		<span className="font-medium">
-																			Descripción brindada:
+																			Descripción
+																			brindada:
 																		</span>{" "}
 																		{
 																			denuncia.descripcion
@@ -259,22 +203,32 @@ export const DenunciasRecibidas = () => {
 														<div>
 															{/* acá debe ir un mejor historial */}
 															<h5 className="font-semibold text-gray-600">
-																Historial de la denuncia
+																Historial de la
+																denuncia
 															</h5>
 															<p className="text-sm text-gray-500 mt-2">
 																La denuncia fue
 																registrada el{" "}
-																{new Date(denuncia.fecha_registro).toLocaleDateString()}{" "}
+																{new Date(
+																	denuncia.fecha_registro
+																).toLocaleDateString()}{" "}
 																y actualmente se
 																encuentra en
 																estado "
-																{denuncia.estado.replace("_"," ")}
+																{denuncia.estado.replace(
+																	"_",
+																	" "
+																)}
 																".
 															</p>
 														</div>
 														<div className="mt-4 flex justify-end">
 															<button
-																onClick={() => toggleRowExpansion(denuncia.tracking_code)}
+																onClick={() =>
+																	toggleRowExpansion(
+																		denuncia.tracking_code
+																	)
+																}
 																className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
 															>
 																Cerrar detalles

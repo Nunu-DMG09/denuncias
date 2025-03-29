@@ -58,3 +58,16 @@ export interface TrackingData {
 	success: boolean
 	data?: Tracking[]
 }
+
+export interface DenunciaRecibida {
+	tracking_code: string;
+	estado: string;
+	fecha_registro: string;
+	denunciante_nombre: string;
+	denunciante_dni: string;
+	denunciado_nombre: string;
+	denunciado_dni: string;
+	motivo: string;
+	descripcion: string;
+	fecha_incidente: string;
+}
