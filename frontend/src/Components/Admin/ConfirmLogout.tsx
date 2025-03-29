@@ -11,7 +11,10 @@ export const ConfirmLogout: React.FC<ConfirmLogoutProps> = ({ onCancel }) => {
 		confirmLogout("si");
 	};
 	return (
-		<div className="fixed inset-0 backdrop-blur-sm backdrop-saturate-100 bg-[#3a46500d] flex justify-center items-center z-50 animate__animated animate__fadeIn">
+		<div 
+			className="fixed inset-0 backdrop-blur-sm backdrop-saturate-100 bg-[#3a46500d] flex justify-center items-center z-50 animate__animated animate__fadeIn"
+			onClick={onCancel}
+		>
 			<div className="bg-white p-8 rounded-lg w-96 shadow-xl animate__animated animate__zoomIn animate__faster">
 				<h2 className="text-xl font-bold mb-4 text-center">
 					¿Estás seguro de cerrar sesión?
