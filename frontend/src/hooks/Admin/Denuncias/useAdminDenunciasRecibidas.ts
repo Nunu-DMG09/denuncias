@@ -11,6 +11,8 @@ interface DenunciaRecibida {
     denunciado_nombre: string;
     denunciado_dni: string;
     motivo: string;
+    descripcion: string;
+    fecha_incidente: string;
 }
 export const useAdminDenunciasRecibidas = (itemsPerPage : number = 10) => {
     const [denuncias, setDenuncias] = useState<DenunciaRecibida[]>([]);
@@ -44,7 +46,9 @@ export const useAdminDenunciasRecibidas = (itemsPerPage : number = 10) => {
                     denunciante_dni: denuncia.denunciante_dni,
                     denunciado_nombre: denuncia.denunciado_nombre,
                     denunciado_dni: denuncia.denunciado_dni,
-                    motivo: denuncia.motivo
+                    motivo: denuncia.motivo,
+                    descripcion: denuncia.descripcion,
+                    fecha_incidente: denuncia.fecha_incidente,
                 }));
                 setDenuncias(denunciasFormateadas);
                 setTotalPages(Math.ceil(denunciasFormateadas.length / itemsPerPage));
