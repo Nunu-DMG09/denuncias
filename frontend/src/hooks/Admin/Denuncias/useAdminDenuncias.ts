@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { authApi } from "../../../utils/apiAxios";
 import { toast } from "sonner";
 import { useAuthContext } from "../useAuthContext";
-
+import { usePagination } from "../../usePagination";
 interface Denuncia {
 	tracking_code: string;
 	fecha_registro: string;
@@ -17,8 +17,6 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 	const [denuncias, setDenuncias] = useState<Denuncia[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [totalPages, setTotalPages] = useState(0);
-	const [currentPage, setCurrentPage] = useState(1);
 	const { user } = useAuthContext();
 
 	const fetchDenuncias = useCallback(async () => {
@@ -38,9 +36,6 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 				})
 			);
 			setDenuncias(denunciasFormateadas);
-			setTotalPages(
-				Math.ceil(denunciasFormateadas.length / itemsPerPage)
-			);
 			setError(null);
 		} catch (error) {
 			console.error("Error al obtener las denuncias:", error);
@@ -58,24 +53,11 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 		} finally {
 			setLoading(false);
 		}
-	}, [itemsPerPage]);
+	}, []);
 
 	useEffect(() => {
 		fetchDenuncias();
 	}, [fetchDenuncias]);
-
-	const handleCurrentPage = (action: "next" | "prev") => {
-		if (action === "next" && currentPage < totalPages) {
-			setCurrentPage((prev) => prev + 1);
-		} else if (action === "prev" && currentPage > 1) {
-			setCurrentPage((prev) => prev - 1);
-		}
-	};
-	const handlePageChange = (page: number) => {
-		if (page >= 1 && page <= totalPages) {
-			setCurrentPage(page);
-		}
-	};
 
 	const recibirDenuncia = async (dni: string, tracking_code: string) => {
 		const adminDni = dni || user?.dni_admin|| "";
@@ -107,27 +89,16 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 		}
 	};
 
-	const denunciasPaginadas = denuncias.slice(
-		(currentPage - 1) * itemsPerPage,
-		currentPage * itemsPerPage
-	);
+	const {
+		currentPage,
+		totalPages,
+		handleCurrentPage,
+		handlePageChange,
+		getVisiblePageNumbers,
+		paginatedItems: denunciasPaginadas,
+	} = usePagination(denuncias, itemsPerPage);
 
-	const getVisiblePageNumbers = () => {
-		return Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-			let pageNum;
-			if (currentPage <= 3) {
-				pageNum = i + 1;
-			} else if (currentPage >= totalPages - 2) {
-				pageNum = totalPages - 4 + i;
-			} else {
-				pageNum = currentPage - 2 + i;
-			}
-			if (pageNum <= 0 || pageNum > totalPages) {
-				return null;
-			}
-			return pageNum;
-		}).filter((page) => page !== null) as number[];
-	};
+
 
 	return {
 		denuncias,
@@ -135,7 +106,6 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 		error,
 		totalPages,
 		currentPage,
-		setCurrentPage,
 		denunciasPaginadas,
 		handleCurrentPage,
 		handlePageChange,
