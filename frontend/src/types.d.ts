@@ -70,4 +70,6 @@ export interface DenunciaRecibida {
 	motivo: string;
 	descripcion: string;
 	fecha_incidente: string;
+	seguimiento_comentario: string;
+	motivo_otro:string
 }

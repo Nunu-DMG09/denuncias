@@ -106,6 +106,18 @@ export const ExpandedRecievedRow = ({
 										<p className="text-gray-800 font-semibold bg-violet-50 p-2 rounded">
 											{denuncia.motivo}
 										</p>
+										{
+											denuncia.motivo_otro && (
+												<div className="my-4">
+													<h5 className="text-sm uppercase text-gray-500 font-medium mb-1">
+														Motivo Especificado
+													</h5>
+													<p className="text-gray-800 font-semibold bg-violet-50 p-2 rounded capitalize">
+														{denuncia.motivo_otro}
+													</p>
+												</div>
+											)
+										}
 									</div>
 									<div className="mb-4">
 										<h5 className="text-sm uppercase text-gray-500 font-medium mb-1">
@@ -171,7 +183,7 @@ export const ExpandedRecievedRow = ({
 										Comentario
 									</h4>
 									<p className="italic text-gray-600 bg-amber-50 p-3 rounded text-sm mb-4">
-										{denuncia.comentario_administrador || "No hay comentarios del administrador aún."}
+										{denuncia.seguimiento_comentario || "No hay comentarios del administrador aún."}
 									</p>
 									<button className="w-full cursor-pointer flex items-center justify-center px-4 py-2 bg-amber-500 text-white rounded-md shadow hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-300 ease-in-out">
 										<DownloadIcon />

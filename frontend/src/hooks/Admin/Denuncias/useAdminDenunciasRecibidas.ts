@@ -49,6 +49,8 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 						motivo: denuncia.motivo,
 						descripcion: denuncia.descripcion,
 						fecha_incidente: denuncia.fecha_incidente,
+						seguimiento_comentario: denuncia.seguimiento_comentario,
+						motivo_otro: denuncia.motivo_otro,
 					}));
 				setDenuncias(denunciasFormateadas);
 				setError(null);
