@@ -127,16 +127,58 @@ class GestionController extends BaseController
             COALESCE(denunciantes.numero_documento, "00000000") as denunciante_dni, 
             denunciados.nombre as denunciado_nombre, 
             denunciados.numero_documento as denunciado_dni, 
-            motivos.nombre as motivo
+            motivos.nombre as motivo,
+            seguimiento_denuncias.estado as seguimiento_estado,
+            seguimiento_denuncias.comentario as seguimiento_comentario,
         ')
             ->join('denunciantes', 'denuncias.denunciante_id = denunciantes.id', 'left')
             ->join('denunciados', 'denuncias.denunciado_id = denunciados.id')
             ->join('motivos', 'denuncias.motivo_id = motivos.id')
+            ->join('seguimiento_denuncias', 'denuncias.id = seguimiento_denuncias.denuncia_id', 'left')
+            ->groupBy('denuncias.id')
             ->where('denuncias.dni_admin', $dni_admin)
             ->whereIn('denuncias.estado', ['en proceso', 'recibida'])
             ->get()
             ->getResult();
 
         return $this->response->setJSON($denuncias);
+    }
+    public function procesosDenuncia()
+    {
+        $data = $this->request->getGet();
+        $code = $data['tracking_code'];
+        $dni_admin = $data['dni_admin'];
+        $id = $this->generateId('seguimientoDenuncias');
+        $estado = $data['estado'];
+        $comentario = $data['comentario'];
+
+        if ($this->seguimientoDenunciasModel->insert([
+            'id' => $id,
+            'denuncia_id' => $code,
+            'estado' => $estado,
+            'comentario' => $comentario,
+            'fecha_actualizacion' => date('Y-m-d H:i:s'),
+            'dni_admin' => $dni_admin
+        ])) {
+        }
+        if ($update = $this->denunciasModel
+            ->where('tracking_code', $code)
+            ->set([
+                'estado' => $estado
+            ])
+            ->update()
+        ) {
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Error al insertar el seguimiento de la denuncia'
+            ]);
+        }
+        if ($update) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'La denuncia ha sido actualizada'
+            ]);
+        }  
     }
 }
