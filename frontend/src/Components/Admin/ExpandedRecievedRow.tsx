@@ -84,6 +84,22 @@ export const ExpandedRecievedRow = ({
 							</p>
 						</div>
 					</div>
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+						<div>
+							<h5 className="font-semibold text-gray-600">
+								Comentario del administrador
+							</h5>
+							<p className="text-sm text-gray-500 mt-2">
+								{denuncia.comentario_administrador ||
+									"No hay comentarios."}
+							</p>
+						</div>
+						<div>
+							<button className="px-4 py-2 bg-(--primary-color) text-white rounded-md shadow cursor-pointer hover:bg-(--secondary-color) focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-300 ease-in-out">
+								Descargar evidencias subidas
+							</button>
+						</div>
+					</div>
 					<div className="mt-4 flex justify-end">
 						<button
 							onClick={() => onClose(denuncia.tracking_code)}
