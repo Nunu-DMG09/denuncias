@@ -144,6 +144,57 @@ class GestionController extends BaseController
 
         return $this->response->setJSON($denuncias);
     }
+    public function downloadAdjunto()
+    {
+        $data = $this->request->getGet();
+        $code = $data['tracking_code'];
+        $denuncia = $this->denunciasModel
+            ->where('tracking_code', $code)
+            ->first();
+            
+        if (!$denuncia) {
+            return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Denuncia no encontrada'
+            ]);
+        }
+        $folderPath = WRITEPATH . 'uploads/denuncias/' . $denuncia['id'];
+        $zipName = 'adjuntos_' . $code . '.zip';
+        $zipPath = WRITEPATH . 'temp/' . $zipName;
+        
+        $zip = new \ZipArchive();
+        if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
+            $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($folderPath),
+            \RecursiveIteratorIterator::LEAVES_ONLY
+            );
+            
+            foreach ($files as $file) {
+            if (!$file->isDir()) {
+                $filePath = $file->getRealPath();
+                $relativePath = substr($filePath, strlen($folderPath) + 1);
+                $zip->addFile($filePath, $relativePath);
+            }
+            }
+            $zip->close();
+            $response = $this->response;
+            $response->setHeader('Content-Type', 'application/zip');
+            $response->setHeader('Content-Disposition', 'attachment; filename="' . $zipName . '"');
+            $response->setHeader('Expires', '0');
+            $response->setHeader('Cache-Control', 'must-revalidate');
+            $response->setHeader('Pragma', 'public');
+            $response->setHeader('Content-Length', filesize($zipPath));
+            
+            readfile($zipPath);
+            unlink($zipPath);
+            return;
+        } else {
+            return $this->response->setJSON([
+            'success' => false,
+            'message' => 'No se pudo crear el archivo zip'
+            ]);
+        }
+    }
     public function procesosDenuncia()
     {
         $data = $this->request->getGet();
