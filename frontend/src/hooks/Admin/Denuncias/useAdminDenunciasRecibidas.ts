@@ -14,6 +14,7 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 	);
 	const [editingRows, setEditingRows] = useState<Record<string, boolean>>({});
 	const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
+	const [stateRows, setStateRows] = useState<Record<string, string>>({});
 
 	const handleEdit = (tracking_code: string) => {
 		setEditingRows((prev) => ({
@@ -27,11 +28,21 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 					...prev,
 					[tracking_code]: denuncia.seguimiento_comentario || "",
 				}));
+				setStateRows((prev) => ({
+					...prev,
+					[tracking_code]: denuncia.estado || "",
+				}));
 			}
 		}
 	}
 	const handleCommentChange = (tracking_code: string, value: string) => {
 		setCommentInputs((prev) => ({
+			...prev,
+			[tracking_code]: value,
+		}));
+	}
+	const handleStateChange = (tracking_code: string, value: string) => {
+		setStateRows((prev) => ({
 			...prev,
 			[tracking_code]: value,
 		}));
@@ -160,6 +171,8 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 		handleEdit,
 		editingRows,
 		handleCommentChange,
-		commentInputs
+		commentInputs,
+		handleStateChange,
+		stateRows,
 	};
 };

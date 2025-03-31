@@ -18,6 +18,8 @@ interface ExpandedRecievedRowProps {
 	isEditing: boolean;
 	onCommentChange: (tracking_code: string, value: string) => void;
 	commentValue: string;
+	onStateChange: (tracking_code: string, value: string) => void;
+	stateValue: string;
 }
 
 export const ExpandedRecievedRow = ({
@@ -27,6 +29,8 @@ export const ExpandedRecievedRow = ({
 	isEditing,
 	onCommentChange,
 	commentValue,
+	onStateChange,
+	stateValue,
 }: ExpandedRecievedRowProps) => {
 	const { getStatusDescription, formatDate } = useAdminDenunciasRecibidas();
 	return (
@@ -53,6 +57,24 @@ export const ExpandedRecievedRow = ({
 									</svg>
 									Denuncia #{denuncia.tracking_code}
 								</h3>
+									{isEditing && (
+										<div className="relative inline-block">
+											<select 
+												className="appearance-none bg-white border border-indigo-300 text-gray-700 py-2 pl-4 pr-10 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-medium transition-all duration-200"
+												value={stateValue || denuncia.estado}
+												onChange={(e) => onStateChange(denuncia.tracking_code, e.target.value)}
+											>
+												<option value="en proceso">En Proceso</option>
+												<option value="resuelto">Finalizada</option>
+												<option value="rechazado">Rechazada</option>
+											</select>
+											<div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-indigo-500">
+												<svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+													<path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+												</svg>
+											</div>
+										</div>
+									)}
 								<span
 									className={`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${getStatusColor(
 										denuncia.estado
@@ -237,18 +259,6 @@ export const ExpandedRecievedRow = ({
 													>
 														Cancelar
 													</button>
-													<button
-														type="button"
-														// onClick={() =>
-														// 	onSaveComment &&
-														// 	onSaveComment(
-														// 		denuncia.tracking_code
-														// 	)
-														// }
-														className="px-3 py-1 text-sm bg-amber-500 hover:bg-amber-600 text-white rounded"
-													>
-														Guardar comentario
-													</button>
 												</div>
 											</div>
 										) : (
@@ -287,7 +297,7 @@ export const ExpandedRecievedRow = ({
 											}
 											className="px-4 py-2 bg-white border cursor-pointer transition-all duration-300 ease-in-out border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 										>
-											Añadir comentario
+											Editar Denuncia
 										</button>
 									)}
 									<button
