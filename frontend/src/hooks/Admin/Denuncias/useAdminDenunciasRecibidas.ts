@@ -15,6 +15,7 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 	const [editingRows, setEditingRows] = useState<Record<string, boolean>>({});
 	const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
 	const [stateRows, setStateRows] = useState<Record<string, string>>({});
+	const [isDownloading, setIsDownloading] = useState<Record<string, boolean>>({});
 
 	const handleEdit = (tracking_code: string) => {
 		setEditingRows((prev) => ({
@@ -206,6 +207,63 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 			setLoading(false);
 		}
 	}, [user?.dni_admin, stateRows, commentInputs, authApi]);
+	const downloadAdjuntos = useCallback(async (tracking_code: string) => {
+		if (!user?.dni_admin) {
+			toast.error('No se pudo identificar al administrador')
+			return;
+		}
+		try {
+			setIsDownloading((prev) => ({
+				...prev,
+				[tracking_code]: true,
+			}));
+			toast.loading("Descargando archivos adjuntos...")
+			const response = await authApi.get('/download', {
+				params: {
+					tracking_code
+				},
+				responseType: 'blob',
+			})
+			const contentType = response.headers['content-type'];
+			if(contentType && contentType.includes('application/json')) {
+				const reader = new FileReader();
+				reader.onload = () => {
+					const jsonResponse = JSON.parse(reader.result as string);
+					toast.dismiss();
+					toast.info(jsonResponse.message || "No se encontraron archivos adjuntos")
+				}
+				reader.readAsText(response.data)
+				return;
+			}
+			if (response.data.size < 100) {
+				toast.dismiss();
+				toast.error("No se encontraron archivos adjuntos")
+				return;
+			}
+			const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
+			const link = document.createElement("a");
+			link.href = downloadUrl;
+			link.setAttribute("download", `${tracking_code}.zip`);
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			window.URL.revokeObjectURL(downloadUrl);
+			toast.dismiss();
+			toast.success("Archivos adjuntos descargados con éxito")
+		} catch (error) {
+			console.error("Error al descargar archivos adjuntos:", error);
+			toast.dismiss();
+			toast.error("Error al descargar archivos adjuntos", {
+				description: "Ocurrió un error al intentar descargar los archivos",
+			});
+		} finally {
+			setIsDownloading((prev) => ({
+				...prev,
+				[tracking_code]: false,
+			}));
+			toast.dismiss();
+		}
+	}, [user?.dni_admin])
 	return {
 		denuncias,
 		denunciasPaginadas,
@@ -227,5 +285,7 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 		handleStateChange,
 		stateRows,
 		submitUpdateDenuncia,
+		downloadAdjuntos,
+		isDownloading
 	};
 };

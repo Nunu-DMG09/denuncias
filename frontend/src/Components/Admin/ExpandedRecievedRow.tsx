@@ -10,6 +10,7 @@ import {
 	XIcon,
 } from "../Icons";
 import { useAdminDenunciasRecibidas } from "../../hooks/Admin/Denuncias/useAdminDenunciasRecibidas";
+import { Loader } from "../Loaders/Loader";
 
 interface ExpandedRecievedRowProps {
 	denuncia: DenunciaRecibida;
@@ -21,6 +22,8 @@ interface ExpandedRecievedRowProps {
 	onStateChange: (tracking_code: string, value: string) => void;
 	stateValue: string;
 	onUpdate: (tracking_code: string) => void;
+	onDownload: (tracking_code: string) => void;
+	isDownloading?: boolean;
 }
 
 export const ExpandedRecievedRow = ({
@@ -33,6 +36,8 @@ export const ExpandedRecievedRow = ({
 	onStateChange,
 	stateValue,
 	onUpdate,
+	onDownload,
+	isDownloading,
 }: ExpandedRecievedRowProps) => {
 	const { getStatusDescription, formatDate } = useAdminDenunciasRecibidas();
 	return (
@@ -288,10 +293,20 @@ export const ExpandedRecievedRow = ({
 									)}
 									<button
 										type="button"
+										onClick={() =>
+											onDownload(denuncia.tracking_code)
+										}
+										disabled={isDownloading}
 										className="w-full cursor-pointer flex items-center justify-center px-4 py-2 bg-amber-500 text-white rounded-md shadow hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-300 ease-in-out"
 									>
-										<DownloadIcon />
-										Descargar evidencias
+										{isDownloading ? (
+											<Loader isBtn={true} />
+										) : (
+											<>
+												<DownloadIcon />
+												Descargar evidencias
+											</>
+										)}
 									</button>
 								</div>
 							</div>
@@ -319,7 +334,9 @@ export const ExpandedRecievedRow = ({
 								)}
 								<button
 									disabled={!isEditing}
-									onClick={() => onUpdate(denuncia.tracking_code)}
+									onClick={() =>
+										onUpdate(denuncia.tracking_code)
+									}
 									className="px-4 py-2 disabled:bg-gray-400 disabled:cursor-not-allowed bg-indigo-600 border cursor-pointer transition-all duration-300 ease-in-out border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 								>
 									Actualizar estado

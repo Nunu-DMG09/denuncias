@@ -23,7 +23,9 @@ export const DenunciasRecibidas = () => {
 		commentInputs,
 		handleStateChange,
 		stateRows,
-		submitUpdateDenuncia
+		submitUpdateDenuncia,
+		downloadAdjuntos,
+		isDownloading
 	} = useAdminDenunciasRecibidas(itemsPerPage);
 
 	return (
@@ -119,6 +121,8 @@ export const DenunciasRecibidas = () => {
 												onStateChange={handleStateChange}
 												stateValue={stateRows[denuncia.tracking_code]}
 												onUpdate={submitUpdateDenuncia}
+												onDownload={downloadAdjuntos}
+												isDownloading={!!isDownloading[denuncia.tracking_code]}
 											/>
 										)}
 									</React.Fragment>
