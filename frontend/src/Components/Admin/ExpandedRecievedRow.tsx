@@ -75,6 +75,12 @@ export const ExpandedRecievedRow = ({
 											)
 										}
 									>
+										<option value={denuncia.estado} className="capitalize">
+											{denuncia.estado.replace(
+												"_",
+												" "
+											)}
+										</option>
 										<option value="en proceso">
 											En Proceso
 										</option>
