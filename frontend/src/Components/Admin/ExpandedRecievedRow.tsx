@@ -68,21 +68,21 @@ export const ExpandedRecievedRow = ({
 								</li>
 							</ul>
 						</div>
-					</div>
-					<div>
-						{/* acá debe ir un mejor historial */}
-						<h5 className="font-semibold text-gray-600">
-							Historial de la denuncia
-						</h5>
-						<p className="text-sm text-gray-500 mt-2">
-							La denuncia fue registrada el{" "}
-							{new Date(
-								denuncia.fecha_registro
-							).toLocaleDateString()}{" "}
-							y actualmente se encuentra en estado "
-							{denuncia.estado.replace("_", " ")}
-							".
-						</p>
+						<div>
+							{/* acá debe ir un mejor historial */}
+							<h5 className="font-semibold text-gray-600">
+								Historial de la denuncia
+							</h5>
+							<p className="text-sm text-gray-500 mt-2">
+								La denuncia fue registrada el{" "}
+								{new Date(
+									denuncia.fecha_registro
+								).toLocaleDateString()}{" "}
+								y actualmente se encuentra en estado "
+								{denuncia.estado.replace("_", " ")}
+								".
+							</p>
+						</div>
 					</div>
 					<div className="mt-4 flex justify-end">
 						<button
