@@ -13,9 +13,13 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 		{}
 	);
 	const [editingRows, setEditingRows] = useState<Record<string, boolean>>({});
-	const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
+	const [commentInputs, setCommentInputs] = useState<Record<string, string>>(
+		{}
+	);
 	const [stateRows, setStateRows] = useState<Record<string, string>>({});
-	const [isDownloading, setIsDownloading] = useState<Record<string, boolean>>({});
+	const [isDownloading, setIsDownloading] = useState<Record<string, boolean>>(
+		{}
+	);
 
 	const handleEdit = (tracking_code: string) => {
 		setEditingRows((prev) => ({
@@ -23,7 +27,9 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 			[tracking_code]: !prev[tracking_code],
 		}));
 		if (!editingRows[tracking_code]) {
-			const denuncia = denuncias.find(d => d.tracking_code === tracking_code);
+			const denuncia = denuncias.find(
+				(d) => d.tracking_code === tracking_code
+			);
 			if (denuncia) {
 				setCommentInputs((prev) => ({
 					...prev,
@@ -35,19 +41,19 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 				}));
 			}
 		}
-	}
+	};
 	const handleCommentChange = (tracking_code: string, value: string) => {
 		setCommentInputs((prev) => ({
 			...prev,
 			[tracking_code]: value,
 		}));
-	}
+	};
 	const handleStateChange = (tracking_code: string, value: string) => {
 		setStateRows((prev) => ({
 			...prev,
 			[tracking_code]: value,
 		}));
-	}
+	};
 
 	const { user } = useAuthContext();
 	const {
@@ -55,8 +61,8 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 		handleCurrentPage,
 		handlePageChange,
 		getVisiblePageNumbers,
-        currentPage,
-        totalPages,
+		currentPage,
+		totalPages,
 	} = usePagination(denuncias, itemsPerPage);
 
 	const fetchDenunciasRecibidas = useCallback(async () => {
@@ -114,7 +120,7 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 		fetchDenunciasRecibidas();
 	}, [fetchDenunciasRecibidas]);
 	const toggleRowExpansion = (tracking_code: string) => {
-		if(expandedRows[tracking_code]) {
+		if (expandedRows[tracking_code]) {
 			setEditingRows((prev) => ({
 				...prev,
 				[tracking_code]: false,
@@ -127,21 +133,21 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 	};
 	const formatDate = (dateString: string) => {
 		if (!dateString) return "Fecha no disponible";
-	
+
 		const options: Intl.DateTimeFormatOptions = {
 			year: "numeric",
 			month: "long",
 			day: "numeric",
 		};
-	
+
 		return new Date(dateString).toLocaleDateString("es-ES", options);
-	}
+	};
 	// Función para obtener descripciones de estados
 	const getStatusDescription = (estado: string) => {
 		switch (estado) {
 			case "pendiente":
 				return "La denuncia está pendiente de revisión.";
-			case 'recibida':
+			case "recibida":
 				return "La denuncia ha sido recibida y está en proceso de análisis.";
 			case "en proceso":
 				return "La denuncia está siendo analizada actualmente.";
@@ -154,116 +160,168 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 			default:
 				return "Estado actual de la denuncia.";
 		}
-	}
-	const submitUpdateDenuncia = useCallback(async (tracking_code: string) => {
-		if (!user?.dni_admin) {
-			toast.error("No se pudo identificar al administrador");
-			return;
-		}
-		if (!stateRows[tracking_code]) {
-			toast.error("Debes seleccionar un estado para la denuncia");
-			return;
-		}
-		try {
-			setLoading(true);
-			const response = await authApi.get('/updateDenuncia', {
-				params: {
-					tracking_code,
-					dni_admin: user?.dni_admin,
-					comentario: commentInputs[tracking_code] || "",
-					estado: stateRows[tracking_code],
-				}
-			})
-			if (response.status === 200) {
-				toast.success("Denuncia actualizada con éxito", {
-					description: "La denuncia ha sido actualizada correctamente",
+	};
+	const submitUpdateDenuncia = useCallback(
+		async (tracking_code: string) => {
+			if (!user?.dni_admin) {
+				toast.error("No se pudo identificar al administrador");
+				return;
+			}
+			if (!stateRows[tracking_code]) {
+				toast.error("Debes seleccionar un estado para la denuncia");
+				return;
+			}
+			try {
+				setLoading(true);
+				const response = await authApi.get("/updateDenuncia", {
+					params: {
+						tracking_code,
+						dni_admin: user?.dni_admin,
+						comentario: commentInputs[tracking_code] || "",
+						estado: stateRows[tracking_code],
+					},
 				});
-				setDenuncias(prevDenuncias => 
-					prevDenuncias.map(denuncia => 
-						denuncia.tracking_code === tracking_code
-							? {
-								...denuncia,
-								estado: stateRows[tracking_code],
-								seguimiento_comentario: commentInputs[tracking_code] || ""
-							}
-							: denuncia
-					)
-				);
-				setEditingRows(prev => ({
-					...prev,
-					[tracking_code]: false
-				}));
-				setExpandedRows(prev => ({
-					...prev,
-					[tracking_code]: false
-				}));
-			}
-		} catch (error) {
-			console.error('Error al actualizar la denuncia:', error);
-			toast.error("Error al actualizar la denuncia", {
-				description: "Ocurrió un error al intentar actualizar la denuncia",
-			})
-		} finally {
-			setLoading(false);
-		}
-	}, [user?.dni_admin, stateRows, commentInputs, authApi]);
-	const downloadAdjuntos = useCallback(async (tracking_code: string) => {
-		if (!user?.dni_admin) {
-			toast.error('No se pudo identificar al administrador')
-			return;
-		}
-		try {
-			setIsDownloading((prev) => ({
-				...prev,
-				[tracking_code]: true,
-			}));
-			toast.loading("Descargando archivos adjuntos...")
-			const response = await authApi.get('/download', {
-				params: {
-					tracking_code
-				},
-				responseType: 'blob',
-			})
-			const contentType = response.headers['content-type'];
-			if(contentType && contentType.includes('application/json')) {
-				const reader = new FileReader();
-				reader.onload = () => {
-					const jsonResponse = JSON.parse(reader.result as string);
-					toast.dismiss();
-					toast.info(jsonResponse.message || "No se encontraron archivos adjuntos")
+				if (response.status === 200) {
+					toast.success("Denuncia actualizada con éxito", {
+						description:
+							"La denuncia ha sido actualizada correctamente",
+					});
+					setDenuncias((prevDenuncias) =>
+						prevDenuncias.map((denuncia) =>
+							denuncia.tracking_code === tracking_code
+								? {
+										...denuncia,
+										estado: stateRows[tracking_code],
+										seguimiento_comentario:
+											commentInputs[tracking_code] || "",
+								  }
+								: denuncia
+						)
+					);
+					setEditingRows((prev) => ({
+						...prev,
+						[tracking_code]: false,
+					}));
+					setExpandedRows((prev) => ({
+						...prev,
+						[tracking_code]: false,
+					}));
 				}
-				reader.readAsText(response.data)
+			} catch (error) {
+				console.error("Error al actualizar la denuncia:", error);
+				toast.error("Error al actualizar la denuncia", {
+					description:
+						"Ocurrió un error al intentar actualizar la denuncia",
+				});
+			} finally {
+				setLoading(false);
+			}
+		},
+		[user?.dni_admin, stateRows, commentInputs, authApi]
+	);
+	const downloadAdjuntos = useCallback(
+		async (tracking_code: string) => {
+			if (!user?.dni_admin) {
+				toast.error("No se pudo identificar al administrador");
 				return;
 			}
-			if (response.data.size < 100) {
-				toast.dismiss();
-				toast.error("No se encontraron archivos adjuntos")
-				return;
+			const toastId = toast.loading("Descargando archivos adjuntos...");
+
+			try {
+				setIsDownloading((prev) => ({
+					...prev,
+					[tracking_code]: true,
+				}));
+				const response = await fetch(
+					`http://localhost/denuncias/backend/public/admin/download?tracking_code=${tracking_code}`,
+					{
+						method: "GET",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem(
+								"token"
+							)}`,
+						},
+					}
+				);
+				if (!response.ok) {
+					throw new Error(`Error HTTP: ${response.status}`);
+				}
+				const contentType = response.headers.get("content-type");
+				if (contentType && contentType.includes("application/json")) {
+					const jsonData = await response.json();
+					toast.dismiss(toastId);
+					toast.error(
+						jsonData.message ||
+							"No se encontraron archivos adjuntos"
+					);
+					return;
+				}
+				const blob = await response.blob();
+				if (blob.size < 100) {
+					toast.dismiss(toastId);
+					toast.error(
+						"El archivo descargado está vacío o es inválido"
+					);
+					return;
+				}
+				const downloadUrl = URL.createObjectURL(blob);
+				const link = document.createElement("a");
+				link.href = downloadUrl;
+				link.setAttribute("download", `adjuntos_${tracking_code}.zip`);
+				document.body.appendChild(link);
+				link.click();
+				link.remove();
+				setTimeout(() => URL.revokeObjectURL(downloadUrl), 100);
+				toast.dismiss(toastId);
+				toast.success("Descarga iniciada correctamente");
+			} catch (err: unknown) {
+				console.error("Error al descargar archivos adjuntos:", error);
+				toast.dismiss(toastId);
+				if (err && typeof err === "object") {
+					if ("response" in err) {
+						const axiosError = err as {
+							response: {
+								status: number;
+								data?: { message?: string };
+							};
+						};
+
+						toast.error(
+							`Error del servidor: ${axiosError.response.status}`,
+							{
+								description:
+									axiosError.response.data?.message ||
+									"Ocurrió un error al descargar los archivos",
+							}
+						);
+					} else if (err instanceof Error) {
+						// Error estándar de JavaScript
+						toast.error("Error al descargar archivos", {
+							description:
+								err.message ||
+								"No se pudo completar la descarga",
+						});
+					} else {
+						// Otros tipos de error
+						toast.error("Error al descargar archivos", {
+							description:
+								"Error desconocido durante la descarga",
+						});
+					}
+				} else {
+					toast.error("Error al descargar archivos", {
+						description: "No se pudo completar la descarga",
+					});
+				}
+			} finally {
+				setIsDownloading((prev) => ({
+					...prev,
+					[tracking_code]: false,
+				}));
 			}
-			const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
-			const link = document.createElement("a");
-			link.href = downloadUrl;
-			link.setAttribute("download", `${tracking_code}.zip`);
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-			window.URL.revokeObjectURL(downloadUrl);
-			toast.dismiss();
-			toast.success("Archivos adjuntos descargados con éxito")
-		} catch (error) {
-			console.error("Error al descargar archivos adjuntos:", error);
-			toast.dismiss();
-			toast.error("Error al descargar archivos adjuntos", {
-				description: "Ocurrió un error al intentar descargar los archivos",
-			});
-		} finally {
-			setIsDownloading((prev) => ({
-				...prev,
-				[tracking_code]: false,
-			}));
-			toast.dismiss();
-		}
-	}, [user?.dni_admin])
+		},
+		[user?.dni_admin]
+	);
 	return {
 		denuncias,
 		denunciasPaginadas,
@@ -286,6 +344,6 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 		stateRows,
 		submitUpdateDenuncia,
 		downloadAdjuntos,
-		isDownloading
+		isDownloading,
 	};
 };
