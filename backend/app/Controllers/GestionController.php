@@ -199,6 +199,9 @@ class GestionController extends BaseController
     {
         $data = $this->request->getGet();
         $code = $data['tracking_code'];
+        $id_denuncias = $this->denunciasModel
+            ->where('tracking_code', $code)
+            ->first();
         $dni_admin = $data['dni_admin'];
         $id = $this->generateId('seguimientoDenuncias');
         $estado = $data['estado'];
@@ -206,7 +209,7 @@ class GestionController extends BaseController
 
         if ($this->seguimientoDenunciasModel->insert([
             'id' => $id,
-            'denuncia_id' => $code,
+            'denuncia_id' => $id_denuncias['id'],
             'estado' => $estado,
             'comentario' => $comentario,
             'fecha_actualizacion' => date('Y-m-d H:i:s'),
