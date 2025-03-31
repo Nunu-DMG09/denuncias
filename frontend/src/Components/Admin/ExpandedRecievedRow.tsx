@@ -1,6 +1,7 @@
 import { DenunciaRecibida } from "../../types";
 import { getStatusColor } from "../../utils";
 import { CalendarIcon, CommentIcon, DownloadIcon, HistorialIcon, PersonIcon, WarnIcon, XIcon } from "../Icons";
+import { useAdminDenunciasRecibidas } from "../../hooks/Admin/Denuncias/useAdminDenunciasRecibidas";
 
 interface ExpandedRecievedRowProps {
 	denuncia: DenunciaRecibida;
@@ -11,6 +12,7 @@ export const ExpandedRecievedRow = ({
 	denuncia,
 	onClose,
 }: ExpandedRecievedRowProps) => {
+	const {  getStatusDescription, formatDate } = useAdminDenunciasRecibidas();
 	return (
 		<tr key={`details-${denuncia.tracking_code}`}>
 			<td colSpan={6} className="p-0">
@@ -215,35 +217,3 @@ export const ExpandedRecievedRow = ({
 		</tr>
 	);
 };
-
-// Función auxiliar para formatear fechas
-function formatDate(dateString: string) {
-	if (!dateString) return "Fecha no disponible";
-
-	const options: Intl.DateTimeFormatOptions = {
-		year: "numeric",
-		month: "long",
-		day: "numeric",
-	};
-
-	return new Date(dateString).toLocaleDateString("es-ES", options);
-}
-// Función para obtener descripciones de estados
-function getStatusDescription(estado: string) {
-	switch (estado) {
-		case "pendiente":
-			return "La denuncia está pendiente de revisión.";
-		case 'recibida':
-			return "La denuncia ha sido recibida y está en proceso de análisis.";
-		case "en_proceso":
-			return "La denuncia está siendo analizada actualmente.";
-		case "derivado":
-			return "La denuncia ha sido derivada a otra unidad para su seguimiento.";
-		case "resuelto":
-			return "La denuncia ha sido resuelta satisfactoriamente.";
-		case "rechazado":
-			return "La denuncia ha sido rechazada debido a criterios específicos.";
-		default:
-			return "Estado actual de la denuncia.";
-	}
-}

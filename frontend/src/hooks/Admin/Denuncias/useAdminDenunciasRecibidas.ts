@@ -83,6 +83,36 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 			[tracking_code]: !prev[tracking_code],
 		}));
 	};
+	const formatDate = (dateString: string) => {
+		if (!dateString) return "Fecha no disponible";
+	
+		const options: Intl.DateTimeFormatOptions = {
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+		};
+	
+		return new Date(dateString).toLocaleDateString("es-ES", options);
+	}
+	// Función para obtener descripciones de estados
+	const getStatusDescription = (estado: string) => {
+		switch (estado) {
+			case "pendiente":
+				return "La denuncia está pendiente de revisión.";
+			case 'recibida':
+				return "La denuncia ha sido recibida y está en proceso de análisis.";
+			case "en_proceso":
+				return "La denuncia está siendo analizada actualmente.";
+			case "derivado":
+				return "La denuncia ha sido derivada a otra unidad para su seguimiento.";
+			case "resuelto":
+				return "La denuncia ha sido resuelta satisfactoriamente.";
+			case "rechazado":
+				return "La denuncia ha sido rechazada debido a criterios específicos.";
+			default:
+				return "Estado actual de la denuncia.";
+		}
+	}
 	return {
 		denuncias,
 		denunciasPaginadas,
@@ -95,5 +125,7 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 		getVisiblePageNumbers,
 		toggleRowExpansion,
 		expandedRows,
+		formatDate,
+		getStatusDescription,
 	};
 };
