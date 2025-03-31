@@ -154,6 +154,58 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 				return "Estado actual de la denuncia.";
 		}
 	}
+	const submitUpdateDenuncia = useCallback(async (tracking_code: string) => {
+		if (!user?.dni_admin) {
+			toast.error("No se pudo identificar al administrador");
+			return;
+		}
+		if (!stateRows[tracking_code]) {
+			toast.error("Debes seleccionar un estado para la denuncia");
+			return;
+		}
+		try {
+			setLoading(true);
+			const response = await authApi.get('/updateDenuncia', {
+				params: {
+					tracking_code,
+					dni_admin: user?.dni_admin,
+					comentario: commentInputs[tracking_code] || "",
+					estado: stateRows[tracking_code],
+				}
+			})
+			if (response.status === 200) {
+				toast.success("Denuncia actualizada con éxito", {
+					description: "La denuncia ha sido actualizada correctamente",
+				});
+				setDenuncias(prevDenuncias => 
+					prevDenuncias.map(denuncia => 
+						denuncia.tracking_code === tracking_code
+							? {
+								...denuncia,
+								estado: stateRows[tracking_code],
+								seguimiento_comentario: commentInputs[tracking_code] || ""
+							}
+							: denuncia
+					)
+				);
+				setEditingRows(prev => ({
+					...prev,
+					[tracking_code]: false
+				}));
+				setExpandedRows(prev => ({
+					...prev,
+					[tracking_code]: false
+				}));
+			}
+		} catch (error) {
+			console.error('Error al actualizar la denuncia:', error);
+			toast.error("Error al actualizar la denuncia", {
+				description: "Ocurrió un error al intentar actualizar la denuncia",
+			})
+		} finally {
+			setLoading(false);
+		}
+	}, [user?.dni_admin, stateRows, commentInputs, authApi]);
 	return {
 		denuncias,
 		denunciasPaginadas,
@@ -174,5 +226,6 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 		commentInputs,
 		handleStateChange,
 		stateRows,
+		submitUpdateDenuncia,
 	};
 };
