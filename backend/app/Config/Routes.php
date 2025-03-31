@@ -26,7 +26,7 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('denuncias', 'GestionController::dashboard');
     $routes->get('recibida', 'GestionController::receivedAdmin');
     $routes->get('mandar', 'GestionController::receiveAdmin');
-    $routes->get('', 'GestionController::processAdmin');
+    $routes->get('updateDenuncia', 'GestionController::processAdmin');
     $routes->get('download', 'GestionController::downloadAdjunto');
     $routes->group('', ['filter' => 'auth:superadmin'], function ($routes) {});
 });
