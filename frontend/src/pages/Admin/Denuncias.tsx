@@ -2,6 +2,7 @@ import { useAdminDenuncias } from "../../hooks/Admin/Denuncias/useAdminDenuncias
 import { getStatusColor } from "../../utils";
 import { useAuthContext } from "../../hooks/Admin/useAuthContext";
 import { DenunciasWarn } from "../../Components/Errors/DenunciasWarn";
+import { DenunciasLoader } from "../../Components/Loaders/DenunciasLoader";
 
 export const Denuncias = () => {
 	const itemsPerPage = 10;
@@ -31,9 +32,7 @@ export const Denuncias = () => {
 			</div>
 
 			{loading ? (
-				<div className="flex justify-center items-center h-64">
-					<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-(--primary-color)"></div>
-				</div>
+				<DenunciasLoader />
 			) : denunciasPaginadas.length === 0 ? (
 				<DenunciasWarn />
 			) : (
