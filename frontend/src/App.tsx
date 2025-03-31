@@ -21,6 +21,7 @@ import { DenunciasRecibidas } from "./pages/Admin/DenunciasRecibidas";
 import { TrackingDenuncia } from "./pages/Tracking/TrackingDenuncia";
 import { Unauthorized } from "./pages/Unauthorized";
 import { NotFound } from "./pages/404";
+import { SearchDenuncia } from "./pages/Admin/SearchDenuncia";
 
 function App() {
 	return (
@@ -88,6 +89,10 @@ function App() {
 							<Route
 								path="recibidos"
 								element={<DenunciasRecibidas />}
+							/>
+							<Route
+								path="search"
+								element={<SearchDenuncia />}
 							/>
 						</Route>
 						<Route path="*" element={<NotFound />} />

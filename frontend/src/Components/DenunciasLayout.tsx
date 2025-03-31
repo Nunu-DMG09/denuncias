@@ -34,10 +34,21 @@ export const DenunciasLayout = () => {
                     >
                         Recibidos
                     </NavLink>
+                    <NavLink 
+                        to="/admin/denuncias/search" 
+                        className={({ isActive }) => 
+                            `py-4 px-1 border-b-2 text-sm font-medium ${
+                                isActive 
+                                ? "border-(--primary-color) text-(--primary-color)" 
+                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                            }`
+                        }
+                    >
+                        Buscar
+                    </NavLink>
+
                 </nav>
             </div>
-            
-            {/* Aquí se renderiza el contenido específico de la ruta */}
             <Outlet />
         </div>
     );
