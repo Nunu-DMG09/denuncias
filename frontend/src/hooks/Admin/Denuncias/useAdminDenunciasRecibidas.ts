@@ -12,6 +12,30 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 	const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>(
 		{}
 	);
+	const [editingRows, setEditingRows] = useState<Record<string, boolean>>({});
+	const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
+
+	const handleEdit = (tracking_code: string) => {
+		setEditingRows((prev) => ({
+			...prev,
+			[tracking_code]: !prev[tracking_code],
+		}));
+		if (!editingRows[tracking_code]) {
+			const denuncia = denuncias.find(d => d.tracking_code === tracking_code);
+			if (denuncia) {
+				setCommentInputs((prev) => ({
+					...prev,
+					[tracking_code]: denuncia.seguimiento_comentario || "",
+				}));
+			}
+		}
+	}
+	const handleCommentChange = (tracking_code: string, value: string) => {
+		setCommentInputs((prev) => ({
+			...prev,
+			[tracking_code]: value,
+		}));
+	}
 
 	const { user } = useAuthContext();
 	const {
@@ -78,6 +102,12 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 		fetchDenunciasRecibidas();
 	}, [fetchDenunciasRecibidas]);
 	const toggleRowExpansion = (tracking_code: string) => {
+		if(expandedRows[tracking_code]) {
+			setEditingRows((prev) => ({
+				...prev,
+				[tracking_code]: false,
+			}));
+		}
 		setExpandedRows((prev) => ({
 			...prev,
 			[tracking_code]: !prev[tracking_code],
@@ -127,5 +157,9 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 		expandedRows,
 		formatDate,
 		getStatusDescription,
+		handleEdit,
+		editingRows,
+		handleCommentChange,
+		commentInputs
 	};
 };

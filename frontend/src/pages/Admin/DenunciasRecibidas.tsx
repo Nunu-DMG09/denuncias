@@ -17,6 +17,10 @@ export const DenunciasRecibidas = () => {
 		handlePageChange,
 		expandedRows,
 		toggleRowExpansion,
+		handleEdit,
+		editingRows,
+		handleCommentChange,
+		commentInputs
 	} = useAdminDenunciasRecibidas(itemsPerPage);
 
 	return (
@@ -105,6 +109,10 @@ export const DenunciasRecibidas = () => {
 												key={`details-${denuncia.tracking_code}`}
 												denuncia={denuncia}
 												onClose={toggleRowExpansion}
+												onEdit={handleEdit}
+												isEditing={!!editingRows[denuncia.tracking_code]}
+												commentValue = {commentInputs[denuncia.tracking_code]}
+												onCommentChange={handleCommentChange}
 											/>
 										)}
 									</React.Fragment>
