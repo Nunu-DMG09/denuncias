@@ -143,7 +143,7 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 				return "La denuncia está pendiente de revisión.";
 			case 'recibida':
 				return "La denuncia ha sido recibida y está en proceso de análisis.";
-			case "en_proceso":
+			case "en proceso":
 				return "La denuncia está siendo analizada actualmente.";
 			case "derivado":
 				return "La denuncia ha sido derivada a otra unidad para su seguimiento.";
