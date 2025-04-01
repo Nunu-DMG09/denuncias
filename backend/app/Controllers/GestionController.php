@@ -147,7 +147,14 @@ class GestionController extends BaseController
     public function downloadAdjunto()
     {
         $data = $this->request->getGet();
-        $code = $data['tracking_code'];
+        $code = $data['tracking_code'] ?? null;
+
+        if (!$code) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'El código de seguimiento es requerido'
+            ]);
+        }
         $denuncia = $this->denunciasModel
             ->where('tracking_code', $code)
             ->first();
@@ -181,14 +188,14 @@ class GestionController extends BaseController
         if (!is_dir($tempDir)) {
             mkdir($tempDir, 0777, true);
         }
-        $zipName = 'adjuntos_' . $code . '_' . time() . '.zip'; // Añadir timestamp para evitar colisiones
+        $zipName = 'adjuntos_' . $code . '_' . time() . '.zip';
         $zipPath = $tempDir . '/' . $zipName;
         if (file_exists($zipPath)) {
             unlink($zipPath);
         }
         $zip = new \ZipArchive();
         if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
-            $fileCount = 0; // Contador para verificar si se añadieron archivos
+            $fileCount = 0;
             $files = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($folderPath),
                 \RecursiveIteratorIterator::LEAVES_ONLY
@@ -197,7 +204,6 @@ class GestionController extends BaseController
                 if (!$file->isDir()) {
                     $filePath = $file->getRealPath();
                     $relativePath = substr($filePath, strlen($folderPath) + 1);
-                    
                     // Evitar archivos ocultos o del sistema
                     if (substr($relativePath, 0, 1) !== '.') {
                         if ($zip->addFile($filePath, $relativePath)) {
@@ -206,7 +212,6 @@ class GestionController extends BaseController
                     }
                 }
             }
-            
             $zip->close();
             if ($fileCount === 0) {
                 return $this->response->setJSON([
@@ -214,26 +219,18 @@ class GestionController extends BaseController
                     'message' => 'No se encontraron archivos válidos para comprimir'
                 ]);
             }
+
             if (!file_exists($zipPath) || filesize($zipPath) < 10) {
                 return $this->response->setJSON([
                     'success' => false,
                     'message' => 'Error al crear el archivo ZIP'
                 ]);
             }
-            $response = $this->response;
-            $response->setHeader('Content-Type', 'application/zip');
-            $response->setHeader('Content-Disposition', 'attachment; filename="' . $zipName . '"');
-            $response->setHeader('Content-Length', filesize($zipPath));
-            $response->setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-            $response->setHeader('Pragma', 'no-cache');
-            $response->setHeader('Expires', '0');
-            readfile($zipPath);
-            @unlink($zipPath);
-            return $response;
+            return $this->response->download($zipPath, null)->setFileName($zipName);
         } else {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'No se pudo crear el archivo zip'
+                'message' => 'No se pudo crear el archivo ZIP'
             ]);
         }
     }
