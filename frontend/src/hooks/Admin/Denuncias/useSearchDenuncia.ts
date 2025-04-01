@@ -111,12 +111,12 @@ export const useSearchDenuncia = () => {
 			fetchRucData();
 		}
 	}, [tipoDocumento, numeroDocumento, nombre]);
-	const fetchDenucias = async () => {
+	const fetchDenucias = useCallback(async () => {
 		try {
 			setIsLoading(true);
 			const response = await authApi.get("/search", {
 				params: {
-					numeroDocumento: numeroDocumento,
+					numero_documento: numeroDocumento,
 				},
 			});
 			if (response.data && Array.isArray(response.data)) {
@@ -155,7 +155,7 @@ export const useSearchDenuncia = () => {
 		} finally {
 			setIsLoading(false);
 		}
-	};
+	}, [numeroDocumento, motivos]);
 	const handleSearchClick = useCallback(async () => {
 		if (!tipoDocumento) {
 			toast.error("Por favor, selecciona un tipo de documento.");
