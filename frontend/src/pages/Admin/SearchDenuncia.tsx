@@ -127,15 +127,15 @@ export const SearchDenuncia = () => {
 								? `Resultados de la búsqueda (${denunciaData.length})`
 								: "No se encontraron denuncias con estos criterios"}
 						</h3>
-						
 						{denunciaData.length > 0 ? (
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-min">
 								{denunciaData.map((denuncia) => (
 									<div 
 										key={denuncia.id} 
-										className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"
+										className="bg-white rounded-xl relative shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col"
+										style={{ height: 'auto', alignSelf: 'start' }}
 									>
-										<div className="p-5">
+										<div className="p-5 flex-grow flex flex-col">
 											<div className="flex justify-between items-start mb-3 flex-wrap">
 												<h4 className="text-lg font-medium text-gray-800 flex items-center">
 													<MiniDocumentIcon />
@@ -147,7 +147,7 @@ export const SearchDenuncia = () => {
 													{denuncia.estado.replace("_", " ")}
 												</span>
 											</div>
-											<div className="space-y-2">
+											<div className="space-y-2 flex-grow" style={{ minHeight: 120 }}> 
 												<div className="flex items-center text-sm text-gray-500">
 													<span className="text-indigo-600">
 														<CalendarIcon />
@@ -158,12 +158,12 @@ export const SearchDenuncia = () => {
 														day: 'numeric'
 													})}
 												</div>
-												
 												<div className="mt-2">
 													<span className="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-md">
 														{denuncia.motivo_id === 'mo_otros' ? denuncia.motivo_otro : denuncia.motivo}
 													</span>
 												</div>
+												
 												<div className={`mt-3 text-sm text-gray-600 ${!expandedCards[denuncia.id] && 'line-clamp-2'}`}>
 													<p>{denuncia.descripcion}</p>
 												</div>
@@ -182,7 +182,6 @@ export const SearchDenuncia = () => {
 																{denuncia.denunciante_dni && ` - ${denuncia.denunciante_dni}`}
 															</p>
 														</div>
-														
 														<div>
 															<h5 className="text-sm font-medium text-gray-700 mb-1">Información del denunciado</h5>
 															<p className="text-sm text-gray-600">
@@ -190,7 +189,6 @@ export const SearchDenuncia = () => {
 																{denuncia.denunciado_dni && ` - ${denuncia.denunciado_dni}`}
 															</p>
 														</div>
-														
 														{denuncia.seguimiento_comentario && (
 															<div>
 																<h5 className="text-sm font-medium text-gray-700 mb-1">Comentarios de seguimiento</h5>
@@ -203,7 +201,7 @@ export const SearchDenuncia = () => {
 												</div>
 											</div>
 										</div>
-										<div className="border-t border-gray-100 bg-gray-50 px-5 py-3">
+										<div className="mt-auto border-t border-gray-100 bg-gray-50 px-5 py-3">
 											<button 
 												className="w-full cursor-pointer text-center text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors duration-200 flex items-center justify-center"
 												onClick={() => toggleCardDetails(denuncia.id)}
