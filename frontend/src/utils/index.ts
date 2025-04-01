@@ -11,6 +11,8 @@ export const ALLOWED_FILE_TYPES = {
 	"image/gif": [".gif"],
 	"image/bmp": [".bmp"],
 	"image/webp": [".webp"],
+	'image/avif': ['.avif'],
+	"image/svg+xml": [".svg"],
 	"application/pdf": [".pdf"],
 	"application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
 		".docx",
