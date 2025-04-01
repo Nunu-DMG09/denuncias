@@ -27,6 +27,25 @@ class GestionController extends BaseController
         $this->motivosModel = new MotivosModel();
         $this->adjuntosModel = new AdjuntosModel();
     }
+    public function generateId($table)
+    {
+        $prefixes = [
+            'denuncias' => 'de',
+            'denunciantes' => 'dn',
+            'denunciados' => 'de',
+            'adjuntos' => 'ad',
+            'seguimientoDenuncias' => 'sd'
+        ];
+        if (!isset($prefixes[$table])) {
+            throw new \InvalidArgumentException("Invalid table name: $table");
+        }
+        $model = $this->{$table . 'Model'};
+        $prefix = $prefixes[$table];
+        do {
+            $uuid = $prefix . substr(bin2hex(random_bytes(6)), 0, 6);
+        } while ($model->where('id', $uuid)->first());
+        return $uuid;
+    }
     public function dashboard()
     {
         $db = \Config\Database::connect();
@@ -50,25 +69,6 @@ class GestionController extends BaseController
             ->getResult();
 
         return $this->response->setJSON($denuncias);
-    }
-    public function generateId($table)
-    {
-        $prefixes = [
-            'denuncias' => 'de',
-            'denunciantes' => 'dn',
-            'denunciados' => 'de',
-            'adjuntos' => 'ad',
-            'seguimientoDenuncias' => 'sd'
-        ];
-        if (!isset($prefixes[$table])) {
-            throw new \InvalidArgumentException("Invalid table name: $table");
-        }
-        $model = $this->{$table . 'Model'};
-        $prefix = $prefixes[$table];
-        do {
-            $uuid = $prefix . substr(bin2hex(random_bytes(6)), 0, 6);
-        } while ($model->where('id', $uuid)->first());
-        return $uuid;
     }
     public function receiveAdmin()
     {
@@ -157,7 +157,7 @@ class GestionController extends BaseController
         $denuncia = $this->denunciasModel
             ->where('tracking_code', $code)
             ->first();
-            
+
         if (!$denuncia) {
             return $this->response->setJSON([
                 'success' => false,
@@ -200,7 +200,7 @@ class GestionController extends BaseController
                 if (!$file->isDir()) {
                     $filePath = $file->getRealPath();
                     $relativePath = substr($filePath, strlen($folderPath) + 1);
-                    
+
                     if (substr($relativePath, 0, 1) !== '.') {
                         if ($zip->addFile($filePath, $relativePath)) {
                             $fileCount++;
@@ -266,5 +266,25 @@ class GestionController extends BaseController
                 'message' => 'La denuncia ha sido actualizada'
             ]);
         }
+    }
+    public function search()
+    {
+        $data = $this->request->getGet();
+        $dni = $data['numero_documento'];
+        $denuncias = $this->denunciasModel
+            ->select('denuncias.*')
+            ->join('denunciados', 'denuncias.denunciado_id = denunciados.id')
+            ->where('denunciados.numero_documento', $dni)
+            ->findAll();
+        if (empty($denuncias)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No se encontraron denuncias para este DNI'
+            ]);
+        }
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $denuncias
+        ]);
     }
 }
