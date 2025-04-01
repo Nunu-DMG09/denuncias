@@ -11,7 +11,9 @@ export const SearchDenuncia = () => {
 		error,
 		isLoading,
 		denunciaData,
-		handleSearchClick
+		handleSearchClick,
+		hasSearched,
+		isLoadingDNI
 	} = useSearchDenuncia();
 	return (
 		<div className="container mx-auto my-8 px-4">
@@ -67,7 +69,7 @@ export const SearchDenuncia = () => {
 						Nro de Documento de Identidad
 						<span className="text-red-500 font-black">*</span>
 					</label>
-					{isLoading && <Loader isBtn={false} />}
+					{isLoadingDNI && <Loader isBtn={false} />}
 				</div>
 				{error && <p className="text-red-500 text-sm">{error}</p>}
 				{tipoDocumento !== "dni" && tipoDocumento !== "ruc" ? (
@@ -113,14 +115,121 @@ export const SearchDenuncia = () => {
 						)}
 					</button>
 				</div>
+				
+				{/* Sección de resultados */}
+				{hasSearched && (
+					<div className="mt-10 animate__animated animate__fadeIn">
+						<h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
+							{denunciaData.length > 0 
+								? `Resultados de la búsqueda (${denunciaData.length})`
+								: "No se encontraron denuncias con estos criterios"}
+						</h3>
+						
+						{denunciaData.length > 0 ? (
+							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+								{denunciaData.map((denuncia) => (
+									<div 
+										key={denuncia.id} 
+										className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"
+									>
+										<div className="p-4">
+											<div className="flex justify-between items-start">
+												<h4 className="text-lg font-medium text-gray-800 flex items-center">
+													<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+													</svg>
+													{denuncia.tracking_code}
+												</h4>
+												<span 
+													className={`px-2 py-1 text-xs rounded-full font-semibold ${
+														denuncia.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-800' : 
+														denuncia.estado === 'en_proceso' ? 'bg-blue-100 text-blue-800' : 
+														denuncia.estado === 'resuelto' ? 'bg-green-100 text-green-800' : 
+														denuncia.estado === 'rechazado' ? 'bg-red-100 text-red-800' : 
+														denuncia.estado === 'derivado' ? 'bg-purple-100 text-purple-800' : 
+														'bg-gray-100 text-gray-800'
+													}`}
+												>
+													{denuncia.estado
+														.replace("_", " ")
+														.toLowerCase()
+														.replace(/^\w|\s\w/g, (c) => c.toUpperCase())}
+												</span>
+											</div>
+											
+											<div className="mt-2">
+												<div className="flex items-center text-sm text-gray-500 mb-1">
+													<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+													</svg>
+													{new Date(denuncia.fecha_registro).toLocaleDateString('es-ES', {
+														year: 'numeric',
+														month: 'long',
+														day: 'numeric'
+													})}
+												</div>
+												
+												<div className="mt-2 mb-3">
+													<span className="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-md">
+														{denuncia.motivo}
+													</span>
+												</div>
+												
+												<div className="mt-3 text-sm text-gray-600 line-clamp-3">
+													<p>{denuncia.descripcion}</p>
+												</div>
+											</div>
+										</div>
+										
+										<div className="border-t border-gray-100 bg-gray-50 px-4 py-3">
+											<button 
+												className="w-full text-center text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors duration-200 flex items-center justify-center"
+												onClick={() => window.open(`/admin/denuncia/${denuncia.tracking_code}`, '_blank')}
+											>
+												<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+												</svg>
+												Ver detalles
+											</button>
+										</div>
+									</div>
+								))}
+							</div>
+						) : (
+							<div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+								<div className="flex items-center">
+									<div className="flex-shrink-0 text-blue-400">
+										<svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+											<path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z" clipRule="evenodd" />
+										</svg>
+									</div>
+									<div className="ml-3">
+										<p className="text-sm text-blue-700">
+											Intente buscar con otros criterios o revisar que los datos ingresados sean correctos.
+										</p>
+									</div>
+								</div>
+							</div>
+						)}
+					</div>
+				)}
+				
+				{/* Opcional: Agregar un botón para exportar o generar reporte */}
+				{denunciaData && denunciaData.length > 0 && (
+					<div className="mt-6 flex justify-end">
+						<button 
+							className="bg-gradient-to-r from-green-600 to-green-700 text-white px-4 py-2 rounded-md shadow hover:from-green-700 hover:to-green-800 transition-all duration-300 flex items-center"
+							onClick={() => {/* Función para exportar resultados */}}
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+							</svg>
+							Exportar resultados
+						</button>
+					</div>
+				)}
 			</div>
-			<p>
-				{
-					denunciaData.length === 0 && !isLoading
-						? "No se encontraron resultados"
-						: "Si se encontraron aña"
-				}
-			</p>
 		</div>
 	);
 };

@@ -22,12 +22,18 @@ export const useSearchDenuncia = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [denunciaData, setDenunciaData] = useState<Denuncias[]>([]);
 	const [error, setError] = useState<string | null>(null);
+    const [hasSearched, setHasSearched] = useState<boolean>(false);
+    const [isLoadingDNI, setIsLoadingDNI] = useState<boolean>(false);
 
 	const handleTipoDocumento = (tipo: string) => {
 		setTipoDocumento(tipo);
 		setNumeroDocumento("");
 		setNombre("");
 		setError(null);
+        if(hasSearched) {
+            setDenunciaData([]);
+            setHasSearched(false);
+        }
 	};
 	const handleDocumentoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const documentoValue = e.target.value;
@@ -47,7 +53,7 @@ export const useSearchDenuncia = () => {
 		}
 		if (tipoDocumento === "dni" && numeroDocumento.length === 8) {
 			const fetchDniData = async () => {
-				setIsLoading(true);
+				setIsLoadingDNI(true);
 				setError(null);
 				try {
 					const nombre = await getDNIData(numeroDocumento);
@@ -66,7 +72,7 @@ export const useSearchDenuncia = () => {
 					setError(errMsg);
 					toast.error(errMsg);
 				} finally {
-					setIsLoading(false);
+					setIsLoadingDNI(false);
 				}
 			};
 			fetchDniData();
@@ -86,7 +92,7 @@ export const useSearchDenuncia = () => {
 		}
 		if (tipoDocumento === "ruc" && numeroDocumento.length === 11) {
 			const fetchRucData = async () => {
-				setIsLoading(true);
+				setIsLoadingDNI(true);
 				setError(null);
 				try {
 					const nombre = await getRUCData(numeroDocumento);
@@ -105,7 +111,7 @@ export const useSearchDenuncia = () => {
 					setError(errMsg);
 					toast.error(errMsg);
 				} finally {
-					setIsLoading(false);
+					setIsLoadingDNI(false);
 				}
 			};
 			fetchRucData();
@@ -114,13 +120,16 @@ export const useSearchDenuncia = () => {
 	const fetchDenucias = useCallback(async () => {
 		try {
 			setIsLoading(true);
+            setError(null);
+            console.log("Fetching denuncias...");
 			const response = await authApi.get("/search", {
 				params: {
 					numero_documento: numeroDocumento,
 				},
 			});
-			if (response.data && Array.isArray(response.data)) {
-				const denunciasFormateadas = response.data.map(
+            console.log("Response data:", response.data);
+			if (response.data && response.data.success && Array.isArray(response.data.data)) {
+				const denunciasFormateadas = response.data.data.map(
 					(denuncia: Denuncias) => ({
 						id: denuncia.id,
 						tracking_code: denuncia.tracking_code,
@@ -134,10 +143,17 @@ export const useSearchDenuncia = () => {
 						estado: denuncia.estado,
 					})
 				);
+                console.log("Formatted denuncias:", denunciasFormateadas);
 				setDenunciaData(denunciasFormateadas);
+                if (denunciasFormateadas.length === 0) {
+                    toast.info("No se encontraron denuncias para este documento");
+                } else {
+                    toast.success(`Se encontraron ${denunciasFormateadas.length} denuncias`);
+                }
 				setError(null);
 			} else {
 				setDenunciaData([]);
+                toast.info("No se encontraron denuncias para este documento");
 			}
 		} catch (error) {
 			console.error("Error al obtener las denuncias:", error);
@@ -176,8 +192,10 @@ export const useSearchDenuncia = () => {
 			);
 			return;
 		}
+        setHasSearched(true);
         await fetchDenucias();
 	}, [tipoDocumento, numeroDocumento, fetchDenucias]);
+    
 	return {
 		tipoDocumento,
 		numeroDocumento,
@@ -188,6 +206,8 @@ export const useSearchDenuncia = () => {
 		handleTipoDocumento,
 		handleDocumentoChange,
 		handleName,
-        handleSearchClick
+        handleSearchClick,
+        hasSearched,
+        isLoadingDNI
 	};
 };
