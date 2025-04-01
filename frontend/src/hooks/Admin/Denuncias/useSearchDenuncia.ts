@@ -121,13 +121,11 @@ export const useSearchDenuncia = () => {
 		try {
 			setIsLoading(true);
             setError(null);
-            console.log("Fetching denuncias...");
 			const response = await authApi.get("/search", {
 				params: {
 					numero_documento: numeroDocumento,
 				},
 			});
-            console.log("Response data:", response.data);
 			if (response.data && response.data.success && Array.isArray(response.data.data)) {
 				const denunciasFormateadas = response.data.data.map(
 					(denuncia: Denuncias) => ({
@@ -156,7 +154,6 @@ export const useSearchDenuncia = () => {
                 toast.info("No se encontraron denuncias para este documento");
 			}
 		} catch (error) {
-			console.error("Error al obtener las denuncias:", error);
 			if (error instanceof Error) {
 				setError(
 					error.message || "Ocurrió un error al obtener las denuncias"
