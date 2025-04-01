@@ -142,7 +142,6 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 
 		return new Date(dateString).toLocaleDateString("es-ES", options);
 	};
-	// Función para obtener descripciones de estados
 	const getStatusDescription = (estado: string) => {
 		switch (estado) {
 			case "pendiente":
