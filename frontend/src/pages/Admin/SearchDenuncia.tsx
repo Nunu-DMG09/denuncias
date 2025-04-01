@@ -1,6 +1,8 @@
 import { toast } from "sonner";
 import { Loader } from "../../Components/Loaders/Loader";
 import { useSearchDenuncia } from "../../hooks/Admin/Denuncias/useSearchDenuncia";
+import { CalendarIcon, MiniDocumentIcon } from "../../Components/Icons";
+import { getStatusColor } from "../../utils";
 export const SearchDenuncia = () => {
 	const {
 		numeroDocumento,
@@ -118,8 +120,6 @@ export const SearchDenuncia = () => {
 						)}
 					</button>
 				</div>
-				
-				{/* Sección de resultados */}
 				{hasSearched && (
 					<div className="mt-10 animate__animated animate__fadeIn">
 						<h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
@@ -136,37 +136,22 @@ export const SearchDenuncia = () => {
 										className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"
 									>
 										<div className="p-5">
-											{/* Encabezado con código y estado */}
-											<div className="flex justify-between items-start mb-3">
+											<div className="flex justify-between items-start mb-3 flex-wrap">
 												<h4 className="text-lg font-medium text-gray-800 flex items-center">
-													<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-													</svg>
+													<MiniDocumentIcon />
 													<span className="font-semibold tracking-wide">{denuncia.tracking_code}</span>
 												</h4>
 												<span 
-													className={`px-3 py-1 text-xs rounded-full font-semibold ${
-														denuncia.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-800' : 
-														denuncia.estado === 'en_proceso' ? 'bg-blue-100 text-blue-800' : 
-														denuncia.estado === 'resuelto' ? 'bg-green-100 text-green-800' : 
-														denuncia.estado === 'rechazado' ? 'bg-red-100 text-red-800' : 
-														denuncia.estado === 'derivado' ? 'bg-purple-100 text-purple-800' : 
-														'bg-gray-100 text-gray-800'
-													}`}
+													className={`px-3 py-1 text-xs rounded-full capitalize font-semibold ${getStatusColor(denuncia.estado)}`}
 												>
-													{denuncia.estado
-														.replace("_", " ")
-														.toLowerCase()
-														.replace(/^\w|\s\w/g, (c) => c.toUpperCase())}
+													{denuncia.estado.replace("_", " ")}
 												</span>
 											</div>
-											
-											{/* Información principal siempre visible */}
 											<div className="space-y-2">
 												<div className="flex items-center text-sm text-gray-500">
-													<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-													</svg>
+													<span className="text-indigo-600">
+														<CalendarIcon />
+													</span>
 													{new Date(denuncia.fecha_registro).toLocaleDateString('es-ES', {
 														year: 'numeric',
 														month: 'long',
@@ -176,17 +161,13 @@ export const SearchDenuncia = () => {
 												
 												<div className="mt-2">
 													<span className="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-md">
-														{denuncia.motivo}
+														{denuncia.motivo_id === 'mo_otros' ? denuncia.motivo_otro : denuncia.motivo}
 													</span>
 												</div>
-												
-												{/* Descripción con recorte si no está expandida */}
 												<div className={`mt-3 text-sm text-gray-600 ${!expandedCards[denuncia.id] && 'line-clamp-2'}`}>
 													<p>{denuncia.descripcion}</p>
 												</div>
 											</div>
-											
-											{/* Contenido expandido */}
 											<div 
 												className={`mt-4 overflow-hidden transition-all duration-500 ease-in-out ${
 													expandedCards[denuncia.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
@@ -218,38 +199,13 @@ export const SearchDenuncia = () => {
 																</p>
 															</div>
 														)}
-														
-														<div className="flex items-center justify-end space-x-2 pt-2">
-															<button 
-																className="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 py-1 px-3 rounded-md transition-colors duration-200"
-																onClick={(e) => {
-																	e.stopPropagation();
-																	navigator.clipboard.writeText(denuncia.tracking_code);
-																	toast.success("Código copiado al portapapeles");
-																}}
-															>
-																Copiar código
-															</button>
-															
-															<button 
-																className="text-xs bg-green-50 hover:bg-green-100 text-green-700 py-1 px-3 rounded-md transition-colors duration-200"
-																onClick={(e) => {
-																	e.stopPropagation();
-																	window.open(`/admin/denuncia/${denuncia.tracking_code}`, '_blank');
-																}}
-															>
-																Ver en detalle
-															</button>
-														</div>
 													</div>
 												</div>
 											</div>
 										</div>
-										
-										{/* Botón para expandir/colapsar */}
 										<div className="border-t border-gray-100 bg-gray-50 px-5 py-3">
 											<button 
-												className="w-full text-center text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors duration-200 flex items-center justify-center"
+												className="w-full cursor-pointer text-center text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors duration-200 flex items-center justify-center"
 												onClick={() => toggleCardDetails(denuncia.id)}
 											>
 												{expandedCards[denuncia.id] ? (
@@ -288,21 +244,6 @@ export const SearchDenuncia = () => {
 								</div>
 							</div>
 						)}
-					</div>
-				)}
-				
-				{/* Opcional: Agregar un botón para exportar o generar reporte */}
-				{denunciaData && denunciaData.length > 0 && (
-					<div className="mt-6 flex justify-end">
-						<button 
-							className="bg-gradient-to-r from-green-600 to-green-700 text-white px-4 py-2 rounded-md shadow hover:from-green-700 hover:to-green-800 transition-all duration-300 flex items-center"
-							onClick={() => {/* Función para exportar resultados */}}
-						>
-							<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-							</svg>
-							Exportar resultados
-						</button>
 					</div>
 				)}
 			</div>

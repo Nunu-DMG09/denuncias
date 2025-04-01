@@ -12,6 +12,7 @@ interface Denuncias {
 	descripcion: string;
 	fecha_registro: string;
 	estado: string;
+    motivo_otro: string
 }
 
 export const useSearchDenuncia = () => {
@@ -146,9 +147,9 @@ export const useSearchDenuncia = () => {
 						descripcion: denuncia.descripcion,
 						fecha_registro: denuncia.fecha_registro,
 						estado: denuncia.estado,
+                        motivo_otro: denuncia.motivo_otro
 					})
 				);
-                console.log("Formatted denuncias:", denunciasFormateadas);
 				setDenunciaData(denunciasFormateadas);
                 if (denunciasFormateadas.length === 0) {
                     toast.info("No se encontraron denuncias para este documento");
