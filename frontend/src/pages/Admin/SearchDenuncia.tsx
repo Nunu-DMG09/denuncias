@@ -1,7 +1,6 @@
-import { toast } from "sonner";
 import { Loader } from "../../Components/Loaders/Loader";
 import { useSearchDenuncia } from "../../hooks/Admin/Denuncias/useSearchDenuncia";
-import { CalendarIcon, MiniDocumentIcon } from "../../Components/Icons";
+import { CalendarIcon, FiltersIcon, MiniDocumentIcon } from "../../Components/Icons";
 import { getStatusColor } from "../../utils";
 export const SearchDenuncia = () => {
 	const {
@@ -122,11 +121,17 @@ export const SearchDenuncia = () => {
 				</div>
 				{hasSearched && (
 					<div className="mt-10 animate__animated animate__fadeIn">
-						<h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
-							{denunciaData.length > 0 
-								? `Resultados de la búsqueda (${denunciaData.length})`
-								: "No se encontraron denuncias con estos criterios"}
-						</h3>
+						<div className="w-full bg-(--tertiary-color) mb-4 border-b border-(--primary-color) flex justify-between items-center p-4 rounded-md shadow-sm">
+							<h3 className="text-lg font-semibold text-white">
+								{denunciaData.length > 0 
+									? `Resultados de la búsqueda (${denunciaData.length})`
+									: "No se encontraron denuncias con estos criterios"}
+							</h3>
+							<button className="bg-slate-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-900 cursor-pointer transition-all duration-300 flex items-center space-x-2">
+								<FiltersIcon />
+								<span>Filtros</span>
+							</button>
+						</div>
 						{denunciaData.length > 0 ? (
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-min">
 								{denunciaData.map((denuncia) => (
@@ -185,8 +190,8 @@ export const SearchDenuncia = () => {
 														<div>
 															<h5 className="text-sm font-medium text-gray-700 mb-1">Información del denunciado</h5>
 															<p className="text-sm text-gray-600">
-																{denuncia.denunciado_nombre || "Información no disponible"}
-																{denuncia.denunciado_dni && ` - ${denuncia.denunciado_dni}`}
+																{nombre || "Información no disponible"}
+																{numeroDocumento && ` - ${numeroDocumento}`}
 															</p>
 														</div>
 														{denuncia.seguimiento_comentario && (
