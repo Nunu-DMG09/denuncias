@@ -26,6 +26,7 @@ export const useSearchDenuncia = () => {
     const [hasSearched, setHasSearched] = useState<boolean>(false);
     const [isLoadingDNI, setIsLoadingDNI] = useState<boolean>(false);
     const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
+    const [showFilters, setShowFilters] = useState<boolean>(false);
 
     const toggleCardDetails = (id: string) => {
         setExpandedCards((prev) => ({
@@ -200,6 +201,9 @@ export const useSearchDenuncia = () => {
         setHasSearched(true);
         await fetchDenucias();
 	}, [tipoDocumento, numeroDocumento, fetchDenucias]);
+	const handleShowFilters = () => {
+		setShowFilters((prev) => !prev);
+	}
     
 	return {
 		tipoDocumento,
@@ -215,6 +219,9 @@ export const useSearchDenuncia = () => {
         hasSearched,
         isLoadingDNI,
         toggleCardDetails,
-        expandedCards
+        expandedCards,
+		showFilters,
+		handleShowFilters,
+		motivos
 	};
 };
