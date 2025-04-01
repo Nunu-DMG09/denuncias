@@ -233,7 +233,7 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 					[tracking_code]: true,
 				}));
 				const response = await fetch(
-					`http://localhost/denuncias/backend/public/admin/download?tracking_code=${tracking_code}`,
+					`http://localhost/denuncias/backend/public/download?tracking_code=${tracking_code}`,
 					{
 						method: "GET",
 						headers: {
