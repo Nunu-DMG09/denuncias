@@ -252,9 +252,6 @@ export const validatePage = (
 					formData.denunciante.numero_documento ===
 						formData.denunciado.numero_documento
 				) {
-					toast.error(
-						"El denunciante no puede ser el mismo que el denunciado"
-					);
 					return false;
 				}
 			}

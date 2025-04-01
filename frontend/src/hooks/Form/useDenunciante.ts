@@ -23,7 +23,17 @@ export const useDenunciante = () => {
 	);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
+	const [duplicatedDocError, setDuplicatedDocError] = useState<string | null>(null);
 
+	const checkDuplicatedDocument = (denuncianteDoc: string, denunciadoDoc: string) => {
+		if (denuncianteDoc === denunciadoDoc) {
+			setDuplicatedDocError("El número de documento del denunciante no puede ser igual al del denunciado.");
+			return true
+		} else {
+			setDuplicatedDocError(null);
+			return false
+		}
+	}
 	const handleTipoDatos = (tipo: string) => {
 		setTipoDatos(tipo);
 	};
@@ -127,6 +137,8 @@ export const useDenunciante = () => {
         setNombre,
         isLoading,
         error,
-		handleName
+		handleName,
+		checkDuplicatedDocument,
+		duplicatedDocError
 	};
 };
