@@ -27,7 +27,7 @@ class AuthFilter implements FilterInterface
             if ($arguments && !in_array($decoded->categoria, $arguments)) {
                 return redirect()->to('/unauthorized')->with('error', 'Permisos insuficientes');
             }
-            $request->user = $decoded;
+            service('request')->setGlobal('user', $decoded);
         } catch (\Exception $e) {
             return redirect()->to('/login')->with('error', 'Token inválido o expirado');
         }
