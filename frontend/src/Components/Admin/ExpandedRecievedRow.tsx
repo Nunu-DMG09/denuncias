@@ -6,6 +6,7 @@ import {
 	DownloadIcon,
 	HistorialIcon,
 	PersonIcon,
+	StateIcon,
 	WarnIcon,
 	XIcon,
 } from "../Icons";
@@ -63,50 +64,6 @@ export const ExpandedRecievedRow = ({
 								</svg>
 								Denuncia #{denuncia.tracking_code}
 							</h3>
-							{isEditing && (
-								<div className="relative inline-block">
-									<select
-										className="appearance-none bg-white border border-indigo-300 text-gray-700 py-2 pl-4 pr-10 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-medium transition-all duration-200"
-										value={stateValue || denuncia.estado}
-										onChange={(e) =>
-											onStateChange(
-												denuncia.tracking_code,
-												e.target.value
-											)
-										}
-									>
-										<option value={denuncia.estado} className="capitalize">
-											{denuncia.estado.replace(
-												"_",
-												" "
-											)}
-										</option>
-										<option value="en proceso">
-											En Proceso
-										</option>
-										<option value="resuelto">
-											Finalizada
-										</option>
-										<option value="rechazado">
-											Rechazada
-										</option>
-									</select>
-									<div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-indigo-500">
-										<svg
-											className="h-4 w-4"
-											xmlns="http://www.w3.org/2000/svg"
-											viewBox="0 0 20 20"
-											fill="currentColor"
-										>
-											<path
-												fillRule="evenodd"
-												d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-												clipRule="evenodd"
-											/>
-										</svg>
-									</div>
-								</div>
-							)}
 							<span
 								className={`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${getStatusColor(
 									denuncia.estado
@@ -277,6 +234,68 @@ export const ExpandedRecievedRow = ({
 												rows={4}
 												placeholder="Añade un comentario sobre esta denuncia..."
 											/>
+											<div className="relative inline-block mb-4">
+												<h4 className="flex items-center text-lg font-semibold text-amber-700 my-3">
+													<StateIcon />
+													Estado
+												</h4>
+												<div className="relative">
+													<select
+														className="appearance-none bg-amber-50 border border-amber-200 text-gray-700 py-2 pl-4 pr-10 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 text-sm font-medium transition-all duration-200"
+														value={
+															stateValue ||
+															denuncia.estado
+														}
+														onChange={(e) =>
+															onStateChange(
+																denuncia.tracking_code,
+																e.target.value
+															)
+														}
+													>
+														<option
+															value={
+																denuncia.estado
+															}
+														>
+															{denuncia.estado
+																.replace(
+																	"_",
+																	" "
+																)
+																.toLowerCase()
+																.replace(
+																	/^\w|\s\w/g,
+																	(c) =>
+																		c.toUpperCase()
+																)}
+														</option>
+														<option value="en proceso">
+															En Proceso
+														</option>
+														<option value="resuelto">
+															Finalizada
+														</option>
+														<option value="rechazado">
+															Rechazada
+														</option>
+													</select>
+													<div className="pointer-events-none absolute inset-y-0 right-2 flex items-center text-amber-500">
+														<svg
+															className="h-4 w-4"
+															xmlns="http://www.w3.org/2000/svg"
+															viewBox="0 0 20 20"
+															fill="currentColor"
+														>
+															<path
+																fillRule="evenodd"
+																d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+																clipRule="evenodd"
+															/>
+														</svg>
+													</div>
+												</div>
+											</div>
 											<div className="flex justify-end mt-2 space-x-2">
 												<button
 													type="button"
