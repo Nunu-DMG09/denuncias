@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { Loader } from "../../Components/Loaders/Loader";
 import { useSearchDenuncia } from "../../hooks/Admin/Denuncias/useSearchDenuncia";
 export const SearchDenuncia = () => {
@@ -13,7 +14,9 @@ export const SearchDenuncia = () => {
 		denunciaData,
 		handleSearchClick,
 		hasSearched,
-		isLoadingDNI
+		isLoadingDNI,
+		expandedCards,
+		toggleCardDetails
 	} = useSearchDenuncia();
 	return (
 		<div className="container mx-auto my-8 px-4">
@@ -126,22 +129,23 @@ export const SearchDenuncia = () => {
 						</h3>
 						
 						{denunciaData.length > 0 ? (
-							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 								{denunciaData.map((denuncia) => (
 									<div 
 										key={denuncia.id} 
-										className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"
+										className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"
 									>
-										<div className="p-4">
-											<div className="flex justify-between items-start">
+										<div className="p-5">
+											{/* Encabezado con código y estado */}
+											<div className="flex justify-between items-start mb-3">
 												<h4 className="text-lg font-medium text-gray-800 flex items-center">
 													<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 													</svg>
-													{denuncia.tracking_code}
+													<span className="font-semibold tracking-wide">{denuncia.tracking_code}</span>
 												</h4>
 												<span 
-													className={`px-2 py-1 text-xs rounded-full font-semibold ${
+													className={`px-3 py-1 text-xs rounded-full font-semibold ${
 														denuncia.estado === 'pendiente' ? 'bg-yellow-100 text-yellow-800' : 
 														denuncia.estado === 'en_proceso' ? 'bg-blue-100 text-blue-800' : 
 														denuncia.estado === 'resuelto' ? 'bg-green-100 text-green-800' : 
@@ -157,9 +161,10 @@ export const SearchDenuncia = () => {
 												</span>
 											</div>
 											
-											<div className="mt-2">
-												<div className="flex items-center text-sm text-gray-500 mb-1">
-													<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											{/* Información principal siempre visible */}
+											<div className="space-y-2">
+												<div className="flex items-center text-sm text-gray-500">
+													<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
 													</svg>
 													{new Date(denuncia.fecha_registro).toLocaleDateString('es-ES', {
@@ -169,28 +174,99 @@ export const SearchDenuncia = () => {
 													})}
 												</div>
 												
-												<div className="mt-2 mb-3">
+												<div className="mt-2">
 													<span className="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-md">
 														{denuncia.motivo}
 													</span>
 												</div>
 												
-												<div className="mt-3 text-sm text-gray-600 line-clamp-3">
+												{/* Descripción con recorte si no está expandida */}
+												<div className={`mt-3 text-sm text-gray-600 ${!expandedCards[denuncia.id] && 'line-clamp-2'}`}>
 													<p>{denuncia.descripcion}</p>
+												</div>
+											</div>
+											
+											{/* Contenido expandido */}
+											<div 
+												className={`mt-4 overflow-hidden transition-all duration-500 ease-in-out ${
+													expandedCards[denuncia.id] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+												}`}
+											>
+												<div className="pt-4 border-t border-gray-100">
+													<div className="space-y-4">
+														<div>
+															<h5 className="text-sm font-medium text-gray-700 mb-1">Información del denunciante</h5>
+															<p className="text-sm text-gray-600">
+																{denuncia.denunciante_nombre || "Información no disponible"}
+																{denuncia.denunciante_dni && ` - ${denuncia.denunciante_dni}`}
+															</p>
+														</div>
+														
+														<div>
+															<h5 className="text-sm font-medium text-gray-700 mb-1">Información del denunciado</h5>
+															<p className="text-sm text-gray-600">
+																{denuncia.denunciado_nombre || "Información no disponible"}
+																{denuncia.denunciado_dni && ` - ${denuncia.denunciado_dni}`}
+															</p>
+														</div>
+														
+														{denuncia.seguimiento_comentario && (
+															<div>
+																<h5 className="text-sm font-medium text-gray-700 mb-1">Comentarios de seguimiento</h5>
+																<p className="text-sm text-gray-600 bg-gray-50 p-2 rounded-md italic">
+																	{denuncia.seguimiento_comentario}
+																</p>
+															</div>
+														)}
+														
+														<div className="flex items-center justify-end space-x-2 pt-2">
+															<button 
+																className="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 py-1 px-3 rounded-md transition-colors duration-200"
+																onClick={(e) => {
+																	e.stopPropagation();
+																	navigator.clipboard.writeText(denuncia.tracking_code);
+																	toast.success("Código copiado al portapapeles");
+																}}
+															>
+																Copiar código
+															</button>
+															
+															<button 
+																className="text-xs bg-green-50 hover:bg-green-100 text-green-700 py-1 px-3 rounded-md transition-colors duration-200"
+																onClick={(e) => {
+																	e.stopPropagation();
+																	window.open(`/admin/denuncia/${denuncia.tracking_code}`, '_blank');
+																}}
+															>
+																Ver en detalle
+															</button>
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
 										
-										<div className="border-t border-gray-100 bg-gray-50 px-4 py-3">
+										{/* Botón para expandir/colapsar */}
+										<div className="border-t border-gray-100 bg-gray-50 px-5 py-3">
 											<button 
 												className="w-full text-center text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors duration-200 flex items-center justify-center"
-												onClick={() => window.open(`/admin/denuncia/${denuncia.tracking_code}`, '_blank')}
+												onClick={() => toggleCardDetails(denuncia.id)}
 											>
-												<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-													<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-												</svg>
-												Ver detalles
+												{expandedCards[denuncia.id] ? (
+													<>
+														<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+															<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+														</svg>
+														Ocultar detalles
+													</>
+												) : (
+													<>
+														<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+															<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+														</svg>
+														Ver detalles
+													</>
+												)}
 											</button>
 										</div>
 									</div>

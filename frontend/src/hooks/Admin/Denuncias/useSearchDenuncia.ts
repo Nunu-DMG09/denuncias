@@ -24,7 +24,14 @@ export const useSearchDenuncia = () => {
 	const [error, setError] = useState<string | null>(null);
     const [hasSearched, setHasSearched] = useState<boolean>(false);
     const [isLoadingDNI, setIsLoadingDNI] = useState<boolean>(false);
+    const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
 
+    const toggleCardDetails = (id: string) => {
+        setExpandedCards((prev) => ({
+            ...prev,
+            [id]: !prev[id],
+        }));
+    }
 	const handleTipoDocumento = (tipo: string) => {
 		setTipoDocumento(tipo);
 		setNumeroDocumento("");
@@ -205,6 +212,8 @@ export const useSearchDenuncia = () => {
 		handleName,
         handleSearchClick,
         hasSearched,
-        isLoadingDNI
+        isLoadingDNI,
+        toggleCardDetails,
+        expandedCards
 	};
 };
