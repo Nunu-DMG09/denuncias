@@ -21,12 +21,16 @@ export const InfoDenuncia = () => {
 					Fecha del incidente
 				</h3>
 				<DatePicker
-					selected={startDate}
-					onChange={(date) => handleDate(date)}
+					selected={formData.fecha_incidente ? new Date(formData.fecha_incidente) : startDate}
+					onChange={(date) => {
+						handleDate(date)
+						updateFormData("fecha_incidente", date?.toISOString() || "");
+					}}
 					className="w-full px-4 py-2 border rounded-md transition-all duration-300 ease focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) outline-none"
 					placeholderText="Selecciona una fecha"
 					dateFormat={"dd/MM/yyyy"}
 					locale={"es"}
+					maxDate={new Date()}
 				/>
 			</div>
 			<div className="motivos-container min-h-[200px] transition-all duration-300">
