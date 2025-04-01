@@ -138,9 +138,11 @@ export const SearchDenuncia = () => {
 				<div className="mt-10 animate__animated animate__fadeIn max-w-3xl mx-auto">
 					<div className="w-full bg-(--tertiary-color) mb-4 border-b border-(--primary-color) flex justify-between items-center p-4 rounded-md shadow-sm">
 						<h3 className="text-lg font-semibold text-white">
-							{denunciaData.length > 0
+							{denunciaData.length > 0 && !filtered
 								? `Resultados de la búsqueda (${denunciaData.length})`
-								: "No se encontraron denuncias con estos criterios"}
+								: denunciasFiltradasData.length > 0 && filtered
+								? `Resultados de la búsqueda (${denunciasFiltradasData.length})`
+								: "No se encontraron resultados"}
 						</h3>
 						<button
 							onClick={handleShowFilters}
