@@ -88,7 +88,148 @@ class AdminController extends BaseController
             return $this->response->setJSON(['error' => 'Token inválido'], 401);
         }
     }
+    public function getAdministradores()
+    {
+        $db = \Config\Database::connect();
+        $query = $db->query('SELECT * FROM administradores');
+        $result = $query->getResult();
+        
+        return $this->response->setJSON($result);
+    }
+    public function createAdministrador()
+    {
+        // Obtener el token del encabezado
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+            return $this->response->setJSON(['error' => 'No autorizado'])->setStatusCode(401);
+        }
+
+        $token = substr($authHeader, 7);
+        try {
+            $key = 'your-secret-key';
+            $decoded = JWT::decode($token, new Key($key, 'HS256'));
+            
+            // Verificar que el usuario sea super_admin
+            if ($decoded->categoria !== 'super_admin') {
+                return $this->response->setJSON([
+                    'error' => 'No tiene permisos para crear administradores'
+                ])->setStatusCode(403);
+            }
+
+            $data = $this->request->getJSON(true);
+            
+            // Validar que todos los campos requeridos estén presentes
+            if (!isset($data['dni_admin']) || !isset($data['nombres']) || !isset($data['password']) || !isset($data['categoria']) || !isset($data['estado'])) {
+                return $this->response->setJSON([
+                    'error' => 'Faltan campos requeridos'
+                ])->setStatusCode(400);
+            }
+
+            // Verificar si ya existe un administrador con ese DNI
+            $existingAdmin = $this->administradoresModel->find($data['dni_admin']);
+            if ($existingAdmin) {
+                return $this->response->setJSON([
+                    'error' => 'Ya existe un administrador con ese DNI'
+                ])->setStatusCode(400);
+            }
+
+            // Hashear la contraseña
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+
+            try {
+                // Intentar insertar el nuevo administrador
+                $success = $this->administradoresModel->insert($data);
+                
+                if ($success) {
+                    // Obtener el administrador recién creado
+                    $newAdmin = $this->administradoresModel->find($data['dni_admin']);
+                    return $this->response->setJSON($newAdmin)->setStatusCode(201);
+                } else {
+                    return $this->response->setJSON([
+                        'error' => 'Error al crear el administrador'
+                    ])->setStatusCode(500);
+                }
+            } catch (\Exception $e) {
+                log_message('error', 'Error al crear administrador: ' . $e->getMessage());
+                return $this->response->setJSON([
+                    'error' => 'Error al crear el administrador'
+                ])->setStatusCode(500);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON(['error' => 'Token inválido'])->setStatusCode(401);
+        }
+    }
+    public function updateAdministrador($dni)
+    {
+        // Obtener el token del encabezado
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+            return $this->response->setJSON(['error' => 'No autorizado'])->setStatusCode(401);
+        }
+
+        $token = substr($authHeader, 7);
+        try {
+            $key = 'your-secret-key';
+            $decoded = JWT::decode($token, new Key($key, 'HS256'));
+            
+            // Verificar que el usuario sea super_admin
+            if ($decoded->categoria !== 'super_admin') {
+                return $this->response->setJSON([
+                    'error' => 'No tiene permisos para editar administradores'
+                ])->setStatusCode(403);
+            }
+
+            // Verificar si existe el administrador
+            $existingAdmin = $this->administradoresModel->find($dni);
+            if (!$existingAdmin) {
+                return $this->response->setJSON([
+                    'error' => 'Administrador no encontrado'
+                ])->setStatusCode(404);
+            }
+
+            $data = $this->request->getJSON(true);
+            $updateData = [];
+
+            // Actualizar solo los campos proporcionados
+            if (isset($data['nombres'])) {
+                $updateData['nombres'] = $data['nombres'];
+            }
+            if (isset($data['categoria'])) {
+                $updateData['categoria'] = $data['categoria'];
+            }
+            if (isset($data['estado'])) {
+                $updateData['estado'] = $data['estado'];
+            }
+            if (isset($data['password']) && !empty($data['password'])) {
+                $updateData['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+            }
+
+            try {
+                // Intentar actualizar el administrador
+                $success = $this->administradoresModel->update($dni, $updateData);
+                
+                if ($success) {
+                    // Obtener el administrador actualizado
+                    $updatedAdmin = $this->administradoresModel->find($dni);
+                    return $this->response->setJSON($updatedAdmin);
+                } else {
+                    return $this->response->setJSON([
+                        'error' => 'Error al actualizar el administrador'
+                    ])->setStatusCode(500);
+                }
+            } catch (\Exception $e) {
+                log_message('error', 'Error al actualizar administrador: ' . $e->getMessage());
+                return $this->response->setJSON([
+                    'error' => 'Error al actualizar el administrador'
+                ])->setStatusCode(500);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON(['error' => 'Token inválido'])->setStatusCode(401);
+        }
+    }
 }
+
+
 
 // public function registerPrueba()
 // {
