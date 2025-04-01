@@ -6,12 +6,11 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->options('(:any)', 'CorsController::options');
-
+$routes->get('login', 'Home::index');
 $routes->get('/', 'Home::index');
 $routes->post('login', 'AdminController::login');
 $routes->get('register', 'AdminController::registerPrueba');
 $routes->get('admin-info', 'AdminController::getAdminInfo');
-$routes->get('download', 'GestionController::downloadAdjunto');
 // Rutas para la API
 $routes->group('api', function ($routes) {
     $routes->get('dni/(:num)', 'ConsultaApi::buscarDNI/$1');
@@ -20,13 +19,16 @@ $routes->group('api', function ($routes) {
 });
 $routes->group('form', function ($routes) {
     $routes->get('motivos', 'FormularioDenunciasController::index');
-    $routes->post('create', 'FormularioDenunciasController::create'); 
+    $routes->post('create', 'FormularioDenunciasController::create');
 });
+
 // Rutas para el administrador
 $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('denuncias', 'GestionController::dashboard');
     $routes->get('recibida', 'GestionController::receivedAdmin');
     $routes->get('mandar', 'GestionController::receiveAdmin');
-    $routes->get('updateDenuncia', 'GestionController::procesosDenuncia'); 
+    $routes->get('updateDenuncia', 'GestionController::procesosDenuncia');
+    $routes->get('search', 'GestionController::search');
+    $routes->get('download', 'GestionController::downloadAdjunto');
     $routes->group('', ['filter' => 'auth:superadmin'], function ($routes) {});
 });
