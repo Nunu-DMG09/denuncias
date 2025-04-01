@@ -11,6 +11,8 @@ export const ALLOWED_FILE_TYPES = {
 	"image/gif": [".gif"],
 	"image/bmp": [".bmp"],
 	"image/webp": [".webp"],
+	'image/avif': ['.avif'],
+	"image/svg+xml": [".svg"],
 	"application/pdf": [".pdf"],
 	"application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
 		".docx",
@@ -250,9 +252,6 @@ export const validatePage = (
 					formData.denunciante.numero_documento ===
 						formData.denunciado.numero_documento
 				) {
-					toast.error(
-						"El denunciante no puede ser el mismo que el denunciado"
-					);
 					return false;
 				}
 			}
@@ -280,9 +279,9 @@ export const getStatusColor = (status: string) => {
 			return "bg-yellow-100 text-yellow-800 border-yellow-200";
 		case "en proceso":
 			return "bg-blue-100 text-blue-800 border-blue-200";
-		case "resuelta":
+		case "resuelto":
 			return "bg-green-100 text-green-800 border-green-200";
-		case "rechazada":
+		case "rechazado":
 			return "bg-red-100 text-red-800 border-red-200";
 		case "recibida":
 			return "bg-purple-100 text-purple-800 border-purple-200";

@@ -17,9 +17,11 @@ export const DatosDenunciante = () => {
 		isLoading,
 		error,
 		handleName,
+		duplicatedDocError,
+		checkDuplicatedDocument,
 	} = useDenunciante();
 	const {
-		formData: { denunciante },
+		formData: { denunciante, denunciado },
 		updateDenunciante,
 		updateFormData,
 	} = useFormContext();
@@ -34,10 +36,16 @@ export const DatosDenunciante = () => {
 				numero_documento: numeroDocumento,
 				sexo,
 				email: denunciante?.email,
-				telefono: denunciante?.telefono
+				telefono: denunciante?.telefono,
 			});
+			if (denunciado && denunciado.numero_documento) {
+				checkDuplicatedDocument(
+					numeroDocumento,
+					denunciado.numero_documento
+				);
+			}
 		}
-	}, [tipoDatos, nombre, tipoDocumento, numeroDocumento, sexo]);
+	}, [tipoDatos, nombre, tipoDocumento, numeroDocumento, sexo, denunciado]);
 	return (
 		<div className="space-y-6">
 			<div className="space-y-4">
@@ -150,6 +158,30 @@ export const DatosDenunciante = () => {
 					</div>
 					{error && (
 						<div className="text-red-500 text-xs mt-1">{error}</div>
+					)}
+					{duplicatedDocError && (
+						<div className="bg-red-50 border-l-4 border-red-500 p-3 rounded mb-10">
+							<div className="flex items-center">
+								<div className="flex-shrink-0 text-red-500">
+									<svg
+										className="h-5 w-5"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+									>
+										<path
+											fillRule="evenodd"
+											d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z"
+											clipRule="evenodd"
+										/>
+									</svg>
+								</div>
+								<div className="ml-3">
+									<p className="text-sm text-red-700">
+										{duplicatedDocError}
+									</p>
+								</div>
+							</div>
+						</div>
 					)}
 					<div className="space-y-2 relative">
 						<input
