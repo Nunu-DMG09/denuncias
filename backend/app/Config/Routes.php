@@ -22,11 +22,13 @@ $routes->group('form', function ($routes) {
     $routes->get('motivos', 'FormularioDenunciasController::index');
     $routes->post('create', 'FormularioDenunciasController::create'); 
 });
+
 // Rutas para el administrador
 $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('denuncias', 'GestionController::dashboard');
     $routes->get('recibida', 'GestionController::receivedAdmin');
     $routes->get('mandar', 'GestionController::receiveAdmin');
     $routes->get('updateDenuncia', 'GestionController::procesosDenuncia'); 
+    $routes->get('search', 'GestionController::search');
     $routes->group('', ['filter' => 'auth:superadmin'], function ($routes) {});
 });
