@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 import { Loader } from "../../Components/Loaders/Loader";
 import { useSearchDenuncia } from "../../hooks/Admin/Denuncias/useSearchDenuncia";
+import { MiniDocumentIcon } from "../../Components/Icons";
 export const SearchDenuncia = () => {
 	const {
 		numeroDocumento,
@@ -118,8 +119,6 @@ export const SearchDenuncia = () => {
 						)}
 					</button>
 				</div>
-				
-				{/* Sección de resultados */}
 				{hasSearched && (
 					<div className="mt-10 animate__animated animate__fadeIn">
 						<h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">
@@ -136,12 +135,9 @@ export const SearchDenuncia = () => {
 										className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100"
 									>
 										<div className="p-5">
-											{/* Encabezado con código y estado */}
 											<div className="flex justify-between items-start mb-3">
 												<h4 className="text-lg font-medium text-gray-800 flex items-center">
-													<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-														<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-													</svg>
+													<MiniDocumentIcon />
 													<span className="font-semibold tracking-wide">{denuncia.tracking_code}</span>
 												</h4>
 												<span 

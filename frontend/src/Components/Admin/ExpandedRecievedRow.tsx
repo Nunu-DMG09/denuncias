@@ -5,6 +5,7 @@ import {
 	CommentIcon,
 	DownloadIcon,
 	HistorialIcon,
+	MiniDocumentIcon,
 	PersonIcon,
 	StateIcon,
 	WarnIcon,
@@ -48,20 +49,7 @@ export const ExpandedRecievedRow = ({
 					<div className="p-6">
 						<div className="flex justify-between items-center mb-5 pb-4 border-b border-indigo-100">
 							<h3 className="text-xl font-bold text-gray-800 flex items-center">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									className="h-6 w-6 mr-2 text-indigo-600"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke="currentColor"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-									/>
-								</svg>
+								<MiniDocumentIcon />
 								Denuncia #{denuncia.tracking_code}
 							</h3>
 							<span
@@ -230,7 +218,7 @@ export const ExpandedRecievedRow = ({
 														e.target.value
 													)
 												}
-												className="w-full p-3 border border-amber-200 rounded-md bg-amber-50 focus:ring-2 focus:ring-amber-300 focus:border-amber-300 resize-none"
+												className="w-full p-3 border border-amber-200 rounded-md bg-amber-50 focus:ring-2 outline-none transition-all duration-300 ease-in-out focus:ring-amber-300 focus:border-amber-300 resize-none"
 												rows={4}
 												placeholder="Añade un comentario sobre esta denuncia..."
 											/>
@@ -354,7 +342,7 @@ export const ExpandedRecievedRow = ({
 										}
 										className="px-4 py-2 bg-white border cursor-pointer transition-all duration-300 ease-in-out border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 									>
-										Editar Denuncia
+										Colocar Comentario
 									</button>
 								)}
 								<button
