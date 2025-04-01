@@ -27,6 +27,16 @@ export const SearchDenuncia = () => {
 		handleShowFilters,
 		showFilters,
 		motivos,
+		fechaFilter,
+		handleFechaFilterChange,
+		motivoFilter,
+		handleMotivoFIlterChange,
+		estadoFilter,
+		handleEstadoFilterChange,
+		denunciasFiltradasData,
+		applyFilters,
+		clearFilters,
+		filtered,
 	} = useSearchDenuncia();
 	return (
 		<div className="container mx-auto my-8 px-4">
@@ -157,7 +167,7 @@ export const SearchDenuncia = () => {
 									} transition-all duration-300 ease-in-out`}
 								>
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-min">
-										{denunciaData.map((denuncia) => (
+										{(filtered ? denunciasFiltradasData : denunciaData).map((denuncia) => (
 											<div
 												key={denuncia.id}
 												className="bg-white rounded-xl relative shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col"
@@ -365,6 +375,10 @@ export const SearchDenuncia = () => {
 													<input
 														type="date"
 														className="w-full outline-none p-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm"
+														value={fechaFilter}
+														onChange={
+															handleFechaFilterChange
+														}
 													/>
 												</div>
 											</div>
@@ -372,7 +386,16 @@ export const SearchDenuncia = () => {
 												<label className="block text-sm font-medium text-gray-700 mb-1">
 													Motivo de denuncia
 												</label>
-												<select className="w-full outline-none p-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm">
+												<select
+													className="w-full outline-none p-2 border border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm"
+													value={motivoFilter}
+													onChange={
+														handleMotivoFIlterChange
+													}
+												>
+													<option value="">
+														Seleccione un motivo
+													</option>
 													{motivos.map((motivo) => (
 														<option
 															key={motivo.id}
@@ -392,6 +415,16 @@ export const SearchDenuncia = () => {
 														<input
 															type="checkbox"
 															className="form-checkbox h-4 w-4 text-indigo-600"
+															checked={
+																estadoFilter.registrado
+															}
+															onChange={(e) => {
+																handleEstadoFilterChange(
+																	"registrado",
+																	e.target
+																		.checked
+																);
+															}}
 														/>
 														<span className="ml-2">
 															Registrada
@@ -401,6 +434,16 @@ export const SearchDenuncia = () => {
 														<input
 															type="checkbox"
 															className="form-checkbox h-4 w-4 text-indigo-600"
+															checked={
+																estadoFilter.recibida
+															}
+															onChange={(e) => {
+																handleEstadoFilterChange(
+																	"recibida",
+																	e.target
+																		.checked
+																);
+															}}
 														/>
 														<span className="ml-2">
 															Recibida
@@ -410,6 +453,16 @@ export const SearchDenuncia = () => {
 														<input
 															type="checkbox"
 															className="form-checkbox h-4 w-4 text-indigo-600"
+															checked={
+																estadoFilter.en_proceso
+															}
+															onChange={(e) => {
+																handleEstadoFilterChange(
+																	"en_proceso",
+																	e.target
+																		.checked
+																);
+															}}
 														/>
 														<span className="ml-2">
 															En proceso
@@ -419,6 +472,16 @@ export const SearchDenuncia = () => {
 														<input
 															type="checkbox"
 															className="form-checkbox h-4 w-4 text-indigo-600"
+															checked={
+																estadoFilter.resuelto
+															}
+															onChange={(e) => {
+																handleEstadoFilterChange(
+																	"resuelto",
+																	e.target
+																		.checked
+																);
+															}}
 														/>
 														<span className="ml-2">
 															Resuelto
@@ -428,6 +491,16 @@ export const SearchDenuncia = () => {
 														<input
 															type="checkbox"
 															className="form-checkbox h-4 w-4 text-indigo-600"
+															checked={
+																estadoFilter.rechazado
+															}
+															onChange={(e) => {
+																handleEstadoFilterChange(
+																	"rechazado",
+																	e.target
+																		.checked
+																);
+															}}
 														/>
 														<span className="ml-2">
 															Rechazado
@@ -436,11 +509,17 @@ export const SearchDenuncia = () => {
 												</div>
 											</div>
 											<div className="pt-4 border-t">
-												<button className="w-full cursor-pointer bg-(--primary-color) text-white py-2 px-4 rounded hover:bg-(--secondary-color) transition-all duration-300 flex items-center justify-center">
+												<button 
+													className="w-full cursor-pointer bg-(--primary-color) text-white py-2 px-4 rounded hover:bg-(--secondary-color) transition-all duration-300 flex items-center justify-center"
+													onClick={applyFilters}
+												>
 													<CheckIcon />
 													Aplicar filtros
 												</button>
-												<button className="w-full cursor-pointer mt-2 border border-gray-300 bg-white text-gray-700 py-2 px-4 rounded hover:bg-gray-50 transition-all duration-300 flex items-center justify-center">
+												<button 
+													className="w-full cursor-pointer mt-2 border border-gray-300 bg-white text-gray-700 py-2 px-4 rounded hover:bg-gray-50 transition-all duration-300 flex items-center justify-center"
+													onClick={clearFilters}
+												>
 													<ResetIcon />
 													Limpiar filtros
 												</button>
