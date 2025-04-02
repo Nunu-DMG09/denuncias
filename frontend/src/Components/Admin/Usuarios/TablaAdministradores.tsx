@@ -1,7 +1,4 @@
-// frontend/src/components/Admin/Usuarios/TablaAdministradores.tsx
-import { useEffect, useState } from "react";
 import useAdministrador from "../../../hooks/Admin/useAdministrador";
-import { toast } from "sonner";
 import { Administrador } from "../../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios";
 import { LoaderWifi } from "../../../Components/Loaders/LoaderWiFi";
 import { getEstadoColor, getTypeColor } from "../../../utils";
@@ -12,66 +9,9 @@ interface TablaAdministradoresProps {
 
 const TablaAdministradores = ({ onEditar }: TablaAdministradoresProps) => {
 	const {
-		getAdministradores,
-		deleteAdministrador,
-		toggleEstadoAdministrador,
 		loading,
+        administradores
 	} = useAdministrador();
-
-	const [administradores, setAdministradores] = useState<Administrador[]>([]);
-	const [showDeleteModal, setShowDeleteModal] = useState(false);
-	const [adminToDelete, setAdminToDelete] = useState<Administrador | null>(
-		null
-	);
-
-	useEffect(() => {
-		cargarAdministradores();
-	}, []);
-
-	const cargarAdministradores = async () => {
-		try {
-			const data = await getAdministradores();
-			setAdministradores(data);
-		} catch (error) {
-			console.error("Error al cargar administradores:", error);
-			toast.error("Error al cargar los administradores");
-		}
-	};
-
-	const handleEliminarClick = (admin: Administrador) => {
-		setAdminToDelete(admin);
-		setShowDeleteModal(true);
-	};
-
-	const handleConfirmDelete = async () => {
-		if (!adminToDelete) return;
-
-		try {
-			await deleteAdministrador(adminToDelete.dni_admin);
-			await cargarAdministradores();
-			setShowDeleteModal(false);
-			setAdminToDelete(null);
-		} catch (error) {
-			console.error("Error al eliminar:", error);
-			toast.error("Error al eliminar el administrador");
-		}
-	};
-
-	const handleCancelDelete = () => {
-		setShowDeleteModal(false);
-		setAdminToDelete(null);
-	};
-
-	const handleToggleEstado = async (dni: string) => {
-		try {
-			await toggleEstadoAdministrador(dni);
-			await cargarAdministradores();
-			toast.success("Estado del administrador actualizado exitosamente");
-		} catch (error) {
-			console.error("Error al cambiar estado:", error);
-			toast.error("Error al cambiar el estado del administrador");
-		}
-	};
 	return (
 		<>
 			{loading ? (
@@ -152,7 +92,7 @@ const TablaAdministradores = ({ onEditar }: TablaAdministradoresProps) => {
 											{/* Botón Estado */}
 											<div className="group relative">
 												<button
-													onClick={() => handleToggleEstado(admin.dni_admin)}
+													// onClick={() => handleToggleEstado(admin.dni_admin)}
 													className={`cursor-pointer flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 shadow-sm hover:shadow ${
 														admin.estado === 'activo' 
 															? 'bg-green-50 hover:bg-green-100 text-green-600 hover:text-green-700' 
@@ -194,56 +134,6 @@ const TablaAdministradores = ({ onEditar }: TablaAdministradoresProps) => {
 					</table>
 				</div>
 			)}
-			{/* {showDeleteModal && (
-				<div className="fixed inset-0 backdrop-blur-[2px] bg-slate-400/20 flex items-center justify-center z-50">
-					<div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
-						<div className="flex items-center justify-center mb-4">
-							<svg
-								className="w-12 h-12 text-red-500"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth="2"
-									d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-								/>
-							</svg>
-						</div>
-						<h3 className="text-xl font-semibold text-center mb-4">
-							Confirmar Eliminación
-						</h3>
-						<p className="text-gray-600 text-center mb-6">
-							¿Estás seguro de que deseas eliminar al
-							administrador{" "}
-							<span className="font-semibold">
-								{adminToDelete?.nombres}
-							</span>
-							?
-							<br />
-							<span className="text-sm text-gray-500">
-								Esta acción no se puede deshacer.
-							</span>
-						</p>
-						<div className="flex justify-end space-x-3">
-							<button
-								onClick={handleCancelDelete}
-								className="px-4 py-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200"
-							>
-								Cancelar
-							</button>
-							<button
-								onClick={handleConfirmDelete}
-								className="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors duration-200"
-							>
-								Eliminar
-							</button>
-						</div>
-					</div>
-				</div>
-			)} */}
 		</>
 	);
 };
