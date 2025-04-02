@@ -4,15 +4,18 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\AdministradoresModel;
+use App\Models\Historial_adminModel;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 class AdminController extends BaseController
 {
     private $administradoresModel;
+    private $historialAdminModel;
     public function __construct()
     {
         $this->administradoresModel = new AdministradoresModel();
+        $this->historialAdminModel = new Historial_adminModel();
     }
     public function login()
     {
@@ -20,12 +23,12 @@ class AdminController extends BaseController
         $dni_admin = $data['dni_admin'] ?? $data->dni_admin ?? '';
         $password = $data['password'] ?? $data->password ?? '';
         $user = $this->administradoresModel->find($dni_admin);
-        
+
         // Verificar si el usuario existe
         if (!$user) {
             return $this->response->setStatusCode(401)->setJSON(['error' => 'Usuario no encontrado']);
         }
-        
+
         // Verificar si el usuario está activo
         if ($user['estado'] !== 'activo') {
             return $this->response->setStatusCode(401)->setJSON(['error' => 'Tu cuenta ha sido desactivada. Por favor, contacta al administrador.']);
@@ -60,7 +63,7 @@ class AdminController extends BaseController
             $decoded = JWT::decode($token, new Key($key, 'HS256'));
             $dni_admin = $decoded->dni_admin;
             $user = $this->administradoresModel->find($dni_admin);
-            
+
             if (!$user) {
                 return $this->response->setJSON(['error' => 'Usuario no encontrado'], 404);
             }
@@ -106,19 +109,26 @@ class AdminController extends BaseController
             ]);
         } catch (\Exception $e) {
             return $this->response->setJSON(['error' => 'Token inválido'], 401);
+            // Eliminar el administrador
+            $success = $this->administradoresModel->delete($dni);
+            if ($success) {
+                return $this->response->setJSON(['message' => 'Administrador eliminado'])->setStatusCode(200);
+            } else {
+                return $this->response->setJSON(['error' => 'Error al eliminar el administrador'])->setStatusCode(500);
+            }
         }
     }
     public function getAdministradores()
     {
-        $db = \Config\Database::connect();
-        $query = $db->query('SELECT * FROM administradores');
-        $result = $query->getResult();
-        
+        $result = $this->administradoresModel
+            ->findAll();
+        if (!$result) {
+            return $this->response->setJSON(['error' => 'No se encontraron administradores'], 404);
+        }
         return $this->response->setJSON($result);
     }
     public function createAdministrador()
     {
-        // Obtener el token del encabezado
         $authHeader = $this->request->getHeaderLine('Authorization');
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
             return $this->response->setJSON(['error' => 'No autorizado'])->setStatusCode(401);
@@ -128,8 +138,7 @@ class AdminController extends BaseController
         try {
             $key = 'your-secret-key';
             $decoded = JWT::decode($token, new Key($key, 'HS256'));
-            
-            // Verificar que el usuario sea super_admin
+
             if ($decoded->categoria !== 'super_admin') {
                 return $this->response->setJSON([
                     'error' => 'No tiene permisos para crear administradores'
@@ -137,13 +146,6 @@ class AdminController extends BaseController
             }
 
             $data = $this->request->getJSON(true);
-            
-            // Validar que todos los campos requeridos estén presentes
-            if (!isset($data['dni_admin']) || !isset($data['nombres']) || !isset($data['password']) || !isset($data['categoria']) || !isset($data['estado'])) {
-                return $this->response->setJSON([
-                    'error' => 'Faltan campos requeridos'
-                ])->setStatusCode(400);
-            }
 
             // Verificar si ya existe un administrador con ese DNI
             $existingAdmin = $this->administradoresModel->find($data['dni_admin']);
@@ -152,16 +154,12 @@ class AdminController extends BaseController
                     'error' => 'Ya existe un administrador con ese DNI'
                 ])->setStatusCode(400);
             }
-
-            // Hashear la contraseña
             $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-
             try {
-                // Intentar insertar el nuevo administrador
-                $success = $this->administradoresModel->insert($data);
-                
+                $success = $this->administradoresModel
+                    ->insert($data);
+
                 if ($success) {
-                    // Obtener el administrador recién creado
                     $newAdmin = $this->administradoresModel->find($data['dni_admin']);
                     return $this->response->setJSON($newAdmin)->setStatusCode(201);
                 } else {
@@ -179,133 +177,112 @@ class AdminController extends BaseController
             return $this->response->setJSON(['error' => 'Token inválido'])->setStatusCode(401);
         }
     }
-    public function updateAdministrador($dni)
+    public function UpdateAdministrador()
     {
         // Obtener el token del encabezado
         $authHeader = $this->request->getHeaderLine('Authorization');
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
             return $this->response->setJSON(['error' => 'No autorizado'])->setStatusCode(401);
         }
-
         $token = substr($authHeader, 7);
         try {
             $key = 'your-secret-key';
             $decoded = JWT::decode($token, new Key($key, 'HS256'));
-            
-            // Verificar que el usuario sea super_admin
-            if ($decoded->categoria !== 'super_admin') {
-                return $this->response->setJSON([
-                    'error' => 'No tiene permisos para editar administradores'
-                ])->setStatusCode(403);
-            }
-
-            // Verificar si existe el administrador
-            $existingAdmin = $this->administradoresModel->find($dni);
-            if (!$existingAdmin) {
-                return $this->response->setJSON([
-                    'error' => 'Administrador no encontrado'
-                ])->setStatusCode(404);
-            }
-
-            $data = $this->request->getJSON(true);
-            $updateData = [];
-
-            // Actualizar solo los campos proporcionados
-            if (isset($data['nombres'])) {
-                $updateData['nombres'] = $data['nombres'];
-            }
-            if (isset($data['categoria'])) {
-                $updateData['categoria'] = $data['categoria'];
-            }
-            if (isset($data['estado'])) {
-                $updateData['estado'] = $data['estado'];
-            }
-            if (isset($data['password']) && !empty($data['password'])) {
-                $updateData['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-            }
-
-            try {
-                // Intentar actualizar el administrador
-                $success = $this->administradoresModel->update($dni, $updateData);
-                
-                if ($success) {
-                    // Obtener el administrador actualizado
-                    $updatedAdmin = $this->administradoresModel->find($dni);
-                    return $this->response->setJSON($updatedAdmin);
-                } else {
-                    return $this->response->setJSON([
-                        'error' => 'Error al actualizar el administrador'
-                    ])->setStatusCode(500);
-                }
-            } catch (\Exception $e) {
-                log_message('error', 'Error al actualizar administrador: ' . $e->getMessage());
-                return $this->response->setJSON([
-                    'error' => 'Error al actualizar el administrador'
-                ])->setStatusCode(500);
-            }
-        } catch (\Exception $e) {
-            return $this->response->setJSON(['error' => 'Token inválido'])->setStatusCode(401);
-        }
-    }
-    public function deleteAdministrador($dni)
-    {
-        // Obtener el token del encabezado
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-            return $this->response->setJSON(['error' => 'No autorizado'])->setStatusCode(401);
-        }
-
-        $token = substr($authHeader, 7);
-        try {
-            $key = 'your-secret-key';
-            $decoded = JWT::decode($token, new Key($key, 'HS256'));
-            
             // Verificar que el usuario sea super_admin
             if ($decoded->categoria !== 'super_admin') {
                 return $this->response->setJSON([
                     'error' => 'No tiene permisos para eliminar administradores'
                 ])->setStatusCode(403);
             }
-
-            // Verificar que no se esté intentando eliminar al propio usuario
-            if ($decoded->dni_admin === $dni) {
-                return $this->response->setJSON([
-                    'error' => 'No puede eliminarse a sí mismo'
-                ])->setStatusCode(400);
+            $data = $this->request->getJson(true);
+            $accion = $data['accion'] ?? null;
+            $dni_admin = $data['dni_admin'] ?? null;
+            $dni = $data['dni'] ?? null;
+            $password = $data['password'] ?? null;
+            $estado = $data['estado'] ?? null;
+            $categoria = $data['categoria'] ?? null;
+            $motivo = $data['motivo'] ?? null;
+            if ($accion == 'estado') {
+                $success = $this->administradoresModel
+                    ->where('dni_admin', $dni_admin)
+                    ->update('estado', $estado);
+                if ($success) {
+                    $this->historialAdminModel->insert([
+                        'realizado_por' => $dni_admin,
+                        'dni_admin' => $dni,
+                        'accion' => $estado == 'activo' ? 'activar' : 'desactivar',
+                        'motivo' => $motivo,
+                        'fecha_accion' => date('Y-m-d H:i:s', strtotime('-5 hours'))
+                    ]);
+                    return $this->response->setJSON(['message' => 'Estado actualizado'])->setStatusCode(200);
+                } else {
+                    return $this->response->setJSON(['error' => 'Error al actualizar el estado'])->setStatusCode(500);
+                }
             }
-
-            // Verificar si existe el administrador
-            $existingAdmin = $this->administradoresModel->find($dni);
-            if (!$existingAdmin) {
-                return $this->response->setJSON([
-                    'error' => 'Administrador no encontrado'
-                ])->setStatusCode(404);
+            if ($accion == 'password') {
+                $success = $this->administradoresModel
+                    ->where('dni_admin', $dni_admin)
+                    ->update('password', password_hash($password, PASSWORD_DEFAULT));
+                if ($success) {
+                    $this->historialAdminModel->insert([
+                        'realizado_por' => $dni_admin,
+                        'dni_admin' => $dni,
+                        'accion' => 'password',
+                        'motivo' => $motivo,
+                        'fecha_accion' => date('Y-m-d H:i:s', strtotime('-5 hours'))
+                    ]);
+                    return $this->response->setJSON(['message' => 'Contraseña actualizada'])->setStatusCode(200);
+                } else {
+                    return $this->response->setJSON(['error' => 'Error al actualizar la contraseña'])->setStatusCode(500);
+                }
             }
-
-            // Intentar eliminar el administrador
-            $success = $this->administradoresModel->delete($dni);
-            
-            if ($success) {
-                return $this->response->setJSON([
-                    'message' => 'Administrador eliminado exitosamente'
-                ]);
+            if ($accion == 'categoria') {
+                $success = $this->administradoresModel
+                    ->where('dni_admin', $dni_admin)
+                    ->update('categoria', $categoria);
+                if ($success) {
+                    $this->historialAdminModel->insert([
+                        'realizado_por' => $dni_admin,
+                        'dni_admin' => $dni,
+                        'accion' => 'categoria',
+                        'motivo' => $motivo,
+                        'fecha_accion' => date('Y-m-d H:i:s', strtotime('-5 hours'))
+                    ]);
+                    return $this->response->setJSON(['message' => 'Categoria actualizada'])->setStatusCode(200);
+                } else {
+                    return $this->response->setJSON(['error' => 'Error al actualizar la categoria'])->setStatusCode(500);
+                }
             }
-            
-            return $this->response->setJSON([
-                'error' => 'Error al eliminar el administrador'
-            ])->setStatusCode(500);
-
         } catch (\Exception $e) {
-            log_message('error', 'Error al eliminar administrador: ' . $e->getMessage());
-            return $this->response->setJSON([
-                'error' => $e->getMessage()
-            ])->setStatusCode(401);
+            return $this->response->setJSON(['error' => 'Token inválido'])->setStatusCode(401);
+        }
+    }
+    public function historyAdmin()
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+            return $this->response->setJSON(['error' => 'No autorizado'])->setStatusCode(401);
+        }
+        $token = substr($authHeader, 7);
+        try {
+            $key = 'your-secret-key';
+            $decoded = JWT::decode($token, new Key($key, 'HS256'));
+            // Verificar que el usuario sea super_admin
+            if ($decoded->categoria !== 'super_admin') {
+                return $this->response->setJSON([
+                    'error' => 'No tiene permisos para eliminar administradores'
+                ])->setStatusCode(403);
+            }
+            $history = $this->historialAdminModel->findAll();
+            if (!$history) {
+                return $this->response->setJSON(['error' => 'No se encontraron registros de historial'], 404);
+            }
+            return $this->response->setJSON($history);
+        } catch (\Exception $e) {
+            return $this->response->setJSON(['error' => 'Token inválido'])->setStatusCode(401);
         }
     }
 }
-
-
-
 // public function registerPrueba()
 // {
 //     $existingAdmin = $this->administradoresModel->find('76628500');
