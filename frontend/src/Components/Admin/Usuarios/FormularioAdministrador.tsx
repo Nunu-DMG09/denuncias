@@ -7,6 +7,7 @@ import { Loader } from "../../Loaders/Loader";
 import { Administrador } from '../../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios';
 interface FormularioAdministradorProps {
     administrador: Administrador | null;
+    actionType: 'password' | 'state' | 'role';
     onClose: () => void;
 }
 interface FormData {
@@ -19,9 +20,10 @@ interface FormData {
 
 const FormularioAdministrador = ({ 
     administrador, 
-    onClose 
+    onClose,
+    actionType
 }: FormularioAdministradorProps) => {
-    const { createAdministrador, updateAdministrador } = useAdministrador();
+    const { loading } = useAdministrador();
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState<FormData>({
         dni_admin: '',
