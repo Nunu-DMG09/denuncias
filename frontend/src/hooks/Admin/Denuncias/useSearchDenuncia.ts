@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { authApi } from "../../../utils/apiAxios";
 import { useFormContext } from "../../Form/useFormContext";
 
-interface Denuncias {
+export interface Denuncias {
 	id: string;
 	tracking_code: string;
 	motivo_id: string;
@@ -12,7 +12,7 @@ interface Denuncias {
 	descripcion: string;
 	fecha_registro: string;
 	estado: string;
-    motivo_otro: string
+	motivo_otro: string;
 }
 
 export const useSearchDenuncia = () => {
@@ -23,26 +23,41 @@ export const useSearchDenuncia = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [denunciaData, setDenunciaData] = useState<Denuncias[]>([]);
 	const [error, setError] = useState<string | null>(null);
-    const [hasSearched, setHasSearched] = useState<boolean>(false);
-    const [isLoadingDNI, setIsLoadingDNI] = useState<boolean>(false);
-    const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
-    const [showFilters, setShowFilters] = useState<boolean>(false);
+	const [hasSearched, setHasSearched] = useState<boolean>(false);
+	const [isLoadingDNI, setIsLoadingDNI] = useState<boolean>(false);
+	const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>(
+		{}
+	);
+	const [showFilters, setShowFilters] = useState<boolean>(false);
+	const [fechaFilter, setFechaFilter] = useState<string>("");
+	const [motivoFilter, setMotivoFilter] = useState<string>("");
+	const [estadoFilter, setEstadoFilter] = useState<Record<string, boolean>>({
+		registrado: false,
+		en_proceso: false,
+		resuelto: false,
+		rechazado: false,
+		recibida: false
+	});
+	const [filtered, setFiltered] = useState<boolean>(false);
+	const [denunciasFiltradasData, setDenunciasFiltradasData] = useState<
+		Denuncias[]
+	>([]);
 
-    const toggleCardDetails = (id: string) => {
-        setExpandedCards((prev) => ({
-            ...prev,
-            [id]: !prev[id],
-        }));
-    }
+	const toggleCardDetails = (id: string) => {
+		setExpandedCards((prev) => ({
+			...prev,
+			[id]: !prev[id],
+		}));
+	};
 	const handleTipoDocumento = (tipo: string) => {
 		setTipoDocumento(tipo);
 		setNumeroDocumento("");
 		setNombre("");
 		setError(null);
-        if(hasSearched) {
-            setDenunciaData([]);
-            setHasSearched(false);
-        }
+		if (hasSearched) {
+			setDenunciaData([]);
+			setHasSearched(false);
+		}
 	};
 	const handleDocumentoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const documentoValue = e.target.value;
@@ -129,13 +144,17 @@ export const useSearchDenuncia = () => {
 	const fetchDenucias = useCallback(async () => {
 		try {
 			setIsLoading(true);
-            setError(null);
+			setError(null);
 			const response = await authApi.get("/search", {
 				params: {
 					numero_documento: numeroDocumento,
 				},
 			});
-			if (response.data && response.data.success && Array.isArray(response.data.data)) {
+			if (
+				response.data &&
+				response.data.success &&
+				Array.isArray(response.data.data)
+			) {
 				const denunciasFormateadas = response.data.data.map(
 					(denuncia: Denuncias) => ({
 						id: denuncia.id,
@@ -148,19 +167,23 @@ export const useSearchDenuncia = () => {
 						descripcion: denuncia.descripcion,
 						fecha_registro: denuncia.fecha_registro,
 						estado: denuncia.estado,
-                        motivo_otro: denuncia.motivo_otro
+						motivo_otro: denuncia.motivo_otro,
 					})
 				);
 				setDenunciaData(denunciasFormateadas);
-                if (denunciasFormateadas.length === 0) {
-                    toast.info("No se encontraron denuncias para este documento");
-                } else {
-                    toast.success(`Se encontraron ${denunciasFormateadas.length} denuncias`);
-                }
+				if (denunciasFormateadas.length === 0) {
+					toast.info(
+						"No se encontraron denuncias para este documento"
+					);
+				} else {
+					toast.success(
+						`Se encontraron ${denunciasFormateadas.length} denuncias`
+					);
+				}
 				setError(null);
 			} else {
 				setDenunciaData([]);
-                toast.info("No se encontraron denuncias para este documento");
+				toast.info("No se encontraron denuncias para este documento");
 			}
 		} catch (error) {
 			if (error instanceof Error) {
@@ -198,13 +221,87 @@ export const useSearchDenuncia = () => {
 			);
 			return;
 		}
-        setHasSearched(true);
-        await fetchDenucias();
+		setHasSearched(true);
+		await fetchDenucias();
 	}, [tipoDocumento, numeroDocumento, fetchDenucias]);
 	const handleShowFilters = () => {
 		setShowFilters((prev) => !prev);
-	}
-    
+	};
+	const handleFechaFilterChange = (
+		e: React.ChangeEvent<HTMLInputElement>
+	) => {
+		setFechaFilter(e.target.value);
+	};
+	const handleMotivoFIlterChange = (
+		e: React.ChangeEvent<HTMLSelectElement>
+	) => {
+		setMotivoFilter(e.target.value);
+	};
+	const handleEstadoFilterChange = (estado: string, checked: boolean) => {
+		setEstadoFilter((prev) => ({
+			...prev,
+			[estado]: checked,
+		}));
+	};
+	const filtrarDenuncias = useCallback(() => {
+		if (!denunciaData.length) return [];
+		return denunciaData.filter((denuncia) => {
+			if (fechaFilter) {
+				const fechaDenuncia = new Date(denuncia.fecha_registro)
+					.toISOString()
+					.split("T")[0];
+				if (fechaDenuncia !== fechaFilter) return false;
+			}
+			if (
+				motivoFilter &&
+				motivoFilter !== "" &&
+				denuncia.motivo_id !== motivoFilter
+			)
+				return false;
+
+			const statesSelected = Object.values(estadoFilter).some(
+				(value) => value
+			);
+			if (statesSelected) {
+				const estadoDenuncia = denuncia.estado
+					.toLowerCase()
+					.replace(/\s+/g, "_");
+				const statesCoincide = Object.entries(estadoFilter).some(
+					([estado, seleccionado]) =>
+						seleccionado && estadoDenuncia.includes(estado)
+				);
+				if (!statesCoincide) return false;
+			}
+			return true;
+		});
+	}, [denunciaData, fechaFilter, motivoFilter, estadoFilter]);
+	const applyFilters = () => {
+		const denunciasFiltradas = filtrarDenuncias();
+		setDenunciasFiltradasData(denunciasFiltradas);
+		setFiltered(true);
+
+		if (denunciasFiltradas.length === 0) {
+			toast.info("No se encontraron denuncias con los filtros aplicados");
+		} else {
+			toast.success(
+				`Se encontraron ${denunciasFiltradas.length} denuncias con los filtros aplicados`
+			);
+		}
+	};
+	const clearFilters = () => {
+		setFechaFilter("");
+		setMotivoFilter("");
+		setEstadoFilter({
+			registrado: false,
+			en_proceso: false,
+			resuelto: false,
+			rechazado: false,
+			recibida: false
+		});
+		setFiltered(false);
+		setDenunciasFiltradasData([]);
+	};
+
 	return {
 		tipoDocumento,
 		numeroDocumento,
@@ -215,13 +312,23 @@ export const useSearchDenuncia = () => {
 		handleTipoDocumento,
 		handleDocumentoChange,
 		handleName,
-        handleSearchClick,
-        hasSearched,
-        isLoadingDNI,
-        toggleCardDetails,
-        expandedCards,
+		handleSearchClick,
+		hasSearched,
+		isLoadingDNI,
+		toggleCardDetails,
+		expandedCards,
 		showFilters,
 		handleShowFilters,
-		motivos
+		motivos,
+		fechaFilter,
+		handleFechaFilterChange,
+		motivoFilter,
+		handleMotivoFIlterChange,
+		estadoFilter,
+		handleEstadoFilterChange,
+		denunciasFiltradasData,
+		applyFilters,
+		clearFilters,
+		filtered,
 	};
 };
