@@ -2,7 +2,7 @@ import { Administrador } from "../../../pages/Admin/AdministrarUsuarios/Administ
 import { Loader } from "../../Loaders/Loader";
 import useEditAdmin from "../../../hooks/Admin/useEditAdmin";
 
-export type Action = "password" | "state" | "role" | "create";
+export type Action = "password" | "state" | "role";
 interface FormularioAdministradorProps {
 	admin: Administrador | null;
 	actionType: Action;
@@ -20,7 +20,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 
 	// Renderizado condicional según el tipo de acción
 	const renderActionForm = () => {
-		if (!admin && actionType !== "create") {
+		if (!admin) {
             return (
                 <div className="p-4 bg-red-50 rounded-md">
                     <p className="text-red-600">

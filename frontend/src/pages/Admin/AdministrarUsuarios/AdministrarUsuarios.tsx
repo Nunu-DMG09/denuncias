@@ -72,7 +72,7 @@ const AdministrarUsuarios = () => {
                         <div className="animate__animated animate__fadeIn">
                             <FormularioAdministrador
                                 admin={administradorEditar}
-                                actionType={administradorEditar ? 'role' : 'create'}
+                                actionType={administradorEditar ? 'role' : 'password'}
                                 onCancel={() => {
                                     setMostrarFormulario(false);
                                     setAdministradorEditar(null);

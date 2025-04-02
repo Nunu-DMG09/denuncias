@@ -15,7 +15,7 @@ interface FormData {
 	motivo?: string;
 }
 
-export const useEditAdmin = (admin: Administrador | null, onComplete: () => void, actionType: Action) => {
+export const useEditAdmin = (admin: Administrador | null, onComplete: () => void, actionType: Action | 'create') => {
 	const {
 		loading: apiLoading,
 		updateAdminPassword,
@@ -215,7 +215,7 @@ export const useEditAdmin = (admin: Administrador | null, onComplete: () => void
 				nombres: formData.nombres,
 				password: formData.password,
 				categoria: formData.categoria,
-				estado: formData.estado,
+				estado: 'activo',
 			});
 
 			// Limpiar formulario
