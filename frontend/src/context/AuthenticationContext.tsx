@@ -16,6 +16,7 @@ interface User {
 	dni_admin: string;
 	categoria: string;
 	nombres: string;
+	estado: 'activo' | 'inactivo';
 }
 
 export const AuthContext = createContext<AuthContextProps | null>(null);
@@ -42,6 +43,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 						dni_admin: payload.dni_admin,
 						categoria: payload.categoria,
 						nombres: payload.nombres || "Administrador",
+						estado: payload.estado || 'activo',
 					});
 				} else {
 					localStorage.removeItem("auth_token");
@@ -74,13 +76,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 					dni_admin: payload.dni_admin,
 					categoria: payload.categoria,
 					nombres: payload.nombres || "Administrador",
+					estado: payload.estado || 'activo',
 				});
 				return true;
 			}
 			return false;
 		} catch (error) {
-			console.error(error);
-			return false;
+			if (axios.isAxiosError(error)) {
+				const errorMessage = error.response?.data?.error;
+				if (errorMessage) {
+					throw new Error(errorMessage);
+				}
+			}
+			throw new Error('Error al iniciar sesión');
 		}
 	};
 	const confirmLogout = (confirmation: string) => {
@@ -106,13 +114,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 					},
 				}
 			);
+
+			if (response.data.forceLogout) {
+				toast.error("Tu cuenta ha sido desactivada");
+				logout();
+				return;
+			}
+
 			if (response.data.roleChanged) {
 				localStorage.setItem("auth_token", response.data.token);
 				setUser({
 					dni_admin: response.data.user.dni_admin,
 					categoria: response.data.user.categoria,
 					nombres: response.data.user.nombres || "Administrador",
+					estado: response.data.user.estado
 				});
+
+				if (response.data.user.estado === 'inactivo') {
+					toast.error("Tu cuenta ha sido desactivada");
+					logout();
+					return;
+				}
+
 				toast.info("Se ha actualizado tu información de usuario", {
 					description: `Tu rol ha cambiado a ${
 						response.data.user.categoria === "super_admin"
@@ -127,6 +150,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 				error
 			);
 			if (axios.isAxiosError(error) && error.response?.status === 401) {
+				if (error.response.data?.forceLogout) {
+					toast.error("Tu cuenta ha sido desactivada");
+				}
 				logout();
 			}
 		}
@@ -134,7 +160,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 	useEffect(() => {
 		if (isAuthenticated) {
 			checkUserInfo();
-			const interval = setInterval(checkUserInfo, 5 * 60 * 1000);
+			const interval = setInterval(checkUserInfo, 30 * 1000);
 			return () => clearInterval(interval);
 		}
 	}, [isAuthenticated]);

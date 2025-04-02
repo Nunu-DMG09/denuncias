@@ -30,5 +30,12 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('updateDenuncia', 'GestionController::procesosDenuncia');
     $routes->get('search', 'GestionController::search');
     $routes->get('download', 'GestionController::downloadAdjunto');
-    $routes->group('', ['filter' => 'auth:superadmin'], function ($routes) {});
+    $routes->get('administradores', 'AdminController::getAdministradores');
+
+    // Rutas que requieren ser super_admin
+    $routes->group('', ['filter' => 'auth:super_admin'], function ($routes) {
+        $routes->post('administradores', 'AdminController::createAdministrador');
+        $routes->put('administradores/(:segment)', 'AdminController::updateAdministrador/$1');
+        $routes->delete('administradores/(:segment)', 'AdminController::deleteAdministrador/$1');
+    });
 });

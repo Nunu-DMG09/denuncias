@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import useAdministrador from '../../../hooks/Admin/useAdministrador';
 import { toast } from 'sonner';
 import { getDNIData } from '../../../services/apisDocs';
+import { Loader } from "../../Loaders/Loader";
 
 // Definimos las interfaces necesarias
 interface Administrador {
@@ -64,7 +65,7 @@ const FormularioAdministrador = ({
         setFormData(prev => ({
             ...prev,
             dni_admin: dni,
-            nombres: dni.length === 8 ? prev.nombres : '' // Limpiar nombre si el DNI cambia
+            nombres: '' // Limpiar nombre cuando cambia el DNI
         }));
 
         if (dni.length === 8) {
@@ -121,14 +122,9 @@ const FormularioAdministrador = ({
                 });
             }
             onClose();
-            toast.success(
-                administrador 
-                ? 'Administrador actualizado exitosamente' 
-                : 'Administrador creado exitosamente'
-            );
-        } catch (error) {
+        } catch (error: any) {
+            // No mostrar mensaje de error aquí ya que el hook useAdministrador ya lo maneja
             console.error('Error:', error);
-            toast.error('Error al guardar el administrador');
         }
     };
 
@@ -137,9 +133,9 @@ const FormularioAdministrador = ({
             <h2 className="text-xl font-bold mb-4">
                 {administrador ? 'Editar' : 'Nuevo'} Administrador
             </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                         DNI
                     </label>
                     <input
@@ -147,36 +143,35 @@ const FormularioAdministrador = ({
                         value={formData.dni_admin}
                         onChange={handleDNIChange}
                         disabled={!!administrador}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                        className="mt-1 block w-full p-2.5 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         maxLength={8}
                         required
                     />
                 </div>
 
-                <div className="relative">
-                    <label className="block text-sm font-medium text-gray-700">
-                        Nombres
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nombres">
+                        Nombres y Apellidos
                     </label>
-                    <input
-                        type="text"
-                        value={formData.nombres}
-                        onChange={(e) => setFormData({
-                            ...formData,
-                            nombres: e.target.value
-                        })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                        required
-                        readOnly={!administrador}
-                    />
-                    {isLoading && (
-                        <div className="absolute right-2 top-8">
-                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
-                        </div>
-                    )}
+                    <div className="relative">
+                        <input
+                            type="text"
+                            id="nombres"
+                            name="nombres"
+                            value={formData.nombres}
+                            readOnly
+                            className="w-full px-3 py-2 border rounded-lg bg-gray-50 cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        {isLoading && (
+                            <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                                <Loader isBtn={false} />
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                         Contraseña
                         {administrador && " (dejar en blanco para mantener la actual)"}
                     </label>
@@ -187,14 +182,14 @@ const FormularioAdministrador = ({
                             ...formData,
                             password: e.target.value
                         })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                        className="mt-1 block w-full p-2.5 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         required={!administrador}
                         minLength={8}
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                         Categoría
                     </label>
                     <select
@@ -203,7 +198,7 @@ const FormularioAdministrador = ({
                             ...formData,
                             categoria: e.target.value as CategoriaAdmin
                         })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                        className="mt-1 block w-full p-2.5 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                         <option value="admin">Administrador</option>
                         <option value="super_admin">Super Administrador</option>
@@ -212,7 +207,7 @@ const FormularioAdministrador = ({
 
                 {administrador && (
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                             Estado
                         </label>
                         <select
@@ -221,7 +216,7 @@ const FormularioAdministrador = ({
                                 ...formData,
                                 estado: e.target.value as EstadoAdmin
                             })}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                            className="mt-1 block w-full p-2.5 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
                             <option value="activo">Activo</option>
                             <option value="inactivo">Inactivo</option>
@@ -229,17 +224,17 @@ const FormularioAdministrador = ({
                     </div>
                 )}
 
-                <div className="flex justify-end space-x-3">
+                <div className="flex justify-end space-x-4 mt-6">
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-50"
+                        className="px-6 py-2.5 border rounded-md text-gray-600 hover:bg-gray-50 transition-colors duration-200"
                     >
                         Cancelar
                     </button>
                     <button
                         type="submit"
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                        className="px-6 py-2.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200"
                         disabled={isLoading}
                     >
                         {administrador ? 'Actualizar' : 'Crear'}

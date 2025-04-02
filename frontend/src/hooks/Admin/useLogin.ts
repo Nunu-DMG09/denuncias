@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { getDNIData } from "../../services/apisDocs";
 import { toast } from "sonner";
 import { useAuthContext } from "./useAuthContext";
+import axios from "axios";
+
 export const useLogin = () => {
 	const [numeroDocumento, setNumeroDocumento] = useState<string>("");
 	const [nombre, setNombre] = useState<string>("");
@@ -36,17 +38,20 @@ export const useLogin = () => {
 		setError(null);
 		try {
 			const success = await login(numeroDocumento, password);
-
 			if (success) {
 				toast.success("Inicio de sesión exitoso");
-			} else {
-				setError("Credenciales incorrectas");
-				toast.error("Credenciales incorrectas");
 			}
 		} catch (error) {
-			console.error(error);
-			setError("Ocurrió un error al iniciar sesión");
-			toast.error("Ocurrió un error al iniciar sesión");
+			let errorMessage = "Error al iniciar sesión";
+			
+			if (error instanceof Error) {
+				errorMessage = error.message;
+			} else if (axios.isAxiosError(error) && error.response?.data?.error) {
+				errorMessage = error.response.data.error;
+			}
+			
+			setError(errorMessage);
+			toast.error(errorMessage);
 		} finally {
 			setSubmitting(false);
 		}
