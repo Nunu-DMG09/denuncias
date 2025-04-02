@@ -194,7 +194,7 @@ class AdminController extends BaseController
                     'error' => 'No tiene permisos para eliminar administradores'
                 ])->setStatusCode(403);
             }
-            $data = $this->request->getGet(true);
+            $data = $this->request->getJson(true);
             $accion = $data['accion'] ?? null;
             $dni_admin = $data['dni_admin'] ?? null;
             $dni = $data['dni'] ?? null;
