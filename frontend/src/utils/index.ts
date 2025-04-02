@@ -11,7 +11,7 @@ export const ALLOWED_FILE_TYPES = {
 	"image/gif": [".gif"],
 	"image/bmp": [".bmp"],
 	"image/webp": [".webp"],
-	'image/avif': ['.avif'],
+	"image/avif": [".avif"],
 	"image/svg+xml": [".svg"],
 	"application/pdf": [".pdf"],
 	"application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
@@ -111,14 +111,15 @@ export const validatePage = (
 				toast.error("Debes seleccionar una fecha de incidente");
 				return false;
 			}
-			if (
-				formData.fecha_incidente >
-				new Date().toISOString().split("T")[0]
-			) {
-				toast.error(
-					"La fecha de incidente no puede ser mayor a la fecha actual"
-				);
-				return false;
+			if (formData.fecha_incidente) {
+				const fechaIncidente = formData.fecha_incidente.split("T")[0];
+				const fechaActual = new Date().toISOString().split("T")[0];
+				if (fechaIncidente > fechaActual) {
+					toast.error(
+						"La fecha de incidente no puede ser mayor a la fecha actual"
+					);
+					return false;
+				}
 			}
 			if (!formData.motivo_id) {
 				toast.error("Debes seleccionar un motivo de denuncia");
@@ -135,9 +136,11 @@ export const validatePage = (
 				toast.error("La descripción debe tener al menos 50 caracteres");
 				return false;
 			}
-			if (formData.descripcion.trim().length >= 250){
-				toast.error("La descripción no puede tener más de 250 caracteres");
-				return false
+			if (formData.descripcion.trim().length >= 250) {
+				toast.error(
+					"La descripción no puede tener más de 250 caracteres"
+				);
+				return false;
 			}
 
 			if (formData.adjuntos.length > 0) {
@@ -288,4 +291,4 @@ export const getStatusColor = (status: string) => {
 		default:
 			return "bg-gray-100 text-gray-800 border-gray-200";
 	}
-}
+};
