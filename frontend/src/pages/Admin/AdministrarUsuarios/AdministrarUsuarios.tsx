@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import TablaAdministradores from '../../../Components/Admin/Usuarios/TablaAdministradores';
 import FormularioAdministrador from '../../../Components/Admin/Usuarios/FormularioAdministrador';
-import useAdministrador from '../../../hooks/Admin/useAdministrador';
 import { AddIcon, AdminsIcon, BackIcon } from '../../../Components/Icons';
 
 export interface Administrador {
@@ -12,7 +11,6 @@ export interface Administrador {
 }
 
 const AdministrarUsuarios = () => {
-    const { loading, error } = useAdministrador();
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
     const [administradorEditar, setAdministradorEditar] = useState<Administrador | null>(null);
     const [animateContent, setAnimateContent] = useState(false);
@@ -74,6 +72,7 @@ const AdministrarUsuarios = () => {
                         <div className="animate__animated animate__fadeIn">
                             <FormularioAdministrador
                                 admin={administradorEditar}
+                                actionType={administradorEditar ? 'role' : 'create'}
                                 onCancel={() => {
                                     setMostrarFormulario(false);
                                     setAdministradorEditar(null);
@@ -83,12 +82,7 @@ const AdministrarUsuarios = () => {
                         </div>
                     ) : (
                         <div className="animate__animated animate__fadeIn">
-                            <TablaAdministradores
-                                onEditar={(administrador: Administrador) => {
-                                    setAdministradorEditar(administrador);
-                                    setMostrarFormulario(true);
-                                }}
-                            />
+                            <TablaAdministradores/>
                         </div>
                     )}
                 </div>

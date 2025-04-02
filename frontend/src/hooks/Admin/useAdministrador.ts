@@ -3,6 +3,7 @@ import { authApi } from "../../utils/apiAxios";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { Administrador } from "../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios";
+import { useAuthContext } from "./useAuthContext";
 interface AdminData {
 	dni_admin: string;
 	nombres: string;
@@ -12,6 +13,7 @@ interface AdminData {
 }
 
 export const useAdministrador = () => {
+	const { user } = useAuthContext();
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [administradores, setAdministradores] = useState<Administrador[]>([]);
@@ -88,8 +90,10 @@ export const useAdministrador = () => {
         setLoading(true);
         setError(null);
         try {
-            const authData = localStorage.getItem("authData");
-            const currentDniAdmin = authData ? JSON.parse(authData).user.dni_admin : '';
+            const currentDniAdmin = user?.dni_admin || '';
+			if (!currentDniAdmin) {
+				throw new Error("No se encontró el DNI del administrador actual");
+			}
             const params = new URLSearchParams({
                 accion,
                 dni_admin: currentDniAdmin,

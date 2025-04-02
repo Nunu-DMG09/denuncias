@@ -2,9 +2,10 @@ import { Administrador } from "../../../pages/Admin/AdministrarUsuarios/Administ
 import { Loader } from "../../Loaders/Loader";
 import useEditAdmin from "../../../hooks/Admin/useEditAdmin";
 
+export type Action = "password" | "state" | "role" | "create";
 interface FormularioAdministradorProps {
 	admin: Administrador | null;
-	actionType: "password" | "state" | "role";
+	actionType: Action;
 	onCancel: () => void;
 }
 
@@ -19,6 +20,21 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 
 	// Renderizado condicional según el tipo de acción
 	const renderActionForm = () => {
+		if (!admin && actionType !== "create") {
+            return (
+                <div className="p-4 bg-red-50 rounded-md">
+                    <p className="text-red-600">
+                        Error: No se ha seleccionado un administrador para editar.
+                    </p>
+                    <button
+                        onClick={onCancel}
+                        className="mt-4 bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
+                    >
+                        Volver
+                    </button>
+                </div>
+            );
+        }
 		switch (actionType) {
 			case "password":
 				return (
@@ -53,11 +69,10 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 								<input
 									type="password"
 									placeholder="Confirmar contraseña"
-									// Nota: En el hook debemos agregar un campo confirmPassword
-									// Por ahora lo dejo aquí para mantener la interfaz de usuario
-									onChange={(e) => {
-										/* Manejar en el hook */
-									}}
+									value={formData.confirmPassword}
+									onChange={(e) =>
+										updateField("confirmPassword", e.target.value)
+									}
 									className="w-full p-2 border border-blue-300 rounded"
 									disabled={isLoading}
 									required
@@ -92,19 +107,19 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 				return (
 					<div
 						className={`p-4 ${
-							admin.estado === "activo"
+							admin?.estado === "activo"
 								? "bg-red-50"
 								: "bg-green-50"
 						} rounded-md`}
 					>
 						<h4
 							className={`text-sm font-medium ${
-								admin.estado === "activo"
+								admin?.estado === "activo"
 									? "text-red-800"
 									: "text-green-800"
 							} mb-3`}
 						>
-							{admin.estado === "activo"
+							{admin?.estado === "activo"
 								? "Desactivar"
 								: "Activar"}{" "}
 							administrador
@@ -121,12 +136,12 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 									updateField("motivo", e.target.value)
 								}
 								className={`w-full p-2 border rounded ${
-									admin.estado === "activo"
+									admin?.estado === "activo"
 										? "border-red-300"
 										: "border-green-300"
 								}`}
 								placeholder={`Indique el motivo para ${
-									admin.estado === "activo"
+									admin?.estado === "activo"
 										? "desactivar"
 										: "activar"
 								} al administrador`}
@@ -144,7 +159,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 							<button
 								onClick={() => handleSubmit()}
 								className={`${
-									admin.estado === "activo"
+									admin?.estado === "activo"
 										? "bg-red-600 hover:bg-red-700"
 										: "bg-green-600 hover:bg-green-700"
 								} text-white px-4 py-2 rounded transition-colors`}
@@ -152,7 +167,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 							>
 								{isLoading ? (
 									<Loader isBtn={true} />
-								) : admin.estado === "activo" ? (
+								) : admin?.estado === "activo" ? (
 									"Desactivar"
 								) : (
 									"Activar"
@@ -189,7 +204,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 								<select
 									value={formData.categoria}
 									onChange={(e) =>
-										updateField("categoria", e.target.value)
+										updateField("categoria", e.target.value as Administrador["categoria"])
 									}
 									className="w-full p-2 border border-purple-300 rounded"
 									disabled={isLoading}
@@ -233,7 +248,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 									disabled={
 										isLoading ||
 										formData.categoria ===
-											admin.categoria ||
+											admin?.categoria ||
 										!formData.motivo?.trim()
 									}
 								>
