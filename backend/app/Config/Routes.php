@@ -36,5 +36,6 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->group('', ['filter' => 'auth:super_admin'], function ($routes) {
         $routes->post('administradores', 'AdminController::createAdministrador');
         $routes->get('update', 'AdminController::updateAdministrador');
+        $routes->get('history','AdminController::historyAdmin');
     });
 });
