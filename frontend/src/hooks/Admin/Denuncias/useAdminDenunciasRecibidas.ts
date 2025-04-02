@@ -189,11 +189,11 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 						prevDenuncias.map((denuncia) =>
 							denuncia.tracking_code === tracking_code
 								? {
-										...denuncia,
-										estado: stateRows[tracking_code],
-										seguimiento_comentario:
-											commentInputs[tracking_code] || "",
-								  }
+									...denuncia,
+									estado: stateRows[tracking_code],
+									seguimiento_comentario:
+										commentInputs[tracking_code] || "",
+								}
 								: denuncia
 						)
 					);
@@ -231,14 +231,14 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 					...prev,
 					[tracking_code]: true,
 				}));
+				const token = localStorage.getItem("token");
+			
 				const response = await fetch(
-					`http://localhost/denuncias/backend/public/admin/download?tracking_code=${tracking_code}`,
+					`http://localhost/denuncias/backend/public/download?tracking_code=${tracking_code}`,
 					{
 						method: "GET",
 						headers: {
-							Authorization: `Bearer ${localStorage.getItem(
-								"token"
-							)}`,
+							Authorization: `Bearer ${token}`,
 						},
 					}
 				);
@@ -251,7 +251,7 @@ export const useAdminDenunciasRecibidas = (itemsPerPage: number = 10) => {
 					toast.dismiss(toastId);
 					toast.error(
 						jsonData.message ||
-							"No se encontraron archivos adjuntos"
+						"No se encontraron archivos adjuntos"
 					);
 					return;
 				}
