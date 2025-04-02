@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import TablaAdministradores from '../../../Components/Admin/Usuarios/TablaAdministradores';
 import FormularioAdministrador from '../../../Components/Admin/Usuarios/FormularioAdministrador';
 import { AddIcon, AdminsIcon, BackIcon } from '../../../Components/Icons';
+import { CreateAdminForm } from '../../../Components/Admin/Usuarios/CreateAdminForm';
 
 export interface Administrador {
     dni_admin: string;
@@ -68,7 +69,7 @@ const AdministrarUsuarios = () => {
                     </div>
                 </div>
                 <div className="p-6">
-                    {mostrarFormulario ? (
+                    {mostrarFormulario && administradorEditar ? (
                         <div className="animate__animated animate__fadeIn">
                             <FormularioAdministrador
                                 admin={administradorEditar}
@@ -78,6 +79,18 @@ const AdministrarUsuarios = () => {
                                     setAdministradorEditar(null);
                                 }}
                                 
+                            />
+                        </div>
+                    ) : mostrarFormulario && !administradorEditar ? (
+                        <div className="animate__animated animate__fadeIn">
+                            <CreateAdminForm
+                                onCancel={() => {
+                                    setMostrarFormulario(false);
+                                }}
+                                onCreate={() => {
+                                    setMostrarFormulario(false);
+                                    setAdministradorEditar(null);
+                                }}
                             />
                         </div>
                     ) : (
