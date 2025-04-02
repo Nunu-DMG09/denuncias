@@ -4,6 +4,7 @@ import useAdministrador from "../../../hooks/Admin/useAdministrador";
 import { toast } from "sonner";
 import { Administrador } from "../../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios";
 import { LoaderWifi } from "../../../Components/Loaders/LoaderWiFi";
+import { getTypeColor } from "../../../utils";
 
 interface TablaAdministradoresProps {
 	onEditar: (administrador: Administrador) => void;
@@ -113,12 +114,7 @@ const TablaAdministradores = ({ onEditar }: TablaAdministradoresProps) => {
 									</td>
 									<td className="px-6 py-4 whitespace-nowrap">
 										<span
-											className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-												admin.categoria ===
-												"super_admin"
-													? "bg-purple-100 text-purple-800"
-													: "bg-blue-100 text-blue-800"
-											}`}
+											className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getTypeColor(admin.categoria)}`}
 										>
 											{admin.categoria === "super_admin"
 												? "Super Admin"
