@@ -1,39 +1,25 @@
 import React from 'react';
-import { Administrador } from '../../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios';
 import useAdministrador from '../../../hooks/Admin/useAdministrador';
 import FormularioAdministrador from './FormularioAdministrador';
 import { LoaderWifi } from "../../../Components/Loaders/LoaderWiFi";
 
-interface TablaAdministradoresProps {
-    onEditar: (admin: Administrador) => void;
-}
-
-const TablaAdministradores = ({ onEditar }: TablaAdministradoresProps) => {
+const TablaAdministradores = () => {
     const { loading, administradores } = useAdministrador();
-    
-    // Estados para controlar la expansión de filas
     const [expandedRow, setExpandedRow] = React.useState<string | null>(null);
     const [currentAction, setCurrentAction] = React.useState<'password' | 'state' | 'role' | null>(null);
-    
-    // Función para alternar la expansión
     const toggleExpand = (dni: string, action: 'password' | 'state' | 'role') => {
         if (expandedRow === dni && currentAction === action) {
-            // Si ya está expandida con la misma acción, la cerramos
             setExpandedRow(null);
             setCurrentAction(null);
         } else {
-            // Si no está expandida o es otra acción, la abrimos
             setExpandedRow(dni);
             setCurrentAction(action);
         }
     };
-    
-    // Handler para cuando se completa una acción
     const handleActionComplete = () => {
         setExpandedRow(null);
         setCurrentAction(null);
     };
-
     return (
         <>
             {loading ? (

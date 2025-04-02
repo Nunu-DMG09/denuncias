@@ -99,7 +99,7 @@ export const useAdministrador = () => {
                 ...(accion === 'password' && { password: datos.password || '' }),
                 ...(accion === 'categoria' && { categoria: datos.categoria || '' }),
             })
-            const response = await authApi.get(`/admin/update?${params.toString()}`);
+            const response = await authApi.get(`/update?${params.toString()}`);
             if (response.data.message) {
                 toast.success(response.data.message);
                 await getAdministradores(); // Actualizar la lista de administradores después de la actualización

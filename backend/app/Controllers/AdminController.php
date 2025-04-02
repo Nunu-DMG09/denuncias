@@ -172,7 +172,7 @@ class AdminController extends BaseController
             return $this->response->setJSON(['error' => 'Token inválido'])->setStatusCode(401);
         }
     }
-    public function UpdateAdministrador()
+    public function updateAdministrador()
     {
         // Obtener el token del encabezado
         $authHeader = $this->request->getHeaderLine('Authorization');
