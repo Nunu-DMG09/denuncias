@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import useAdministrador from '../../../hooks/Admin/useAdministrador';
 import { toast } from 'sonner';
-import { Administrador } from '../../../pages/Admin/AdministrarUsuarios';
+import { Administrador } from '../../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios';
 
 interface TablaAdministradoresProps {
     onEditar: (administrador: Administrador) => void;
