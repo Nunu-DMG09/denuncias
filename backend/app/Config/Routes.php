@@ -11,6 +11,7 @@ $routes->get('/', 'Home::index');
 $routes->post('login', 'AdminController::login');
 $routes->get('register', 'AdminController::registerPrueba');
 $routes->get('admin-info', 'AdminController::getAdminInfo');
+$routes->get('download', 'GestionController::downloadAdjunto');
 // Rutas para la API
 $routes->group('api', function ($routes) {
     $routes->get('dni/(:num)', 'ConsultaApi::buscarDNI/$1');
@@ -29,7 +30,6 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('mandar', 'GestionController::receiveAdmin');
     $routes->get('updateDenuncia', 'GestionController::procesosDenuncia');
     $routes->get('search', 'GestionController::search');
-    $routes->get('download', 'GestionController::downloadAdjunto');
     $routes->get('administradores', 'AdminController::getAdministradores');
 
     // Rutas que requieren ser super_admin
