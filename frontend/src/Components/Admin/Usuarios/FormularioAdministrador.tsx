@@ -4,31 +4,17 @@ import useAdministrador from '../../../hooks/Admin/useAdministrador';
 import { toast } from 'sonner';
 import { getDNIData } from '../../../services/apisDocs';
 import { Loader } from "../../Loaders/Loader";
-
-// Definimos las interfaces necesarias
-interface Administrador {
-    dni_admin: string;
-    nombres: string;
-    categoria: 'admin' | 'super_admin';
-    estado: 'activo' | 'inactivo';
-}
-
+import { Administrador } from '../../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios';
 interface FormularioAdministradorProps {
     administrador: Administrador | null;
     onClose: () => void;
 }
-
-// Definimos el tipo para la categoría
-type CategoriaAdmin = 'admin' | 'super_admin';
-type EstadoAdmin = 'activo' | 'inactivo';
-
-// Definimos la interfaz para el formulario
 interface FormData {
     dni_admin: string;
     nombres: string;
     password: string;
-    categoria: CategoriaAdmin;
-    estado: EstadoAdmin;
+    categoria: Administrador['categoria'];
+    estado: Administrador['estado'];
 }
 
 const FormularioAdministrador = ({ 
@@ -37,8 +23,6 @@ const FormularioAdministrador = ({
 }: FormularioAdministradorProps) => {
     const { createAdministrador, updateAdministrador } = useAdministrador();
     const [isLoading, setIsLoading] = useState(false);
-    
-    // Especificamos el tipo del estado del formulario
     const [formData, setFormData] = useState<FormData>({
         dni_admin: '',
         nombres: '',

@@ -10,7 +10,8 @@ interface TablaAdministradoresProps {
 const TablaAdministradores = ({ onEditar }: TablaAdministradoresProps) => {
 	const {
 		loading,
-        administradores
+        administradores,
+		handleEditAction
 	} = useAdministrador();
 	return (
 		<>
@@ -92,7 +93,7 @@ const TablaAdministradores = ({ onEditar }: TablaAdministradoresProps) => {
 											{/* Botón Estado */}
 											<div className="group relative">
 												<button
-													// onClick={() => handleToggleEstado(admin.dni_admin)}
+													onClick={() => handleEditAction(admin.dni_admin, 'state')}
 													className={`cursor-pointer flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 shadow-sm hover:shadow ${
 														admin.estado === 'activo' 
 															? 'bg-green-50 hover:bg-green-100 text-green-600 hover:text-green-700' 
@@ -113,7 +114,7 @@ const TablaAdministradores = ({ onEditar }: TablaAdministradoresProps) => {
 											{/* Botón Categoría */}
 											<div className="group relative">
 												<button
-													onClick={() => console.log("Editar categoría")}
+													onClick={() => handleEditAction(admin.dni_admin, 'role')}
 													className="cursor-pointer flex items-center justify-center w-9 h-9 rounded-full bg-purple-50 hover:bg-purple-100 text-purple-600 hover:text-purple-700 transition-all duration-200 shadow-sm hover:shadow"
 													aria-label="Cambiar categoría"
 												>
