@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { authApi } from "../../../utils/apiAxios";
 import { useFormContext } from "../../Form/useFormContext";
 
-interface Denuncias {
+export interface Denuncias {
 	id: string;
 	tracking_code: string;
 	motivo_id: string;
