@@ -16,7 +16,7 @@ import { Denuncias } from "./pages/Admin/Denuncias";
 import { DashboardAdmin } from "./pages/Admin/Dashboard";
 import { AdminsHistorial } from "./pages/Admin/AdminsHistorial";
 //import { UsersManagement } from "./pages/Admin/UsersManagement";
-import AdministrarUsuarios from "./pages/Admin/AdministrarUsuarios";
+import AdministrarUsuarios from "./pages/Admin/AdministrarUsuarios/AdministrarUsuarios";
 import { DenunciasRecibidas } from "./pages/Admin/DenunciasRecibidas";
 // Páginas Generales
 import { TrackingDenuncia } from "./pages/Tracking/TrackingDenuncia";

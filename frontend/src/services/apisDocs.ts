@@ -9,7 +9,7 @@ export const getDNIData = async (dni: string) => {
         const data = await response.json();
         if (data?.success && data?.data) {
             const personData = data.data;
-            const nombre = `${personData.apellido_paterno} ${personData.apellido_materno}, ${personData.nombres}`;
+            const nombre = `${personData.apellido_paterno} ${personData.apellido_materno[0]}. ${personData.nombres.split(' ')[0]}${personData.nombres.split(' ')[1] ? ` ${personData.nombres.split(' ')[1][0]}.` : ''}`;
             return nombre
         }
         return ''
