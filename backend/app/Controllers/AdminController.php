@@ -257,6 +257,31 @@ class AdminController extends BaseController
             return $this->response->setJSON(['error' => 'Token inválido'])->setStatusCode(401);
         }
     }
+    public function historyAdmin()
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+            return $this->response->setJSON(['error' => 'No autorizado'])->setStatusCode(401);
+        }
+        $token = substr($authHeader, 7);
+        try {
+            $key = 'your-secret-key';
+            $decoded = JWT::decode($token, new Key($key, 'HS256'));
+            // Verificar que el usuario sea super_admin
+            if ($decoded->categoria !== 'super_admin') {
+                return $this->response->setJSON([
+                    'error' => 'No tiene permisos para eliminar administradores'
+                ])->setStatusCode(403);
+            }
+            $history = $this->historialAdminModel->findAll();
+            if (!$history) {
+                return $this->response->setJSON(['error' => 'No se encontraron registros de historial'], 404);
+            }
+            return $this->response->setJSON($history);
+        } catch (\Exception $e) {
+            return $this->response->setJSON(['error' => 'Token inválido'])->setStatusCode(401);
+        }
+    }
 }
 // public function registerPrueba()
 // {
