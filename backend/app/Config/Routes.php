@@ -35,7 +35,6 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     // Rutas que requieren ser super_admin
     $routes->group('', ['filter' => 'auth:super_admin'], function ($routes) {
         $routes->post('administradores', 'AdminController::createAdministrador');
-        $routes->put('administradores/(:segment)', 'AdminController::updateAdministrador/$1');
-        $routes->delete('administradores/(:segment)', 'AdminController::deleteAdministrador/$1');
+        $routes->get('update', 'AdminController::updateAdministrador');
     });
 });
