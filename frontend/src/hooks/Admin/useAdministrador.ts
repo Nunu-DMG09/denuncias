@@ -79,28 +79,62 @@ export const useAdministrador = () => {
 			setLoading(false);
 		}
 	};
-	const updateAdministrador = async (
-		dni: string,
-		data: AdminData
-	): Promise<Administrador> => {
-		setLoading(true);
-		setError(null);
-		try {
-			const response = await authApi.put(`/administradores/${dni}`, data);
-			toast.success("Administrador actualizado exitosamente");
-			return response.data;
-		} catch (err) {
-			const axiosError = err as AxiosError<{ message?: string }>;
-			const errorMsg =
-				axiosError.response?.data?.message ||
-				"Error al actualizar el administrador";
-			setError(errorMsg);
-			toast.error(errorMsg);
-			throw err;
-		} finally {
-			setLoading(false);
-		}
-	};
+	const updateAdministrador = async (dni: string, accion: 'estado' | 'password' | 'categoria', datos: {
+        estado?: 'activo' | 'inactivo';
+        password?: string;
+        categoria?: 'admin' | 'super_admin';
+        motivo?: string;
+    }): Promise<Administrador> => {
+        setLoading(true);
+        setError(null);
+        try {
+            const authData = localStorage.getItem("authData");
+            const currentDniAdmin = authData ? JSON.parse(authData).user.dni_admin : '';
+            const params = new URLSearchParams({
+                accion,
+                dni_admin: currentDniAdmin,
+                dni,
+                motivo: datos.motivo || 'Actualización administrativa',
+                ...(accion === 'estado' && { estado: datos.estado || '' }),
+                ...(accion === 'password' && { password: datos.password || '' }),
+                ...(accion === 'categoria' && { categoria: datos.categoria || '' }),
+            })
+            const response = await authApi.get(`/admin/update?${params.toString()}`);
+            if (response.data.message) {
+                toast.success(response.data.message);
+                await getAdministradores(); // Actualizar la lista de administradores después de la actualización
+                const updatedAdmin = administradores.find(admin => admin.dni_admin === dni);
+                if (updatedAdmin) {
+                    return updatedAdmin
+                } else {
+                    throw new Error("Administrador no encontrado después de la actualización");
+                }
+            } else {
+                throw new Error("No se recibió mensaje de éxito en la respuesta");
+            }
+        } catch (err) {
+            const axiosError = err as AxiosError<{ message?: string }>;
+            console.error("Error completo:", err);
+            console.error("URL de la petición:", axiosError.config?.url);
+            const errorMsg =
+                axiosError.response?.data?.message ||
+                "Error al actualizar el administrador";
+            setError(errorMsg);
+            toast.error(errorMsg);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }
+    const updateAdminPassword = async (dni:string, password:string, motivo: string = 'Cambio de contraseña') => {
+        return updateAdministrador(dni, 'password', { password, motivo });
+    }
+    const updateAdminStatus = async (dni:string, estado:'activo' | 'inactivo', motivo: string = estado === 'activo' ? 'Reactivación de cuenta' : 'Desactivación de cuenta') => {
+        return updateAdministrador(dni, 'estado', { estado, motivo });
+    }
+    const updateAdminRole = async (dni:string, categoria:'admin' | 'super_admin', motivo: string = `Cambio de rol a ${categoria}`) => {
+        return updateAdministrador(dni, 'categoria', { categoria, motivo });
+    }
 	useEffect(() => {
 		getAdministradores();
 	}, [getAdministradores]);
@@ -121,6 +155,9 @@ export const useAdministrador = () => {
 		administradores,
 		handleEditAction,
 		editAction,
+        updateAdminPassword,
+        updateAdminStatus,
+        updateAdminRole,
 	};
 };
 

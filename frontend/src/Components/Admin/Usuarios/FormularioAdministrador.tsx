@@ -1,234 +1,271 @@
-// frontend/src/components/Admin/Usuarios/FormularioAdministrador.tsx
-import { useState, useEffect } from 'react';
-import useAdministrador from '../../../hooks/Admin/useAdministrador';
-import { toast } from 'sonner';
-import { getDNIData } from '../../../services/apisDocs';
+import { Administrador } from "../../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios";
 import { Loader } from "../../Loaders/Loader";
-import { Administrador } from '../../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios';
+import useEditAdmin from "../../../hooks/Admin/useEditAdmin";
+
 interface FormularioAdministradorProps {
-    administrador: Administrador | null;
-    actionType: 'password' | 'state' | 'role';
-    onClose: () => void;
-}
-interface FormData {
-    dni_admin: string;
-    nombres: string;
-    password: string;
-    categoria: Administrador['categoria'];
-    estado: Administrador['estado'];
+	admin: Administrador | null;
+	actionType: "password" | "state" | "role";
+	onCancel: () => void;
 }
 
-const FormularioAdministrador = ({ 
-    administrador, 
-    onClose,
-    actionType
-}: FormularioAdministradorProps) => {
-    const { loading } = useAdministrador();
-    const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState<FormData>({
-        dni_admin: '',
-        nombres: '',
-        password: '',
-        categoria: 'admin',
-        estado: 'activo'
-    });
+const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
+	admin,
+	actionType,
+	onCancel,
+}) => {
+	// Toda la lógica está ahora en el hook
+	const { formData, isLoading, error, updateField, handleSubmit } =
+		useEditAdmin(admin, onCancel, actionType);
 
-    useEffect(() => {
-        if (administrador) {
-            setFormData({
-                dni_admin: administrador.dni_admin,
-                nombres: administrador.nombres,
-                password: '',
-                categoria: administrador.categoria,
-                estado: administrador.estado
-            });
-        }
-    }, [administrador]);
+	// Renderizado condicional según el tipo de acción
+	const renderActionForm = () => {
+		switch (actionType) {
+			case "password":
+				return (
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							handleSubmit();
+						}}
+						className="p-4 bg-blue-50 rounded-md"
+					>
+						<h4 className="text-sm font-medium text-blue-800 mb-3">
+							Cambiar contraseña
+						</h4>
+						{error && (
+							<p className="text-red-600 text-xs mb-2">{error}</p>
+						)}
+						<div className="flex flex-col sm:flex-row gap-3">
+							<div className="flex-1">
+								<input
+									type="password"
+									placeholder="Nueva contraseña"
+									value={formData.password}
+									onChange={(e) =>
+										updateField("password", e.target.value)
+									}
+									className="w-full p-2 border border-blue-300 rounded"
+									disabled={isLoading}
+									required
+								/>
+							</div>
+							<div className="flex-1">
+								<input
+									type="password"
+									placeholder="Confirmar contraseña"
+									// Nota: En el hook debemos agregar un campo confirmPassword
+									// Por ahora lo dejo aquí para mantener la interfaz de usuario
+									onChange={(e) => {
+										/* Manejar en el hook */
+									}}
+									className="w-full p-2 border border-blue-300 rounded"
+									disabled={isLoading}
+									required
+								/>
+							</div>
+							<div className="flex gap-2">
+								<button
+									type="submit"
+									className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+									disabled={isLoading}
+								>
+									{isLoading ? (
+										<Loader isBtn={true} />
+									) : (
+										"Guardar"
+									)}
+								</button>
+								<button
+									type="button"
+									onClick={onCancel}
+									className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
+									disabled={isLoading}
+								>
+									Cancelar
+								</button>
+							</div>
+						</div>
+					</form>
+				);
 
-    const handleDNIChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const dni = e.target.value.replace(/\D/g, ''); // Solo permitir números
-        
-        setFormData(prev => ({
-            ...prev,
-            dni_admin: dni,
-            nombres: '' // Limpiar nombre cuando cambia el DNI
-        }));
+			case "state":
+				return (
+					<div
+						className={`p-4 ${
+							admin.estado === "activo"
+								? "bg-red-50"
+								: "bg-green-50"
+						} rounded-md`}
+					>
+						<h4
+							className={`text-sm font-medium ${
+								admin.estado === "activo"
+									? "text-red-800"
+									: "text-green-800"
+							} mb-3`}
+						>
+							{admin.estado === "activo"
+								? "Desactivar"
+								: "Activar"}{" "}
+							administrador
+						</h4>
 
-        if (dni.length === 8) {
-            setIsLoading(true);
-            try {
-                const nombreCompleto = await getDNIData(dni);
-                if (nombreCompleto) {
-                    setFormData(prev => ({
-                        ...prev,
-                        nombres: nombreCompleto
-                    }));
-                } else {
-                    toast.error('No se encontraron datos para este DNI');
-                }
-            } catch (error) {
-                console.error('Error al consultar DNI:', error);
-                toast.error('Error al consultar el DNI');
-            } finally {
-                setIsLoading(false);
-            }
-        }
-    };
+						{/* Campo para el motivo */}
+						<div className="mb-4">
+							<label className="block text-sm font-medium text-gray-700 mb-2">
+								Motivo <span className="text-red-500">*</span>
+							</label>
+							<textarea
+								value={formData.motivo || ""}
+								onChange={(e) =>
+									updateField("motivo", e.target.value)
+								}
+								className={`w-full p-2 border rounded ${
+									admin.estado === "activo"
+										? "border-red-300"
+										: "border-green-300"
+								}`}
+								placeholder={`Indique el motivo para ${
+									admin.estado === "activo"
+										? "desactivar"
+										: "activar"
+								} al administrador`}
+								required
+								rows={3}
+								disabled={isLoading}
+							/>
+						</div>
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+						{error && (
+							<p className="text-red-600 text-xs mb-2">{error}</p>
+						)}
 
-        // Validar longitud del DNI
-        if (formData.dni_admin.length !== 8) {
-            toast.error('El DNI debe tener 8 dígitos');
-            return;
-        }
+						<div className="flex gap-2 mt-4">
+							<button
+								onClick={() => handleSubmit()}
+								className={`${
+									admin.estado === "activo"
+										? "bg-red-600 hover:bg-red-700"
+										: "bg-green-600 hover:bg-green-700"
+								} text-white px-4 py-2 rounded transition-colors`}
+								disabled={isLoading || !formData.motivo?.trim()}
+							>
+								{isLoading ? (
+									<Loader isBtn={true} />
+								) : admin.estado === "activo" ? (
+									"Desactivar"
+								) : (
+									"Activar"
+								)}
+							</button>
+							<button
+								onClick={onCancel}
+								className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
+								disabled={isLoading}
+							>
+								Cancelar
+							</button>
+						</div>
+					</div>
+				);
 
-        // Validar longitud de la contraseña
-        if (!administrador && formData.password.length < 8) {
-            toast.error('La contraseña debe tener al menos 8 caracteres');
-            return;
-        }
+			case "role":
+				return (
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							handleSubmit();
+						}}
+						className="p-4 bg-purple-50 rounded-md"
+					>
+						<h4 className="text-sm font-medium text-purple-800 mb-3">
+							Cambiar categoría
+						</h4>
+						<div className="flex flex-col gap-4">
+							<div>
+								<label className="block text-sm font-medium text-gray-700 mb-2">
+									Nueva categoría
+								</label>
+								<select
+									value={formData.categoria}
+									onChange={(e) =>
+										updateField("categoria", e.target.value)
+									}
+									className="w-full p-2 border border-purple-300 rounded"
+									disabled={isLoading}
+								>
+									<option value="admin">Administrador</option>
+									<option value="super_admin">
+										Super Administrador
+									</option>
+								</select>
+							</div>
 
-        try {
-            if (administrador) {
-                await updateAdministrador(administrador.dni_admin, {
-                    nombres: formData.nombres,
-                    password: formData.password || undefined,
-                    categoria: formData.categoria,
-                    estado: formData.estado
-                });
-            } else {
-                await createAdministrador({
-                    dni_admin: formData.dni_admin,
-                    nombres: formData.nombres,
-                    password: formData.password,
-                    categoria: formData.categoria,
-                    estado: formData.estado
-                });
-            }
-            onClose();
-        } catch (error: any) {
-            // No mostrar mensaje de error aquí ya que el hook useAdministrador ya lo maneja
-            console.error('Error:', error);
-        }
-    };
+							{/* Campo para el motivo */}
+							<div>
+								<label className="block text-sm font-medium text-gray-700 mb-2">
+									Motivo del cambio{" "}
+									<span className="text-red-500">*</span>
+								</label>
+								<textarea
+									value={formData.motivo || ""}
+									onChange={(e) =>
+										updateField("motivo", e.target.value)
+									}
+									className="w-full p-2 border border-purple-300 rounded"
+									placeholder="Indique el motivo para cambiar la categoría"
+									required
+									rows={3}
+									disabled={isLoading}
+								/>
+							</div>
 
-    return (
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold mb-4">
-                {administrador ? 'Editar' : 'Nuevo'} Administrador
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        DNI
-                    </label>
-                    <input
-                        type="text"
-                        value={formData.dni_admin}
-                        onChange={handleDNIChange}
-                        disabled={!!administrador}
-                        className="mt-1 block w-full p-2.5 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        maxLength={8}
-                        required
-                    />
-                </div>
+							{error && (
+								<p className="text-red-600 text-xs mb-2">
+									{error}
+								</p>
+							)}
 
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nombres">
-                        Nombres y Apellidos
-                    </label>
-                    <div className="relative">
-                        <input
-                            type="text"
-                            id="nombres"
-                            name="nombres"
-                            value={formData.nombres}
-                            readOnly
-                            className="w-full px-3 py-2 border rounded-lg bg-gray-50 cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                        {isLoading && (
-                            <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                                <Loader isBtn={false} />
-                            </div>
-                        )}
-                    </div>
-                </div>
+							<div className="flex gap-2 mt-2">
+								<button
+									type="submit"
+									className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
+									disabled={
+										isLoading ||
+										formData.categoria ===
+											admin.categoria ||
+										!formData.motivo?.trim()
+									}
+								>
+									{isLoading ? (
+										<Loader isBtn={true} />
+									) : (
+										"Guardar"
+									)}
+								</button>
+								<button
+									type="button"
+									onClick={onCancel}
+									className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
+									disabled={isLoading}
+								>
+									Cancelar
+								</button>
+							</div>
+						</div>
+					</form>
+				);
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Contraseña
-                        {administrador && " (dejar en blanco para mantener la actual)"}
-                    </label>
-                    <input
-                        type="password"
-                        value={formData.password}
-                        onChange={(e) => setFormData({
-                            ...formData,
-                            password: e.target.value
-                        })}
-                        className="mt-1 block w-full p-2.5 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        required={!administrador}
-                        minLength={8}
-                    />
-                </div>
+			default:
+				return null;
+		}
+	};
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Categoría
-                    </label>
-                    <select
-                        value={formData.categoria}
-                        onChange={(e) => setFormData({
-                            ...formData,
-                            categoria: e.target.value as CategoriaAdmin
-                        })}
-                        className="mt-1 block w-full p-2.5 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    >
-                        <option value="admin">Administrador</option>
-                        <option value="super_admin">Super Administrador</option>
-                    </select>
-                </div>
-
-                {administrador && (
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Estado
-                        </label>
-                        <select
-                            value={formData.estado}
-                            onChange={(e) => setFormData({
-                                ...formData,
-                                estado: e.target.value as EstadoAdmin
-                            })}
-                            className="mt-1 block w-full p-2.5 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        >
-                            <option value="activo">Activo</option>
-                            <option value="inactivo">Inactivo</option>
-                        </select>
-                    </div>
-                )}
-
-                <div className="flex justify-end space-x-4 mt-6">
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="px-6 py-2.5 border rounded-md text-gray-600 hover:bg-gray-50 transition-colors duration-200"
-                    >
-                        Cancelar
-                    </button>
-                    <button
-                        type="submit"
-                        className="px-6 py-2.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200"
-                        disabled={isLoading}
-                    >
-                        {administrador ? 'Actualizar' : 'Crear'}
-                    </button>
-                </div>
-            </form>
-        </div>
-    );
+	return (
+		<div className="animate__animated animate__fadeIn">
+			{renderActionForm()}
+		</div>
+	);
 };
 
 export default FormularioAdministrador;

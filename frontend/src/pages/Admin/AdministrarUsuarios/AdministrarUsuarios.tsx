@@ -73,11 +73,12 @@ const AdministrarUsuarios = () => {
                     {mostrarFormulario ? (
                         <div className="animate__animated animate__fadeIn">
                             <FormularioAdministrador
-                                administrador={administradorEditar}
-                                onClose={() => {
+                                admin={administradorEditar}
+                                onCancel={() => {
                                     setMostrarFormulario(false);
                                     setAdministradorEditar(null);
                                 }}
+                                
                             />
                         </div>
                     ) : (

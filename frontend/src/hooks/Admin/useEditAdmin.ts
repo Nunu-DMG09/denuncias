@@ -1,131 +1,257 @@
-import { useCallback, useEffect, useState } from "react";
+import { act, useCallback, useEffect, useState } from "react";
 import { Administrador } from "../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios";
 import useAdministrador from "./useAdministrador";
 import { toast } from "sonner";
+import { getDNIData } from "../../services/apisDocs";
 
-export const useEditAdmin = (admin: Administrador, onComplete?: () => void) => {
-    // Estados centralizados para la edición
-    const { updateAdministrador, loading } = useAdministrador();
-    const [password, setPassword] = useState<string>('');
-    const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [category, setCategory] = useState<'admin' | 'super_admin'>(admin.categoria);
-    const [status, setStatus] = useState<'activo' | 'inactivo'>(admin.estado);
-    const [error, setError] = useState<string | null>(null);
+interface FormData {
+	dni_admin: string;
+	nombres: string;
+	password: string;
+	categoria: Administrador["categoria"];
+	estado: Administrador["estado"];
+	motivo?: string;
+}
 
-    // Resetear estados cuando cambia el admin a editar
-    useEffect(() => {
-        setPassword('');
-        setConfirmPassword('');
-        setCategory(admin.categoria);
-        setStatus(admin.estado);
+export const useEditAdmin = (
+	admin: Administrador | null,
+	onComplete?: () => void,
+	actionType: "password" | "state" | "role" | "create"
+) => {
+	const {
+		loading: apiLoading,
+		updateAdminPassword,
+		updateAdminStatus,
+		updateAdminRole,
+		createAdministrador,
+	} = useAdministrador();
+    const [isLoadingDNI, setIsLoadingDNI] = useState(false)
+	const [formData, setFormData] = useState<FormData>({
+        dni_admin: '',
+        nombres: '',
+        password: '',
+        categoria: 'admin',
+        estado: 'activo',
+		motivo: '',
+    });
+	const [error, setError] = useState<string | null>(null);
+	const isLoading = apiLoading || isLoadingDNI;
+
+	const [password, setPassword] = useState<string>("");
+	const [confirmPassword, setConfirmPassword] = useState<string>("");
+	const [category, setCategory] = useState<"admin" | "super_admin">(
+		admin?.categoria || "admin"
+	);
+	const [status, setStatus] = useState<"activo" | "inactivo">(admin?.estado || "activo");
+	useEffect(() => {
+        if (admin) {
+            setFormData({
+                dni_admin: admin.dni_admin,
+                nombres: admin.nombres,
+                password: '',
+                categoria: admin.categoria,
+                estado: admin.estado,
+                motivo: ''
+            });
+        } else if (actionType === 'create') {
+            // Resetear para creación
+            setFormData({
+                dni_admin: '',
+                nombres: '',
+                password: '',
+                categoria: 'admin',
+                estado: 'activo',
+                motivo: ''
+            });
+        }
+        
+        // Limpiar errores
         setError(null);
-    }, [admin]);
-
-    // Gestión de contraseñas
-    const handlePasswordSubmit = useCallback(async () => {
-        // Validaciones
-        if (password !== confirmPassword) {
-            setError("Las contraseñas no coinciden");
-            return false;
-        }
+    }, [admin, actionType]);
+	const handleDNIChange = useCallback(async (dni: string) => {
+        const cleanDNI = dni.replace(/\D/g, ''); // Solo permitir números
         
-        if (password.length < 8) {
-            setError("La contraseña debe tener al menos 8 caracteres");
+        setFormData(prev => ({
+            ...prev,
+            dni_admin: cleanDNI,
+            nombres: '' // Limpiar nombre cuando cambia el DNI
+        }));
+
+        if (cleanDNI.length === 8) {
+            setIsLoadingDNI(true);
+            try {
+                const nombreCompleto = await getDNIData(cleanDNI);
+                if (nombreCompleto) {
+                    setFormData(prev => ({
+                        ...prev,
+                        nombres: nombreCompleto
+                    }));
+                } else {
+                    toast.error('No se encontraron datos para este DNI');
+                }
+            } catch (error) {
+                console.error('Error al consultar DNI:', error);
+                toast.error('Error al consultar el DNI');
+            } finally {
+                setIsLoadingDNI(false);
+            }
+        }
+    }, []);
+	const updateField = useCallback((field: keyof FormData, value: string) => {
+        setFormData(prev => ({
+            ...prev,
+            [field]: value
+        }));
+        
+        // Limpiar errores al cambiar cualquier campo
+        setError(null);
+    }, []);
+	const handlePasswordSubmit = useCallback(async () => {
+		// Validaciones
+		if (password !== confirmPassword) {
+			setError("Las contraseñas no coinciden");
+			return false;
+		}
+
+		if (password.length < 8) {
+			setError("La contraseña debe tener al menos 8 caracteres");
+			return false;
+		}
+
+		try {
+			// Usar la función específica para contraseñas
+			await updateAdminPassword(
+				admin?.dni_admin || "",
+				password,
+				"Cambio de contraseña programado"
+			);
+			toast.success("Contraseña actualizada con éxito");
+			// Limpiar y notificar éxito
+			setFormData((prev) => ({
+				...prev,
+				password: "",
+			}));
+
+			if (onComplete) onComplete();
+			return true;
+		} catch (error) {
+			console.error("Error al actualizar contraseña:", error);
+			return false;
+		}
+	}, [password, confirmPassword, admin, updateAdminPassword, onComplete]);
+
+	// Gestión de cambio de categoría
+	const handleCategorySubmit = useCallback(async () => {
+		// Validar que haya cambios
+		if (!formData.motivo?.trim()) {
+            setError("Debe ingresar un motivo para cambiar la categoría");
             return false;
         }
+		try {
+			if (admin) {
+                await updateAdminRole(admin.dni_admin, formData.categoria, formData.motivo);
+                
+                if (onComplete) onComplete();
+                return true;
+            }
+            return false;
+		} catch (error) {
+			console.error("Error al actualizar categoría:", error);
+			return false;
+		}
+	}, [formData.categoria, formData.motivo, admin, updateAdminRole, onComplete]);
 
-        try {
-            await updateAdministrador(admin.dni_admin, {
-                ...admin,
-                password,
+	// Gestión de cambio de estado
+	const handleStatusSubmit = useCallback(async () => {
+		// No validamos aquí ya que generalmente esto se maneja con un toggle
+		if (!formData.motivo?.trim()) {
+			setError('Debe ingresar un motivo para el cambio de estado');
+			return false;
+		}
+		try {
+			if (admin) {
+                const newStatus = admin.estado === 'activo' ? 'inactivo' : 'activo';
+                await updateAdminStatus(admin.dni_admin, newStatus, formData.motivo);
+                
+                if (onComplete) onComplete();
+                return true;
+            }
+            return false;
+		} catch (error) {
+			console.error("Error al actualizar estado:", error);
+			return false;
+		}
+	}, [formData.motivo, admin, updateAdminStatus, onComplete]);
+
+	const handleCreateSubmit = useCallback(async () => {
+		if (formData.dni_admin.length !== 8) {
+			setError("El DNI debe tener 8 dígitos");
+			return false;
+		}
+		if (formData.password.length < 8) {
+			setError("La contraseña debe tener al menos 8 caracteres");
+			return false;
+		}
+		try {
+            await createAdministrador({
+                dni_admin: formData.dni_admin,
+                nombres: formData.nombres,
+                password: formData.password,
+                categoria: formData.categoria,
+                estado: formData.estado
             });
             
-            // Limpiar y notificar éxito
-            setPassword('');
-            setConfirmPassword('');
-            setError(null);
-            toast.success("Contraseña actualizada con éxito");
+            // Limpiar formulario
+            setFormData({
+                dni_admin: '',
+                nombres: '',
+                password: '',
+                categoria: 'admin',
+                estado: 'activo',
+                motivo: ''
+            });
             
             if (onComplete) onComplete();
             return true;
-        } catch (error) {
-            console.error("Error al actualizar contraseña:", error);
+		} catch (error) {
+            console.error('Error:', error);
             return false;
         }
-    }, [password, confirmPassword, admin, updateAdministrador, onComplete]);
+	}, [formData, createAdministrador, onComplete]);
+	const handleSubmit = useCallback(async (e?: React.FormEvent) => {
+		if (e) e.preventDefault()
+		switch (actionType) {
+			case "password":
+				return await handlePasswordSubmit();
+			case "state":
+				return await handleStatusSubmit();
+			case "role":
+				return await handleCategorySubmit();
+			case "create":
+				return await handleCreateSubmit();
+			default:
+				return false;
+		}
+	}, [actionType, handlePasswordSubmit, handleStatusSubmit, handleCategorySubmit, handleCreateSubmit]);
+	return {
+		// Estados
+		formData,
+		isLoading,
+		error,
 
-    // Gestión de cambio de categoría
-    const handleCategorySubmit = useCallback(async () => {
-        // Validar que haya cambios
-        if (category === admin.categoria) {
-            toast.info("No se han realizado cambios en la categoría");
-            return true;
-        }
+		handleDNIChange,
+		updateField,
+		handleSubmit,
 
-        try {
-            await updateAdministrador(admin.dni_admin, {
-                ...admin,
-                categoria: category,
-            });
-            
-            toast.success(`Categoría actualizada a ${category === 'super_admin' ? 'Super Admin' : 'Admin'}`);
-            
-            if (onComplete) onComplete();
-            return true;
-        } catch (error) {
-            console.error("Error al actualizar categoría:", error);
-            return false;
-        }
-    }, [category, admin, updateAdministrador, onComplete]);
+		// Submit handlers
+		handlePasswordSubmit,
+		handleCategorySubmit,
+		handleStatusSubmit,
+		handleCreateSubmit,
 
-    // Gestión de cambio de estado
-    const handleStatusSubmit = useCallback(async () => {
-        // No validamos aquí ya que generalmente esto se maneja con un toggle
-        try {
-            const newStatus = admin.estado === 'activo' ? 'inactivo' : 'activo';
-            setStatus(newStatus); // Actualizar estado local inmediatamente
-            
-            await updateAdministrador(admin.dni_admin, {
-                ...admin,
-                estado: newStatus,
-            });
-            
-            toast.success(`Administrador ${newStatus === 'activo' ? 'activado' : 'desactivado'} con éxito`);
-            
-            if (onComplete) onComplete();
-            return true;
-        } catch (error) {
-            // Revertir cambio local si hay error
-            setStatus(admin.estado);
-            console.error("Error al actualizar estado:", error);
-            return false;
-        }
-    }, [admin, updateAdministrador, onComplete]);
-
-    return {
-        // Estados
-        password,
-        confirmPassword,
-        category,
-        status,
-        error,
-        loading,
-        
-        // Setters
-        setPassword,
-        setConfirmPassword,
-        setCategory,
-        setStatus,
-        setError,
-        
-        // Submit handlers
-        handlePasswordSubmit,
-        handleCategorySubmit,
-        handleStatusSubmit,
-        
-        // Helper para toggle de estado
-        toggleStatus: handleStatusSubmit
-    };
+		// Helper para toggle de estado
+		toggleStatus: handleStatusSubmit,
+	};
 };
 
 export default useEditAdmin;
