@@ -65,57 +65,52 @@ class AdminController extends BaseController
             $user = $this->administradoresModel->find($dni_admin);
 
             if (!$user) {
-                return $this->response->setJSON(['error' => 'Usuario no encontrado'], 404);
+            return $this->response->setJSON(['error' => 'Usuario no encontrado'], 404);
             }
 
             // Verificar si el usuario está activo
             if ($user['estado'] !== 'activo') {
-                return $this->response->setJSON([
-                    'error' => 'Usuario inactivo',
-                    'forceLogout' => true
-                ], 401);
+            session()->destroy();
+            return $this->response->setJSON([
+                'error' => 'Usuario inactivo',
+                'forceLogout' => true
+            ], 401);
             }
 
             if ($user['categoria'] !== $decoded->categoria || $user['estado'] !== $decoded->estado) {
-                $payload = [
-                    'iat' => time(),
-                    'exp' => time() + 3600,
-                    'dni_admin' => $user['dni_admin'],
-                    'categoria' => $user['categoria'],
-                    'nombre' => $user['nombres'] ?? 'Admin',
-                    'estado' => $user['estado']
-                ];
-                $newToken = JWT::encode($payload, $key, 'HS256');
-                session()->set('token', $newToken);
-                return $this->response->setJSON([
-                    'user' => [
-                        'dni_admin' => $user['dni_admin'],
-                        'nombres' => $user['nombres'],
-                        'categoria' => $user['categoria'],
-                        'estado' => $user['estado']
-                    ],
-                    'token' => $newToken,
-                    'roleChanged' => true
-                ]);
-            }
+            $payload = [
+                'iat' => time(),
+                'exp' => time() + 3600,
+                'dni_admin' => $user['dni_admin'],
+                'categoria' => $user['categoria'],
+                'nombre' => $user['nombres'] ?? 'Admin',
+                'estado' => $user['estado']
+            ];
+            $newToken = JWT::encode($payload, $key, 'HS256');
+            session()->set('token', $newToken);
             return $this->response->setJSON([
                 'user' => [
-                    'dni_admin' => $user['dni_admin'],
-                    'nombres' => $user['nombres'],
-                    'categoria' => $user['categoria'],
-                    'estado' => $user['estado']
+                'dni_admin' => $user['dni_admin'],
+                'nombres' => $user['nombres'],
+                'categoria' => $user['categoria'],
+                'estado' => $user['estado']
                 ],
-                'roleChanged' => false
+                'token' => $newToken,
+                'roleChanged' => true
+            ]);
+            }
+            return $this->response->setJSON([
+            'user' => [
+                'dni_admin' => $user['dni_admin'],
+                'nombres' => $user['nombres'],
+                'categoria' => $user['categoria'],
+                'estado' => $user['estado']
+            ],
+            'roleChanged' => false
             ]);
         } catch (\Exception $e) {
+            session()->destroy();
             return $this->response->setJSON(['error' => 'Token inválido'], 401);
-            // Eliminar el administrador
-            $success = $this->administradoresModel->delete($dni);
-            if ($success) {
-                return $this->response->setJSON(['message' => 'Administrador eliminado'])->setStatusCode(200);
-            } else {
-                return $this->response->setJSON(['error' => 'Error al eliminar el administrador'])->setStatusCode(500);
-            }
         }
     }
     public function getAdministradores()
