@@ -313,3 +313,23 @@ export const getEstadoColor = (estado: string) => {
 			return 'bg-gray-100 text-gray-800 border-gray-200';
 	}
 }
+export const getEstadoColorBtn = (estado: string) => {
+	switch (estado) {
+		case 'activo':
+			return "bg-green-50 hover:bg-green-100 text-green-600 hover:text-green-700"
+		case 'inactivo':
+			return "bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700"
+		default:
+			return "bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-700"
+	}
+}
+export const getEstadoIcon = (estado: string) => {
+	switch (estado) {
+		case 'activo':
+			return 'fa-toggle-on';
+		case 'inactivo':
+			return 'fa-toggle-off';
+		default:
+			return 'fa-question-circle';
+	}
+}
