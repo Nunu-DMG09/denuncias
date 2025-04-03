@@ -47,7 +47,7 @@ const AdministrarUsuarios = () => {
                                         setMostrarFormulario(false);
                                         setAdministradorEditar(null);
                                     }}
-                                    className="border border-gray-300 bg-white text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 flex items-center space-x-2"
+                                    className="border cursor-pointer border-gray-300 bg-white text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 flex items-center space-x-2"
                                 >
                                     <BackIcon />
                                     <span>Volver</span>
