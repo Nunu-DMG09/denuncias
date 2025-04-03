@@ -2,6 +2,7 @@ import React from 'react';
 import useAdministrador from '../../../hooks/Admin/useAdministrador';
 import FormularioAdministrador from './FormularioAdministrador';
 import { LoaderWifi } from "../../../Components/Loaders/LoaderWiFi";
+import { AdminRow } from './AdminRow';
 
 const TablaAdministradores = () => {
     const { loading, administradores } = useAdministrador();
@@ -52,78 +53,11 @@ const TablaAdministradores = () => {
                             {administradores.map((admin) => (
                                 <React.Fragment key={admin.dni_admin}>
                                     {/* Fila principal del administrador */}
-                                    <tr className={`hover:bg-gray-50 ${expandedRow === admin.dni_admin ? 'bg-gray-50 border-b-0' : ''}`}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {admin.dni_admin}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {admin.nombres}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                                admin.categoria === 'super_admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
-                                            }`}>
-                                                {admin.categoria === 'super_admin' ? 'Super Admin' : 'Administrador'}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                                admin.estado === 'activo' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                            }`}>
-                                                {admin.estado === 'activo' ? 'Activo' : 'Inactivo'}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                {/* Botón Contraseña */}
-                                                <button
-                                                    onClick={() => toggleExpand(admin.dni_admin, 'password')}
-                                                    className="flex items-center justify-center rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 transition-all duration-300 shadow-sm hover:shadow group overflow-hidden"
-                                                    aria-label="Cambiar contraseña"
-                                                >
-                                                    <span className="flex items-center justify-center w-9 h-9">
-                                                        <i className="fas fa-key text-sm"></i>
-                                                    </span>
-                                                    <span className="pr-3 max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out">
-                                                        Contraseña
-                                                    </span>
-                                                </button>
-                                                
-                                                {/* Botón Estado */}
-                                                <button
-                                                    onClick={() => toggleExpand(admin.dni_admin, 'state')}
-                                                    className={`flex items-center justify-center rounded-full transition-all duration-300 shadow-sm hover:shadow group overflow-hidden ${
-                                                        admin.estado === 'activo' 
-                                                            ? 'bg-green-50 hover:bg-green-100 text-green-600 hover:text-green-700' 
-                                                            : 'bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700'
-                                                    }`}
-                                                    aria-label="Cambiar estado"
-                                                >
-                                                    <span className="flex items-center justify-center w-9 h-9">
-                                                        <i className={`fas ${admin.estado === 'activo' ? 'fa-toggle-on' : 'fa-toggle-off'} text-sm`}></i>
-                                                    </span>
-                                                    <span className="pr-3 max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out">
-                                                        {admin.estado === 'activo' ? 'Desactivar' : 'Activar'}
-                                                    </span>
-                                                </button>
-                                                
-                                                {/* Botón Categoría */}
-                                                <button
-                                                    onClick={() => toggleExpand(admin.dni_admin, 'role')}
-                                                    className="flex items-center justify-center rounded-full bg-purple-50 hover:bg-purple-100 text-purple-600 hover:text-purple-700 transition-all duration-300 shadow-sm hover:shadow group overflow-hidden"
-                                                    aria-label="Cambiar categoría"
-                                                >
-                                                    <span className="flex items-center justify-center w-9 h-9">
-                                                        <i className="fas fa-tags text-sm"></i>
-                                                    </span>
-                                                    <span className="pr-3 max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out">
-                                                        Categoría
-                                                    </span>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    
+                                    <AdminRow 
+                                        admin={admin} 
+                                        expandedRow={expandedRow} 
+                                        toggleExpand={toggleExpand}
+                                    />
                                     {/* Fila expandible para edición */}
                                     {expandedRow === admin.dni_admin && currentAction && (
                                         <tr className="bg-gray-50 animate__animated animate__fadeIn">
