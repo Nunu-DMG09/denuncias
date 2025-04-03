@@ -3,7 +3,7 @@ import {
 	getEstadoColor,
 	getEstadoColorBtn,
 	getEstadoIcon,
-	getStatusColor,
+	getTypeColor,
 } from "../../../utils";
 
 interface AdminRowProps {
@@ -31,7 +31,7 @@ export const AdminRow = ({
 			</td>
 			<td className="px-6 py-4 whitespace-nowrap text-sm">
 				<span
-					className={`capitalize px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+					className={`capitalize px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getTypeColor(
 						admin.categoria
 					)}`}
 				>
