@@ -25,7 +25,6 @@ const TablaAdministradores = () => {
             {loading ? (
                 <div className="flex justify-center items-center py-8">
                     <LoaderWifi />
-                    <p className="ml-3 text-gray-600">Cargando administradores...</p>
                 </div>
             ) : (
                 <div className="overflow-x-auto">
