@@ -52,13 +52,11 @@ const TablaAdministradores = () => {
                         <tbody className="bg-white divide-y divide-gray-200">
                             {administradores.map((admin) => (
                                 <React.Fragment key={admin.dni_admin}>
-                                    {/* Fila principal del administrador */}
                                     <AdminRow 
                                         admin={admin} 
                                         expandedRow={expandedRow} 
                                         toggleExpand={toggleExpand}
                                     />
-                                    {/* Fila expandible para edición */}
                                     {expandedRow === admin.dni_admin && currentAction && (
                                         <tr className="bg-gray-50 animate__animated animate__fadeIn">
                                             <td colSpan={5} className="px-0">
