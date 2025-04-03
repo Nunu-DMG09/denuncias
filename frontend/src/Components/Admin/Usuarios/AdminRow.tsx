@@ -48,53 +48,82 @@ export const AdminRow = ({
 				</span>
 			</td>
 			<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-				<div className="flex flex-wrap items-center gap-2">
-					<button
-						onClick={() =>
-							toggleExpand(admin.dni_admin, "password")
-						}
-						className="flex items-center justify-center rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 transition-all duration-300 shadow-sm hover:shadow group overflow-hidden"
-						aria-label="Cambiar contraseña"
-					>
-						<span className="flex items-center justify-center w-9 h-9">
+				<div className="flex flex-wrap items-center gap-3">
+					<div className="relative group">
+						<button
+							onClick={() =>
+								toggleExpand(admin.dni_admin, "password")
+							}
+							className="h-9 w-9 flex cursor-pointer items-center justify-center rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 shadow-sm hover:shadow transition-all duration-300"
+							aria-label="Cambiar contraseña"
+						>
 							<i className="fas fa-key text-sm"></i>
-						</span>
-						<span className="pr-3 max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out">
-							Contraseña
-						</span>
-					</button>
-					<button
-						onClick={() => toggleExpand(admin.dni_admin, "state")}
-						className={`flex items-center justify-center rounded-full transition-all duration-300 shadow-sm hover:shadow group overflow-hidden ${getEstadoColorBtn(
-							admin.estado
-						)}`}
-						aria-label="Cambiar estado"
-					>
-						<span className="flex items-center justify-center w-9 h-9">
+						</button>
+						<div className="absolute bottom-full left-1/2 transform -translate-x-1/2 pointer-events-none">
+							<div
+								className="bg-(--primary-color) text-white text-xs rounded py-1.5 px-3 whitespace-nowrap mb-2
+									opacity-0 group-hover:opacity-100 
+									translate-y-1 group-hover:translate-y-0 
+									scale-95 group-hover:scale-100
+									transition-all duration-200 ease-out"
+							>
+								Cambiar contraseña
+								<div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-(--primary-color)"></div>
+							</div>
+						</div>
+					</div>
+					<div className="relative group">
+						<button
+							onClick={() =>
+								toggleExpand(admin.dni_admin, "state")
+							}
+							className={`h-9 w-9 flex cursor-pointer items-center justify-center rounded-full shadow-sm hover:shadow transition-all duration-300 ${getEstadoColorBtn(
+								admin.estado
+							)}`}
+							aria-label="Cambiar estado"
+						>
 							<i
-								className={`fas ${getEstadoIcon(
-									admin.estado
-								)} text-sm`}
+								className={`fas ${getEstadoIcon(admin.estado)} text-sm`}
 							></i>
-						</span>
-						<span className="pr-3 max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out">
-							{admin.estado === "activo"
-								? "Desactivar"
-								: "Activar"}
-						</span>
-					</button>
-					<button
-						onClick={() => toggleExpand(admin.dni_admin, "role")}
-						className="flex items-center justify-center rounded-full bg-purple-50 hover:bg-purple-100 text-purple-600 hover:text-purple-700 transition-all duration-300 shadow-sm hover:shadow group overflow-hidden"
-						aria-label="Cambiar categoría"
-					>
-						<span className="flex items-center justify-center w-9 h-9">
+						</button>
+						<div className="absolute bottom-full left-1/2 transform -translate-x-1/2 pointer-events-none">
+							<div
+								className="bg-(--primary-color) text-white text-xs rounded py-1.5 px-3 whitespace-nowrap mb-2
+									opacity-0 group-hover:opacity-100 
+									translate-y-1 group-hover:translate-y-0 
+									scale-95 group-hover:scale-100
+									transition-all duration-200 ease-out"
+							>
+								{admin.estado === "activo"
+									? "Desactivar"
+									: "Activar"}
+								<div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-(--primary-color)"></div>
+							</div>
+						</div>
+					</div>
+					<div className="relative group">
+						<button
+							onClick={() =>
+								toggleExpand(admin.dni_admin, "role")
+							}
+							className="h-9 w-9 flex cursor-pointer items-center justify-center rounded-full bg-purple-50 hover:bg-purple-100 text-purple-600 hover:text-purple-700 shadow-sm hover:shadow transition-all duration-300"
+							aria-label="Cambiar categoría"
+						>
 							<i className="fas fa-tags text-sm"></i>
-						</span>
-						<span className="pr-3 max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out">
-							Categoría
-						</span>
-					</button>
+						</button>
+						<div className="absolute bottom-full left-1/2 transform -translate-x-1/2 pointer-events-none">
+							<div
+								className="bg-(--primary-color) text-white text-xs rounded py-1.5 px-3 whitespace-nowrap mb-2
+									opacity-0 group-hover:opacity-100 
+									translate-y-1 group-hover:translate-y-0 
+									scale-95 group-hover:scale-100
+									transition-all duration-200 ease-out"
+							>
+								Cambiar categoría
+								<div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-(--primary-color)"></div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</td>
 		</tr>
