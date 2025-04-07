@@ -311,6 +311,18 @@ class AdminController extends BaseController
             return $this->response->setJSON(['error' => 'Token inválido'])->setStatusCode(401);
         }
     }
+    public function searchAdmin()
+    {
+        $dni = $this->request->getGet('dni_admin');
+        if (!$dni) {
+            return $this->response->setJSON(['error' => 'DNI no proporcionado'])->setStatusCode(400);
+        }
+        $admin = $this->administradoresModel->find($dni);
+        if (!$admin) {
+            return $this->response->setJSON(['error' => 'Administrador no encontrado'])->setStatusCode(404);
+        }
+        return $this->response->setJSON($admin);
+    }
     public function historyAdmin()
     {
         $authHeader = $this->request->getHeaderLine('Authorization');
