@@ -23,6 +23,7 @@ import { TrackingDenuncia } from "./pages/Tracking/TrackingDenuncia";
 import { Unauthorized } from "./pages/Unauthorized";
 import { NotFound } from "./pages/404";
 import { SearchDenuncia } from "./pages/Admin/SearchDenuncia";
+import { UsersLayout } from "./Components/UsersLayout";
 
 function App() {
 	return (
@@ -64,10 +65,16 @@ function App() {
 							path="/admin/users"
 							element={
 								<ProtectedRoute allowedRoles={["super_admin"]}>
-									<AdministrarUsuarios />
+									<UsersLayout />
 								</ProtectedRoute>
 							}
-						/>
+						>
+							<Route index element={<AdministrarUsuarios />} />
+							<Route
+								path="search"
+								element={<AdministrarUsuarios />}
+							/>
+						</Route>
 						<Route
 							path="/admin/historial-admins"
 							element={
