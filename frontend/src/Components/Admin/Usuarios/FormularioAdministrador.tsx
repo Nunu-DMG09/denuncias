@@ -135,10 +135,10 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 								onChange={(e) =>
 									updateField("motivo", e.target.value)
 								}
-								className={`w-full p-2 border rounded ${
+								className={`w-full p-2 border rounded transition-all outline-none duration-300 ease-in-out focus:ring-2 ${
 									admin?.estado === "activo"
-										? "border-red-300"
-										: "border-green-300"
+										? "border-red-300 focus:ring-red-500"
+										: "border-green-300 focus:ring-green-500"
 								}`}
 								placeholder={`Indique el motivo para ${
 									admin?.estado === "activo"
@@ -162,7 +162,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 									admin?.estado === "activo"
 										? "bg-red-600 hover:bg-red-700"
 										: "bg-green-600 hover:bg-green-700"
-								} text-white px-4 py-2 rounded transition-colors`}
+								} text-white px-4 py-2 rounded transition-colors duration-300 ease-in-out cursor-pointer`}
 								disabled={isLoading || !formData.motivo?.trim()}
 							>
 								{isLoading ? (
@@ -175,7 +175,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 							</button>
 							<button
 								onClick={onCancel}
-								className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
+								className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition-colors duration-300 ease-in-out cursor-pointer"
 								disabled={isLoading}
 							>
 								Cancelar
