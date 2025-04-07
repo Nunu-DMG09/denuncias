@@ -120,7 +120,6 @@ export const useEditAdmin = (admin: Administrador | null, onComplete: () => void
 				formData.password,
 				"Cambio de contraseña programado"
 			);
-			toast.success("Contraseña actualizada con éxito");
 			// Limpiar y notificar éxito
 			setFormData((prev) => ({
 				...prev,

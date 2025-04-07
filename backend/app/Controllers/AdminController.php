@@ -252,7 +252,8 @@ class AdminController extends BaseController
                         ->insert($historialData);
                     return $this->response->setJSON([
                         'message' => 'Estado actualizado correctamente',
-                        'estado' => $estado
+                        'estado' => $estado,
+                        'admin' => $this->administradoresModel->find($dni)
                     ])->setStatusCode(200);
                     break;
                 case 'categoria':
@@ -274,7 +275,8 @@ class AdminController extends BaseController
                         ->insert($historialData);
                     return $this->response->setJSON([
                         'message' => 'Categoría actualizada correctamente',
-                        'categoria' => $categoria
+                        'categoria' => $categoria,
+                        'admin' => $this->administradoresModel->find($dni)
                     ])->setStatusCode(200);
                     break;
 
@@ -297,6 +299,7 @@ class AdminController extends BaseController
                         ->insert($historialData);
                     return $this->response->setJSON([
                         'message' => 'Contraseña actualizada correctamente',
+                        'admin' => $this->administradoresModel->find($dni)
                     ])->setStatusCode(200);
                     break;
                 default:
