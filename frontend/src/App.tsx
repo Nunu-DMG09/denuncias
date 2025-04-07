@@ -24,6 +24,7 @@ import { Unauthorized } from "./pages/Unauthorized";
 import { NotFound } from "./pages/404";
 import { SearchDenuncia } from "./pages/Admin/SearchDenuncia";
 import { UsersLayout } from "./Components/UsersLayout";
+import { SearchAdmin } from "./pages/Admin/AdministrarUsuarios/SearchAdmin";
 
 function App() {
 	return (
@@ -72,7 +73,7 @@ function App() {
 							<Route index element={<AdministrarUsuarios />} />
 							<Route
 								path="search"
-								element={<AdministrarUsuarios />}
+								element={<SearchAdmin />}
 							/>
 						</Route>
 						<Route
