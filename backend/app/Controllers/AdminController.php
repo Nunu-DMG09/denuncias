@@ -41,77 +41,50 @@ class AdminController extends BaseController
                 'exp' => time() + 3600,
                 'dni_admin' => $user['dni_admin'],
                 'categoria' => $user['categoria'],
-                'nombre' => $user['nombres'] ?? 'Admin',
                 'estado' => $user['estado']
             ];
             $token = JWT::encode($payload, $key, 'HS256');
-            session()->set('token', $token);
+            session()->set([
+                'token' => $token,
+                'dni_admin' => $user['dni_admin'],
+                'categoria' => $user['categoria'],
+                'estado' => $user['estado']
+            ]);
             return $this->response->setJSON(['token' => $token]);
         }
-
         return $this->response->setStatusCode(401)->setJSON(['error' => 'Contraseña incorrecta']);
     }
     public function getAdminInfo()
     {
-        $authheader = $this->request->getHeaderLine('Authorization');
-        if (!$authheader || !str_starts_with($authheader, 'Bearer ')) {
+        $dni_admin = session()->get('dni_admin');
+        if (!$dni_admin) {
             return $this->response->setJSON(['error' => 'No autorizado'], 401);
         }
-        $token = substr($authheader, 7);
-        try {
-            $key = 'your-secret-key';
-            $decoded = JWT::decode($token, new Key($key, 'HS256'));
-            $dni_admin = $decoded->dni_admin;
-            $user = $this->administradoresModel->find($dni_admin);
 
-            if (!$user) {
+        $user = $this->administradoresModel->find($dni_admin);
+        if (!$user) {
+            session()->destroy();
             return $this->response->setJSON(['error' => 'Usuario no encontrado'], 404);
-            }
+        }
 
-            // Verificar si el usuario está activo
-            if ($user['estado'] !== 'activo') {
+        // Verificar si el usuario está activo
+        if ($user['estado'] !== 'activo') {
             session()->destroy();
             return $this->response->setJSON([
                 'error' => 'Usuario inactivo',
                 'forceLogout' => true
             ], 401);
-            }
-
-            if ($user['categoria'] !== $decoded->categoria || $user['estado'] !== $decoded->estado) {
-            $payload = [
-                'iat' => time(),
-                'exp' => time() + 3600,
-                'dni_admin' => $user['dni_admin'],
-                'categoria' => $user['categoria'],
-                'nombre' => $user['nombres'] ?? 'Admin',
-                'estado' => $user['estado']
-            ];
-            $newToken = JWT::encode($payload, $key, 'HS256');
-            session()->set('token', $newToken);
-            return $this->response->setJSON([
-                'user' => [
-                'dni_admin' => $user['dni_admin'],
-                'nombres' => $user['nombres'],
-                'categoria' => $user['categoria'],
-                'estado' => $user['estado']
-                ],
-                'token' => $newToken,
-                'roleChanged' => true
-            ]);
-            }
-            return $this->response->setJSON([
-            'user' => [
-                'dni_admin' => $user['dni_admin'],
-                'nombres' => $user['nombres'],
-                'categoria' => $user['categoria'],
-                'estado' => $user['estado']
-            ],
-            'roleChanged' => false
-            ]);
-        } catch (\Exception $e) {
-            session()->destroy();
-            return $this->response->setJSON(['error' => 'Token inválido'], 401);
         }
+
+        // Check if the role has changed
+        $roleChanged = session()->get('categoria') !== $user['categoria'];
+        if ($roleChanged) {
+            session()->set('categoria', $user['categoria']);
+        }
+
+        return $this->response->setJSON([
+            'roleChanged' => $roleChanged
+        ]);
     }
     public function getAdministradores()
     {
@@ -189,6 +162,7 @@ class AdminController extends BaseController
                     'error' => 'No tiene permisos para eliminar administradores'
                 ])->setStatusCode(403);
             }
+            
             $data = $this->request->getGet(true);
             $accion = $data['accion'] ?? null;
             $dni_admin = $data['dni_admin'] ?? null;
