@@ -18,7 +18,7 @@ const Header = () => {
 				<div className="nav-content flex items-center justify-between w-full">
 					<Link
 						className="logo-section flex items-center gap-4 font-(family-name:--titles)"
-						to="/"
+						to = { isAdminSection ? "/admin" : "/" }
 					>
 						<img
 							alt="Logo Municipal"
