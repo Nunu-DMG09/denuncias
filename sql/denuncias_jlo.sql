@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-04-2025 a las 16:16:35
+-- Tiempo de generación: 07-04-2025 a las 18:20:34
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -42,12 +42,17 @@ CREATE TABLE `adjuntos` (
 
 INSERT INTO `adjuntos` (`id`, `denuncia_id`, `file_path`, `file_name`, `file_type`, `fecha_subida`) VALUES
 ('ad106704', 'de4598db', 'uploads/de4598db/1743521242_6dee7412a222a0ca6285.webp', 'Img web.webp', 'image/webp', '2025-04-01 10:27:22'),
+('ad2c94f0', 'decb7ebe', 'uploads/decb7ebe/1743607771_796ae30f9891b2534cbf.pdf', 'Denuncia-TD590CF71C2E6EA3C8FC.pdf', 'application/pdf', '2025-04-02 10:29:31'),
 ('ad2f97f3', 'de4598db', 'uploads/de4598db/1743521242_b8f220f36816872f77ed.mp4', 'Prueba 7.16 MB.mp4', 'video/mp4', '2025-04-01 10:27:22'),
 ('ad3b3c61', 'de8b849d', 'uploads/de8b849d/1743439538_1dd55f3ac0b56856fea5.jpg', 'Almanaques.jpg', 'image/jpeg', '2025-03-31 11:45:38'),
 ('ad5fac59', 'dea60a05', 'uploads/dea60a05/1743104843_4f69281f357e63e8040e.pdf', 'Denuncia-TDB332C2423DEC96E3FF.pdf', 'application/pdf', '2025-03-27 14:47:23'),
+('ad63e833', 'decb7ebe', 'uploads/decb7ebe/1743607771_f227c12fbcee4d18f73d.avif', 'Img-avif.avif', 'image/avif', '2025-04-02 10:29:31'),
+('ad982ff3', 'decb7ebe', 'uploads/decb7ebe/1743607771_61ce312748f51324280e.mp4', 'Prueba 7.16 MB.mp4', 'video/mp4', '2025-04-02 10:29:31'),
 ('adacebb7', 'de4598db', 'uploads/de4598db/1743521242_5cf42146a86ff6b1bb14.avif', 'Img-avif.avif', 'image/avif', '2025-04-01 10:27:22'),
 ('adc8993f', 'de4598db', 'uploads/de4598db/1743521242_b053c828aa93f3ffa1d4.pdf', 'Prueba pdf.pdf', 'application/pdf', '2025-04-01 10:27:22'),
 ('ade572db', 'deb50b23', 'uploads/deb50b23/1743426091_87f4e9b659d2b3de32d5.jpg', 'afiches.jpg', 'image/jpeg', '2025-03-31 08:01:31'),
+('ade70d9f', 'decb7ebe', 'uploads/decb7ebe/1743607771_4cfeec3cb07ac759b89d.mp3', 'Prueba-8.1-MB audio.mp3', 'audio/mpeg', '2025-04-02 10:29:31'),
+('ade88131', 'decb7ebe', 'uploads/decb7ebe/1743607771_cb248c5c0447c2be3a6b.webp', 'Img web.webp', 'image/webp', '2025-04-02 10:29:31'),
 ('adf2375b', 'de4598db', 'uploads/de4598db/1743521242_6260f5f22047a27ca3bc.mp3', 'Prueba-8.1-MB audio.mp3', 'audio/mpeg', '2025-04-01 10:27:22');
 
 --
@@ -81,6 +86,7 @@ CREATE TABLE `administradores` (
 --
 
 INSERT INTO `administradores` (`dni_admin`, `nombres`, `password`, `categoria`, `estado`) VALUES
+('74887540', 'CASTRO P. DIEGO A.', '$2y$10$z3l9n/8Zcx4IjXBHBveFf.3OO3rKtB/J1NuWOc8NsWXZxU89DG3g6', 'super_admin', 'activo'),
 ('76628500', 'BURGA BRACAMONTE, JULIAN', '$2y$10$tfjs0cx9/FFaNHMHnISyuuwX2rf9hQkiZWxVoAnmo2Yl/i6NYFaay', 'super_admin', 'activo');
 
 -- --------------------------------------------------------
@@ -116,6 +122,7 @@ INSERT INTO `denunciados` (`id`, `nombre`, `numero_documento`, `tipo_documento`,
 ('debd8bfc', 'BURGA BRACAMONTE, JULIAN', '76628500', 'DNI', NULL, NULL, 'dsadadads'),
 ('ded4fec0', 'BURGA BRACAMONTE, JULIAN', '76628500', 'DNI', NULL, NULL, 'nose'),
 ('deda1cc4', 'BURGA BRACAMONTE, JULIAN', '76628500', 'DNI', NULL, NULL, 'dddddddd'),
+('dedcda20', 'BURGA BRACAMONTE, JULIAN', '76628500', 'DNI', NULL, NULL, '12345678'),
 ('def810e8', 'BURGA BRACAMONTE, JULIAN', '76628500', 'DNI', NULL, NULL, 'ing ');
 
 --
@@ -209,6 +216,7 @@ INSERT INTO `denuncias` (`id`, `tracking_code`, `es_anonimo`, `denunciante_id`, 
 ('dea14169', 'TDDE5551700C5253B68E', 1, NULL, 'mod4b28c', NULL, 'no me acuerdo a la firme pe mano, estoy escribiendo esto como webon y a la firme ya quiero acabar ', '2025-03-12', 'de6ca417', NULL, '2025-03-26 19:37:50', 'recibida', NULL),
 ('dea60a05', 'TD6C53CA9E4529447B24', 1, NULL, 'mod4b28c', NULL, 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', '2025-03-06', 'deda1cc4', NULL, '2025-03-27 14:47:22', 'registrado', NULL),
 ('deb50b23', 'TD629B018DDB76F53893', 1, NULL, 'mo221768', NULL, 'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq', '2025-03-05', 'de23499b', NULL, '2025-03-31 08:01:31', 'registrado', NULL),
+('decb7ebe', 'TD77DFC2F15EA1270976', 1, NULL, 'mo221768', NULL, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '2025-04-01', 'dedcda20', '76628500', '2025-04-02 10:29:31', 'recibida', NULL),
 ('dnc00001', 'TRK0001', 1, 'dn0001', 'mo221768', NULL, 'Descripción de la denuncia número 1: incidente relacionado con ventajas indebidas.', '2025-03-01', 'de0001', '76628500', '2025-03-26 11:45:33', 'registrado', NULL),
 ('dnc00002', 'TRK0002', 0, 'dn0002', 'mo22176a', NULL, 'Descripción de la denuncia número 2: uso indebido de influencias.', '2025-03-02', 'de0002', '76628500', '2025-03-26 11:45:33', 'en proceso', NULL),
 ('dnc00003', 'TRK0003', 1, 'dn0003', 'mo58aa06', NULL, 'Descripción de la denuncia número 3: conflicto de intereses en gestión pública.', '2025-03-03', 'de0003', '76628500', '2025-03-26 11:45:33', 'resuelto', NULL),
@@ -282,10 +290,22 @@ CREATE TABLE `historial_admin` (
   `id` varchar(8) NOT NULL,
   `realizado_por` varchar(8) NOT NULL,
   `dni_admin` varchar(8) NOT NULL,
-  `accion` enum('activar','desactivada','password','categoria') NOT NULL,
+  `accion` varchar(50) NOT NULL,
   `motivo` varchar(255) NOT NULL,
   `fecha_accion` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `historial_admin`
+--
+
+INSERT INTO `historial_admin` (`id`, `realizado_por`, `dni_admin`, `accion`, `motivo`, `fecha_accion`) VALUES
+('ha146557', '76628500', '', 'password', 'Cambio de contraseña programado', ''),
+('ha77559f', '76628500', '74887540', 'estado', 'a', ''),
+('ha87c9b5', '74887540', '', '', 'por que si', ''),
+('haa9006c', '76628500', '', 'estado', 'me cae mal', ''),
+('haeb2b2c', '76628500', '', 'password', 'Cambio de contraseña programado', ''),
+('haed9f61', '76628500', '74887540', 'estado', 'a', '');
 
 -- --------------------------------------------------------
 
@@ -348,11 +368,13 @@ INSERT INTO `seguimiento_denuncias` (`id`, `denuncia_id`, `estado`, `comentario`
 ('sd054410', 'de4598db', 'rechazado', 'hola', '2025-04-01 15:37:10', '76628500'),
 ('sd14ea16', 'dnc00049', 'recibida', 'La denuncia ha sido recibida por el administrador', '2025-03-27 16:08:48', '76628500'),
 ('sd1b4e99', 'de3ca8b1', 'recibida', 'La denuncia ha sido recibida por el administrador', '2025-03-31 13:37:28', '76628500'),
+('sd20171b', 'decb7ebe', 'recibida', 'La denuncia ha sido recibida por el administrador', '2025-04-02 15:29:49', '76628500'),
 ('sd339b28', 'de4598db', 'recibida', 'La denuncia ha sido recibida por el administrador', '2025-04-01 15:31:19', '76628500'),
 ('sd4abf1b', 'dnc00045', 'recibida', 'La denuncia ha sido recibida por el administrador', '2025-03-27 16:02:08', '76628500'),
 ('sd4d2ca5', 'de3ca8b1', 'recibida', 'La denuncia ha sido recibida por el administrador', '2025-03-27 19:48:00', '76628500'),
 ('sd558b26', 'dnc00049', 'recibida', 'La denuncia ha sido recibida por el administrador', '2025-03-31 13:03:22', '76628500'),
 ('sd5e0d11', 'de3ca8b1', 'recibida', 'La denuncia ha sido recibida por el administrador', '2025-03-27 16:12:06', '76628500'),
+('sd64b9ba', 'decb7ebe', 'registrado', 'Denuncia registrada', '2025-04-02 15:29:31', NULL),
 ('sd8ce483', 'de0d4112', 'registrado', 'Denuncia registrada', '2025-03-26 17:30:06', NULL),
 ('sd96f01c', 'dnc00045', 'recibida', 'La denuncia ha sido recibida por el administrador', '2025-03-27 16:02:27', '76628500'),
 ('sd994a55', 'dnc00045', 'recibida', 'La denuncia ha sido recibida por el administrador', '2025-03-27 16:06:18', '76628500'),
