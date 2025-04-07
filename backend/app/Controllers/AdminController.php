@@ -148,7 +148,7 @@ class AdminController extends BaseController
     public function updateAdministrador()
     {
         // Obtener el token del encabezado
-        $authHeader = $this->request->getHeaderLine('Authorization');
+        $authHeader = $this->request->getGet('Authorization');
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
             return $this->response->setJSON(['error' => 'No autorizado'])->setStatusCode(401);
         }
@@ -162,7 +162,7 @@ class AdminController extends BaseController
                     'error' => 'No tiene permisos para eliminar administradores'
                 ])->setStatusCode(403);
             }
-            
+
             $data = $this->request->getGet(true);
             $accion = $data['accion'] ?? null;
             $dni_admin = $data['dni_admin'] ?? null;
