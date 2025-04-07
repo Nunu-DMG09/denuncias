@@ -105,13 +105,10 @@ export const useAdministrador = () => {
 			});
             if (response.data && response.data.admin) {
                 toast.success(response.data.message || 'Actualización exitosa');
-                await getAdministradores();
-                const updatedAdmin = administradores.find(admin => admin.dni_admin === dni);
-                if (updatedAdmin) {
-                    return updatedAdmin
-                } else {
-                    throw new Error("Administrador no encontrado después de la actualización");
-                }
+                setAdministradores(prevAdmins => 
+					prevAdmins.map(a => a.dni_admin === dni ? response.data.admin : a)
+				);
+				return response.data.admin;
             } else {
                 throw new Error("No se recibió mensaje de éxito en la respuesta");
             }
