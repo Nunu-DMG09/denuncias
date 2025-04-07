@@ -162,66 +162,37 @@ class AdminController extends BaseController
                     'error' => 'No tiene permisos para eliminar administradores'
                 ])->setStatusCode(403);
             }
-            
+
             $data = $this->request->getJSON(true);
             $accion = $data['accion'] ?? null;
             $dni_admin = $data['dni_admin'] ?? null;
             $dni = $data['dni'] ?? null;
-            $password = $data['password'] ?? null;
-            $estado = $data['estado'] ?? null;
-            $categoria = $data['categoria'] ?? null;
             $motivo = $data['motivo'] ?? null;
-            if ($accion == 'estado') {
-                $success = $this->administradoresModel
-                    ->where('dni_admin', $dni_admin)
-                    ->update('estado', $estado);
-                if ($success) {
-                    $this->historialAdminModel->insert([
-                        'realizado_por' => $dni_admin,
-                        'dni_admin' => $dni,
-                        'accion' => $estado == 'activo' ? 'activar' : 'desactivar',
-                        'motivo' => $motivo,
-                        'fecha_accion' => date('Y-m-d H:i:s', strtotime('-5 hours'))
-                    ]);
-                    return $this->response->setJSON(['message' => 'Estado actualizado'])->setStatusCode(200);
-                } else {
-                    return $this->response->setJSON(['error' => 'Error al actualizar el estado'])->setStatusCode(500);
-                }
+            if (!$accion || !$dni_admin || !$dni || !$motivo) {
+                return $this->response->setJSON([
+                    'error' => 'Faltan parámetros obligatorios'
+                ])->setStatusCode(400);
             }
-            if ($accion == 'password') {
-                $success = $this->administradoresModel
-                    ->where('dni_admin', $dni_admin)
-                    ->update('password', password_hash($password, PASSWORD_DEFAULT));
-                if ($success) {
-                    $this->historialAdminModel->insert([
-                        'realizado_por' => $dni_admin,
-                        'dni_admin' => $dni,
-                        'accion' => 'password',
-                        'motivo' => $motivo,
-                        'fecha_accion' => date('Y-m-d H:i:s', strtotime('-5 hours'))
-                    ]);
-                    return $this->response->setJSON(['message' => 'Contraseña actualizada'])->setStatusCode(200);
-                } else {
-                    return $this->response->setJSON(['error' => 'Error al actualizar la contraseña'])->setStatusCode(500);
-                }
+            $adminToUpdate = $this->administradoresModel->find($dni);
+
+            if (!$adminToUpdate) {
+                return $this->response->setJSON([
+                    'error' => 'Administrador no encontrado'
+                ])->setStatusCode(404);
             }
-            if ($accion == 'categoria') {
-                $success = $this->administradoresModel
-                    ->where('dni_admin', $dni_admin)
-                    ->update('categoria', $categoria);
-                if ($success) {
-                    $this->historialAdminModel->insert([
-                        'realizado_por' => $dni_admin,
-                        'dni_admin' => $dni,
-                        'accion' => 'categoria',
-                        'motivo' => $motivo,
-                        'fecha_accion' => date('Y-m-d H:i:s', strtotime('-5 hours'))
-                    ]);
-                    return $this->response->setJSON(['message' => 'Categoria actualizada'])->setStatusCode(200);
-                } else {
-                    return $this->response->setJSON(['error' => 'Error al actualizar la categoria'])->setStatusCode(500);
-                }
+
+            $historialData = [
+                'dni_admin' => $dni_admin,
+                'dni_objetivo' => $dni,
+                'fecha' => date('Y-m-d H:i:s'),
+                'motivo' => $motivo
+            ];
+
+            switch ($accion) {
+                case 'estado':
+                    
             }
+
         } catch (\Exception $e) {
             return $this->response->setJSON(['error' => 'Token inválido'])->setStatusCode(401);
         }
