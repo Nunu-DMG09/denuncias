@@ -190,105 +190,122 @@ class AdminController extends BaseController
     }
     public function updateAdministrador()
     {
-        $data = $this->request->getJSON(true);
-        $accion = $data['accion'] ?? null;
-        $dni_admin = $data['dni_admin'] ?? null;
-        $dni = $data['dni'] ?? null;
-        $motivo = $data['motivo'] ?? null;
-
-        if (!$accion || !$dni_admin || !$dni || !$motivo) {
-            return $this->response->setJSON([
-                'error' => 'Faltan parámetros obligatorios'
-            ])->setStatusCode(400);
-        }
-        $adminToUpdate = $this->administradoresModel->find($dni);
-        if (!$adminToUpdate) {
-            return $this->response->setJSON([
-                'error' => 'Administrador no encontrado'
-            ])->setStatusCode(404);
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+            return $this->response->setJSON(['error' => 'No autorizado'])->setStatusCode(401);
         }
 
-        $historialData = [
-            'id' => $this->generateId('historialAdmin'),
-            'realizado_por' => $dni_admin,
-            'dni_admin' => $dni,
-            'fecha' => date('Y-m-d H:i:s'),
-            'accion' => $accion,
-            'motivo' => $motivo
-        ];
+        $token = substr($authHeader, 7);
+        try {
+            $key = 'your-secret-key';
+            $decoded = JWT::decode($token, new Key($key, 'HS256'));
 
-        switch ($accion) {
-            case 'estado':
-                $estado = $data['estado'] ?? null;
-                if (!$estado || !in_array($estado, ['activo', 'inactivo'])) {
-                    return $this->response->setJSON([
-                        'error' => 'Falta el estado'
-                    ])->setStatusCode(400);
-                }
-                $updateResult = $this->administradoresModel
-                    ->update($dni, ['estado' => $estado]);
-                if (!$updateResult) {
-                    return $this->response->setJSON([
-                        'error' => 'No se pudo actualizar el estado del administrador'
-                    ])->setStatusCode(500);
-                }
-
-                $this->historialAdminModel
-                    ->insert($historialData);
+            if ($decoded->categoria !== 'super_admin') {
                 return $this->response->setJSON([
-                    'message' => 'Estado actualizado correctamente',
-                    'estado' => $estado
-                ])->setStatusCode(200);
-                break;
-            case 'categoria':
-                $categoria = $data['categoria'] ?? null;
-                if (!$categoria || !in_array($categoria, ['admin', 'super_admin'])) {
-                    return $this->response->setJSON([
-                        'error' => 'Falta la categoría'
-                    ])->setStatusCode(400);
-                }
-                $updateResult = $this->administradoresModel
-                    ->update($dni, ['categoria' => $categoria]);
-                if (!$updateResult) {
-                    return $this->response->setJSON([
-                        'error' => 'No se pudo actualizar la categoría del administrador'
-                    ])->setStatusCode(500);
-                }
+                    'error' => 'No tiene permisos para crear administradores'
+                ])->setStatusCode(403);
+            }
+            $data = $this->request->getJSON(true);
+            $accion = $data['accion'] ?? null;
+            $dni_admin = $data['dni_admin'] ?? null;
+            $dni = $data['dni'] ?? null;
+            $motivo = $data['motivo'] ?? null;
 
-                $this->historialAdminModel
-                    ->insert($historialData);
+            if (!$accion || !$dni_admin || !$dni || !$motivo) {
                 return $this->response->setJSON([
-
-                    'message' => 'Categoría actualizada correctamente',
-                    'categoria' => $categoria
-                ])->setStatusCode(200);
-                break;
-
-            case 'password':
-                $password = $data['password'] ?? null;
-                if (!$password) {
-                    return $this->response->setJSON([
-                        'error' => 'Falta la contraseña'
-                    ])->setStatusCode(400);
-                }
-                $updateResult = $this->administradoresModel
-                    ->update($dni, ['password' => password_hash($password, PASSWORD_DEFAULT)]);
-                if (!$updateResult) {
-                    return $this->response->setJSON([
-                        'error' => 'No se pudo actualizar la contraseña del administrador'
-                    ])->setStatusCode(500);
-                }
-
-                $this->historialAdminModel
-                    ->insert($historialData);
-                return $this->response->setJSON([
-                    'message' => 'Contraseña actualizada correctamente',
-                ])->setStatusCode(200);
-                break;
-            default:
-                return $this->response->setJSON([
-                    'error' => 'Acción no válida'
+                    'error' => 'Faltan parámetros obligatorios'
                 ])->setStatusCode(400);
+            }
+            $adminToUpdate = $this->administradoresModel->find($dni);
+            if (!$adminToUpdate) {
+                return $this->response->setJSON([
+                    'error' => 'Administrador no encontrado'
+                ])->setStatusCode(404);
+            }
+
+            $historialData = [
+                'id' => $this->generateId('historialAdmin'),
+                'realizado_por' => $dni_admin,
+                'dni_admin' => $dni,
+                'fecha' => date('Y-m-d H:i:s'),
+                'accion' => $accion,
+                'motivo' => $motivo
+            ];
+
+            switch ($accion) {
+                case 'estado':
+                    $estado = $data['estado'] ?? null;
+                    if (!$estado || !in_array($estado, ['activo', 'inactivo'])) {
+                        return $this->response->setJSON([
+                            'error' => 'Falta el estado'
+                        ])->setStatusCode(400);
+                    }
+                    $updateResult = $this->administradoresModel
+                        ->update($dni, ['estado' => $estado]);
+                    if (!$updateResult) {
+                        return $this->response->setJSON([
+                            'error' => 'No se pudo actualizar el estado del administrador'
+                        ])->setStatusCode(500);
+                    }
+
+                    $this->historialAdminModel
+                        ->insert($historialData);
+                    return $this->response->setJSON([
+                        'message' => 'Estado actualizado correctamente',
+                        'estado' => $estado
+                    ])->setStatusCode(200);
+                    break;
+                case 'categoria':
+                    $categoria = $data['categoria'] ?? null;
+                    if (!$categoria || !in_array($categoria, ['admin', 'super_admin'])) {
+                        return $this->response->setJSON([
+                            'error' => 'Falta la categoría'
+                        ])->setStatusCode(400);
+                    }
+                    $updateResult = $this->administradoresModel
+                        ->update($dni, ['categoria' => $categoria]);
+                    if (!$updateResult) {
+                        return $this->response->setJSON([
+                            'error' => 'No se pudo actualizar la categoría del administrador'
+                        ])->setStatusCode(500);
+                    }
+
+                    $this->historialAdminModel
+                        ->insert($historialData);
+                    return $this->response->setJSON([
+                        'message' => 'Categoría actualizada correctamente',
+                        'categoria' => $categoria
+                    ])->setStatusCode(200);
+                    break;
+
+                case 'password':
+                    $password = $data['password'] ?? null;
+                    if (!$password) {
+                        return $this->response->setJSON([
+                            'error' => 'Falta la contraseña'
+                        ])->setStatusCode(400);
+                    }
+                    $updateResult = $this->administradoresModel
+                        ->update($dni, ['password' => password_hash($password, PASSWORD_DEFAULT)]);
+                    if (!$updateResult) {
+                        return $this->response->setJSON([
+                            'error' => 'No se pudo actualizar la contraseña del administrador'
+                        ])->setStatusCode(500);
+                    }
+
+                    $this->historialAdminModel
+                        ->insert($historialData);
+                    return $this->response->setJSON([
+                        'message' => 'Contraseña actualizada correctamente',
+                    ])->setStatusCode(200);
+                    break;
+                default:
+                    return $this->response->setJSON([
+                        'error' => 'Acción no válida'
+                    ])->setStatusCode(400);
+            }
+        } catch (\Exception $e) {
+            return $this->response->setJSON(['error' => 'Token inválido'])->setStatusCode(401);
         }
     }
     public function historyAdmin()
