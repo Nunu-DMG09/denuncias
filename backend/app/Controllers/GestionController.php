@@ -27,6 +27,33 @@ class GestionController extends BaseController
         $this->motivosModel = new MotivosModel();
         $this->adjuntosModel = new AdjuntosModel();
     }
+    public function correo($correo, $code, $estado, $comentario)
+    {
+        $email = \Config\Services::email();
+        $email->setFrom('futboleraoficialsenati@gmail.com', 'Municipalidad Distrital de José Leonardo Ortiz');
+        $email->setTo($correo);
+        $email->setSubject('Código de Seguimiento de Denuncia');
+        $email->setMessage("
+            <html>
+            <head>
+            <title>Estado de Denuncia</title>
+            </head>
+            <body style='font-family: Asap, sans-serif;'>
+            <p>Estimado usuario,</p>
+            <p>Le informamos sobre el estado actual de su denuncia:</p>
+            <p><strong>Código de Seguimiento:</strong> $code</p>
+            <p><strong>Estado:</strong> $estado</p>
+            <p><strong>Comentario:</strong> $comentario</p>
+            <p>Para realizar el seguimiento de su denuncia, puede ingresar al siguiente enlace:</p>
+            <p><a href='http://localhost:5173/tracking-denuncia?codigo=$code'>Seguimiento</a></p>
+            <p>Atentamente,</p>
+            <p><strong>Municipalidad Distrital de José Leonardo Ortiz</strong></p>
+            </body>
+            </html>
+        ");
+
+        return $email->send();
+    }
     public function generateId($table)
     {
         $prefixes = [
@@ -76,16 +103,25 @@ class GestionController extends BaseController
         $code = $data['tracking_code'];
         $dni_admin = $data['dni_admin'];
         $id = $this->generateId('seguimientoDenuncias');
-
+        $estado = 'recibida';
+        $comentario = 'La denuncia ha sido recibida por el administrador';
         $id_denuncias = $this->denunciasModel
             ->where('tracking_code', $code)
             ->first();
 
+        $correo = $this->denunciantesModel
+            ->select('email')
+            ->where('id', $id_denuncias['denunciante_id'])
+            ->first();
+        if ($correo) {
+            $this->correo($correo['email'], $code, $estado, $comentario);
+        }
+
         if ($this->seguimientoDenunciasModel->insert([
             'id' => $id,
             'denuncia_id' => $id_denuncias['id'],
-            'estado' => 'recibida',
-            'comentario' => 'La denuncia ha sido recibida por el administrador',
+            'estado' => $estado,
+            'comentario' => $comentario,
             'fecha_actualizacion' => date('Y-m-d H:i:s'),
             'dni_admin' => $dni_admin
         ])) {
@@ -237,6 +273,14 @@ class GestionController extends BaseController
         $id = $this->generateId('seguimientoDenuncias');
         $estado = $data['estado'];
         $comentario = $data['comentario'];
+        // Obtener el correo del denunciante
+        $correo = $this->denunciantesModel
+            ->select('email')
+            ->where('id', $id_denuncias['denunciante_id'])
+            ->first();
+        if ($correo) {
+            $this->correo($correo['email'], $code, $estado, $comentario);
+        }
 
         if ($this->seguimientoDenunciasModel->insert([
             'id' => $id,
@@ -271,7 +315,7 @@ class GestionController extends BaseController
     {
         $data = $this->request->getGet();
         $dni = $data['numero_documento'];
-        
+
         $db = \Config\Database::connect();
         $denuncias = $db->table('denuncias')
             ->select('
@@ -297,14 +341,14 @@ class GestionController extends BaseController
             ->where('denunciados.numero_documento', $dni)
             ->get()
             ->getResult();
-        
+
         if (empty($denuncias)) {
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'No se encontraron denuncias para este número de documento'
             ]);
         }
-        
+
         return $this->response->setJSON([
             'success' => true,
             'data' => $denuncias
