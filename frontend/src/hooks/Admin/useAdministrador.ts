@@ -104,7 +104,7 @@ export const useAdministrador = () => {
                 ...(accion === 'categoria' && { categoria: datos.categoria || '' }),
             })
             const response = await authApi.get(`/update?${params.toString()}`);
-            if (response.data.message) {
+            if (response.data && response.data.admin) {
                 toast.success(response.data.message);
                 await getAdministradores(); // Actualizar la lista de administradores después de la actualización
                 const updatedAdmin = administradores.find(admin => admin.dni_admin === dni);
