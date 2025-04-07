@@ -1,6 +1,8 @@
-import { Navigate, useLocation } from "react-router";
+import { Navigate, useLocation, useNavigate } from "react-router";
 import { useAuthContext } from "../hooks/Admin/useAuthContext";
 import { Loader } from "./Loaders/Loader";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 interface ProtectedRouteProps {
 	children: React.ReactNode;
@@ -13,6 +15,17 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
 	const { isAuthenticated, loading, user } = useAuthContext();
 	const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!loading && isAuthenticated && user) {
+            if (user.estado !== 'activo') {
+                toast.error('Tu cuenta está inactiva. Por favor contacta al administrador.');
+                localStorage.removeItem('auth_token');
+                navigate('/admin/login', { replace: true });
+            }
+        }
+    }, [isAuthenticated, loading, user, navigate]);
 
     if (loading) {
         return <div className="flex justify-center items-center h-screen">

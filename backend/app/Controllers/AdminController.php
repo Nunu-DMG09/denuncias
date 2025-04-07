@@ -76,35 +76,58 @@ class AdminController extends BaseController
     }
     public function getAdminInfo()
     {
-        $dni_admin = session()->get('dni_admin');
-        if (!$dni_admin) {
-            return $this->response->setJSON(['error' => 'No autorizado'], 401);
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+            return $this->response->setStatusCode(401)->setJSON(['error' => 'No autorizado', 'forceLogout' => true]);
         }
+        $token = substr($authHeader, 7);
+        try {
+            $key = 'your-secret-key';
+            $decoded = JWT::decode($token, new Key($key, 'HS256'));
+            $dni_admin = $decoded->dni_admin;
 
-        $user = $this->administradoresModel->find($dni_admin);
-        if (!$user) {
-            session()->destroy();
-            return $this->response->setJSON(['error' => 'Usuario no encontrado'], 404);
-        }
+            $user = $this->administradoresModel->find($dni_admin);
+            if (!$user) {
+                return $this->response->setStatusCode(401)->setJSON(['error' => 'Usuario no encontrado', 'forceLogout' => true]);
+            }
+            if ($user['estado'] !== 'activo') {
+                return $this->response->setStatusCode(401)->setJSON([
+                    'error' => 'Tu cuenta ha sido desactivada',
+                    'forceLogout' => true
+                ]);
+            }
+            if ($decoded->categoria !== $user['categoria'] || $decoded->estado !== $user['estado']) {
+                $newPayload = [
+                    'iat' => time(),
+                    'exp' => time() + 3600,
+                    'dni_admin' => $user['dni_admin'],
+                    'categoria' => $user['categoria'],
+                    'nombres' => $user['nombres'],
+                    'estado' => $user['estado']
+                ];
+                $newToken = JWT::encode($newPayload, $key, 'HS256');
 
-        // Verificar si el usuario está activo
-        if ($user['estado'] !== 'activo') {
-            session()->destroy();
+                return $this->response->setJSON([
+                    'roleChanged' => true,
+                    'token' => $newToken,
+                    'user' => [
+                        'dni_admin' => $user['dni_admin'],
+                        'nombres' => $user['nombres'],
+                        'categoria' => $user['categoria'],
+                        'estado' => $user['estado']
+                    ]
+                ]);
+            }
             return $this->response->setJSON([
-                'error' => 'Usuario inactivo',
+                'roleChanged' => false,
+                'user' => $user
+            ]);
+        } catch (\Exception $e) {
+            return $this->response->setStatusCode(401)->setJSON([
+                'error' => 'Token inválido o expirado',
                 'forceLogout' => true
-            ], 401);
+            ]);
         }
-
-        // Check if the role has changed
-        $roleChanged = session()->get('categoria') !== $user['categoria'];
-        if ($roleChanged) {
-            session()->set('categoria', $user['categoria']);
-        }
-
-        return $this->response->setJSON([
-            'roleChanged' => $roleChanged
-        ]);
     }
     public function getAdministradores()
     {
@@ -235,7 +258,7 @@ class AdminController extends BaseController
                 $this->historialAdminModel
                     ->insert($historialData);
                 return $this->response->setJSON([
-                    
+
                     'message' => 'Categoría actualizada correctamente',
                     'categoria' => $categoria
                 ])->setStatusCode(200);
