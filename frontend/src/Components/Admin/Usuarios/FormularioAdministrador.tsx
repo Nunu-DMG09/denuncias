@@ -60,7 +60,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 									onChange={(e) =>
 										updateField("password", e.target.value)
 									}
-									className="w-full p-2 border border-blue-300 rounded"
+									className="w-full p-2 border border-blue-300 rounded outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out"
 									disabled={isLoading}
 									required
 								/>
@@ -73,7 +73,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 									onChange={(e) =>
 										updateField("confirmPassword", e.target.value)
 									}
-									className="w-full p-2 border border-blue-300 rounded"
+									className="w-full p-2 border border-blue-300 rounded outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out"
 									disabled={isLoading}
 									required
 								/>
@@ -81,7 +81,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 							<div className="flex gap-2">
 								<button
 									type="submit"
-									className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+									className="bg-(--secondary-color) cursor-pointer text-white px-4 py-2 rounded hover:bg-(--primary-color) transition-colors duration-300 ease-in-out"
 									disabled={isLoading}
 								>
 									{isLoading ? (
@@ -93,7 +93,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 								<button
 									type="button"
 									onClick={onCancel}
-									className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
+									className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition-colors cursor-pointer duration-300 ease-in-out"
 									disabled={isLoading}
 								>
 									Cancelar
