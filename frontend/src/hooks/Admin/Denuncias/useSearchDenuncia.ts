@@ -13,6 +13,11 @@ export interface Denuncias {
 	fecha_registro: string;
 	estado: string;
 	motivo_otro: string;
+	denunciante_nombre: string
+	denunciante_dni: string
+	seguimiento_comentario: string
+	denunciado_nombre: string
+	denunciado_dni: string
 }
 
 export const useSearchDenuncia = () => {
@@ -168,6 +173,11 @@ export const useSearchDenuncia = () => {
 						fecha_registro: denuncia.fecha_registro,
 						estado: denuncia.estado,
 						motivo_otro: denuncia.motivo_otro,
+						denunciante_nombre: denuncia.denunciante_nombre,
+						denunciante_dni: denuncia.denunciante_dni,
+						seguimiento_comentario: denuncia.seguimiento_comentario,
+						denunciado_nombre: denuncia.denunciado_nombre,
+						denunciado_dni: denuncia.denunciado_dni,
 					})
 				);
 				setDenunciaData(denunciasFormateadas);

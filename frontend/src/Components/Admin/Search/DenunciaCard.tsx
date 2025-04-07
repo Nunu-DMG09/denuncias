@@ -12,8 +12,6 @@ interface DenunciaCardProps {
 
 export const DenunciaCard = ({
 	denuncia,
-	nombre,
-	numeroDocumento,
 	expandedCards,
 	toggleCardDetails,
 }: DenunciaCardProps) => {
@@ -102,8 +100,8 @@ export const DenunciaCard = ({
 									Información del denunciado
 								</h5>
 								<p className="text-sm text-gray-600">
-									{nombre || "Información no disponible"}
-									{numeroDocumento && ` - ${numeroDocumento}`}
+									{denuncia.denunciado_nombre || "Información no disponible"}
+									{denuncia.denunciado_dni && ` - ${denuncia.denunciado_dni}`}
 								</p>
 							</div>
 							{denuncia.seguimiento_comentario && (

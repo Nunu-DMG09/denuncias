@@ -271,17 +271,40 @@ class GestionController extends BaseController
     {
         $data = $this->request->getGet();
         $dni = $data['numero_documento'];
-        $denuncias = $this->denunciasModel
-            ->select('denuncias.*')
+        
+        $db = \Config\Database::connect();
+        $denuncias = $db->table('denuncias')
+            ->select('
+                denuncias.id,
+                denuncias.tracking_code,
+                denuncias.motivo_id,
+                denuncias.descripcion, 
+                denuncias.fecha_registro,
+                denuncias.estado,
+                denuncias.motivo_otro,
+                denunciados.nombre as denunciado_nombre,
+                denunciados.numero_documento as denunciado_dni,
+                COALESCE(denunciantes.nombres, "Anónimo") as denunciante_nombre,
+                COALESCE(denunciantes.numero_documento, "") as denunciante_dni,
+                (
+                    SELECT comentario FROM seguimiento_denuncias 
+                    WHERE seguimiento_denuncias.denuncia_id = denuncias.id 
+                    ORDER BY fecha_actualizacion DESC LIMIT 1
+                ) as seguimiento_comentario
+            ')
             ->join('denunciados', 'denuncias.denunciado_id = denunciados.id')
+            ->join('denunciantes', 'denuncias.denunciante_id = denunciantes.id', 'left')
             ->where('denunciados.numero_documento', $dni)
-            ->findAll();
+            ->get()
+            ->getResult();
+        
         if (empty($denuncias)) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'No se encontraron denuncias para este DNI'
+                'message' => 'No se encontraron denuncias para este número de documento'
             ]);
         }
+        
         return $this->response->setJSON([
             'success' => true,
             'data' => $denuncias
