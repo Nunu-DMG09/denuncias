@@ -94,19 +94,18 @@ export const useAdministrador = () => {
 			if (!currentDniAdmin) {
 				throw new Error("No se encontró el DNI del administrador actual");
 			}
-            const params = new URLSearchParams({
-                accion,
-                dni_admin: currentDniAdmin,
-                dni,
-                motivo: datos.motivo || 'Actualización administrativa',
-                ...(accion === 'estado' && { estado: datos.estado || '' }),
-                ...(accion === 'password' && { password: datos.password || '' }),
-                ...(accion === 'categoria' && { categoria: datos.categoria || '' }),
-            })
-            const response = await authApi.get(`/update?${params.toString()}`);
+            const response = await authApi.post(`/update`, {
+				accion,
+				dni_admin: currentDniAdmin,
+				dni,
+				motivo: datos.motivo || 'Actualización administrativa',
+				estado: accion === 'estado' ? datos.estado : undefined,
+				password: accion === 'password' ? datos.password : undefined,
+				categoria: accion === 'categoria' ? datos.categoria : undefined,
+			});
             if (response.data && response.data.admin) {
-                toast.success(response.data.message);
-                await getAdministradores(); // Actualizar la lista de administradores después de la actualización
+                toast.success(response.data.message || 'Actualización exitosa');
+                await getAdministradores();
                 const updatedAdmin = administradores.find(admin => admin.dni_admin === dni);
                 if (updatedAdmin) {
                     return updatedAdmin
