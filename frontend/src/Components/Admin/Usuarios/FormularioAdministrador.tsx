@@ -206,7 +206,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 									onChange={(e) =>
 										updateField("categoria", e.target.value as Administrador["categoria"])
 									}
-									className="w-full p-2 border border-purple-300 rounded"
+									className="w-full p-2 border border-purple-300 rounded outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 ease-in-out"
 									disabled={isLoading}
 								>
 									<option value="admin">Administrador</option>
@@ -227,7 +227,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 									onChange={(e) =>
 										updateField("motivo", e.target.value)
 									}
-									className="w-full p-2 border border-purple-300 rounded"
+									className="w-full p-2 border border-purple-300 rounded outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 ease-in-out"
 									placeholder="Indique el motivo para cambiar la categoría"
 									required
 									rows={3}
@@ -244,7 +244,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 							<div className="flex gap-2 mt-2">
 								<button
 									type="submit"
-									className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors"
+									className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors duration-300 ease-in-out cursor-pointer"
 									disabled={
 										isLoading ||
 										formData.categoria ===
@@ -261,7 +261,7 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 								<button
 									type="button"
 									onClick={onCancel}
-									className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
+									className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition-colors duration-300 ease-in-out cursor-pointer"
 									disabled={isLoading}
 								>
 									Cancelar
