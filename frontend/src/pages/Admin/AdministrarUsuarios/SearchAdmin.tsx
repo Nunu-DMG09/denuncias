@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { Loader } from "../../../Components/Loaders/Loader";
 import { useSearchAdmin } from "../../../hooks/Admin/useSearchAdmin";
 import { getEstadoColor, getTypeColor } from "../../../utils";
+import { SearchAdminLoader } from "../../../Components/Loaders/SearchAdminLoader";
 
 export const SearchAdmin = () => {
     const { 
@@ -98,6 +99,11 @@ export const SearchAdmin = () => {
                                 </div>
                             </div>
                         )}
+                        {
+                            loading && (
+                                <SearchAdminLoader />
+                            )
+                        }
                         {dniAdmin && adminData && !loading && !error && (
                             <div className="animate__animated animate__fadeIn">
                                 <h4 className="text-lg font-medium text-gray-800 mb-4">
