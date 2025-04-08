@@ -227,7 +227,7 @@ class AdminController extends BaseController
                 'id' => $this->generateId('historialAdmin'),
                 'realizado_por' => $dni_admin,
                 'dni_admin' => $dni,
-                'fecha' => date('Y-m-d H:i:s'),
+                'fecha_accion' => date('Y-m-d H:i:s'),
                 'accion' => $accion,
                 'motivo' => $motivo
             ];
