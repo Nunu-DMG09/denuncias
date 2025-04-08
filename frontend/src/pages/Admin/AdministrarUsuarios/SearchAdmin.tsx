@@ -107,8 +107,8 @@ export const SearchAdmin = () => {
                                 <div className="bg-white rounded-lg shadow border border-gray-100 overflow-hidden">
                                     <div className="p-6">
                                         <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                                            <div className="bg-gray-100 h-24 w-24 rounded-full flex items-center justify-center">
-                                                <i className="fas fa-user text-4xl text-gray-400"></i>
+                                            <div className="bg-blue-200 h-24 w-24 rounded-full flex items-center justify-center">
+                                                <i className="fas fa-user text-4xl text-(--secondary-color)"></i>
                                             </div>
 
                                             <div className="flex-1">
@@ -134,13 +134,13 @@ export const SearchAdmin = () => {
                                             </h5>
                                             <div className="flex flex-wrap gap-3">
                                                 <button
-                                                    className="bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 px-3 py-2 rounded flex items-center gap-2 transition-colors duration-200"
+                                                    className="cursor-pointer bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 px-3 py-2 rounded flex items-center gap-2 transition-colors duration-200"
                                                 >
                                                     <i className="fas fa-key text-sm"></i>
                                                     <span>Cambiar contraseña</span>
                                                 </button>
                                                 <button
-                                                    className={`px-3 py-2 rounded flex items-center gap-2 transition-colors duration-200 ${
+                                                    className={`cursor-pointer px-3 py-2 rounded flex items-center gap-2 transition-colors duration-200 ${
                                                         adminData.estado === 'activo'
                                                             ? 'bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700'
                                                             : 'bg-green-50 hover:bg-green-100 text-green-600 hover:text-green-700'
@@ -150,7 +150,7 @@ export const SearchAdmin = () => {
                                                     <span>{adminData.estado === 'activo' ? 'Desactivar' : 'Activar'}</span>
                                                 </button>
                                                 <button
-                                                    className="bg-purple-50 hover:bg-purple-100 text-purple-600 hover:text-purple-700 px-3 py-2 rounded flex items-center gap-2 transition-colors duration-200"
+                                                    className="cursor-pointer bg-purple-50 hover:bg-purple-100 text-purple-600 hover:text-purple-700 px-3 py-2 rounded flex items-center gap-2 transition-colors duration-200"
                                                 >
                                                     <i className="fas fa-tags text-sm"></i>
                                                     <span>Cambiar categoría</span>
