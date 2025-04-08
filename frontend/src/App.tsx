@@ -12,16 +12,16 @@ import FormularioDenuncia from "./Components/Form/FormDenuncia";
 import { ProtectedRoute } from "./Components/ProtectedRoute";
 // Páginas Admin
 import { Login } from "./pages/Admin/Login";
-import { Denuncias } from "./pages/Admin/Denuncias";
+import { Denuncias } from "./pages/Admin/Denuncias/Denuncias";
 import { DashboardAdmin } from "./pages/Admin/Dashboard";
 import { AdminsHistorial } from "./pages/Admin/AdminsHistorial";
 import AdministrarUsuarios from "./pages/Admin/AdministrarUsuarios/AdministrarUsuarios";
-import { DenunciasRecibidas } from "./pages/Admin/DenunciasRecibidas";
+import { DenunciasRecibidas } from "./pages/Admin/Denuncias/DenunciasRecibidas";
 // Páginas Generales
 import { TrackingDenuncia } from "./pages/Tracking/TrackingDenuncia";
 import { Unauthorized } from "./pages/Unauthorized";
 import { NotFound } from "./pages/404";
-import { SearchDenuncia } from "./pages/Admin/SearchDenuncia";
+import { SearchDenuncia } from "./pages/Admin/Denuncias/SearchDenuncia";
 import { UsersLayout } from "./Components/UsersLayout";
 import { SearchAdmin } from "./pages/Admin/AdministrarUsuarios/SearchAdmin";
 
