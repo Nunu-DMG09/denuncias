@@ -17,9 +17,9 @@ export const SearchAdminLoader = () => {
                 <div className="mt-6 pt-6 border-t border-gray-100">
                     <div className="h-4 bg-gray-200 rounded w-1/3 mb-3"></div>
                     <div className="flex flex-wrap gap-3">
-                        <div className="h-10 bg-gray-200 rounded w-32"></div>
-                        <div className="h-10 bg-gray-200 rounded w-32"></div>
-                        <div className="h-10 bg-gray-200 rounded w-32"></div>
+                        <div className="h-10 bg-blue-200 rounded w-32"></div>
+                        <div className="h-10 bg-red-200 rounded w-32"></div>
+                        <div className="h-10 bg-purple-200 rounded w-32"></div>
                     </div>
                 </div>
             </div>
