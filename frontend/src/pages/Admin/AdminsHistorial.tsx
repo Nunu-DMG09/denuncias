@@ -1,6 +1,6 @@
 import { useAdminHistorial } from "../../hooks/Admin/useAdminHistorial";
 import { LoaderWifi } from "../../Components/Loaders/LoaderWiFi";
-import { formatDateComplete, getActionBadgeColor, getActionName } from "../../utils";
+import { formatDateComplete, getActionBadgeColor, getActionName, getTypeColor } from "../../utils";
 
 export const AdminsHistorial = () => {
 	const { historial, loading, error, refetch } = useAdminHistorial();
@@ -89,7 +89,18 @@ export const AdminsHistorial = () => {
 											className="hover:bg-gray-50 transition-colors"
 										>
 											<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-												{item.dni_admin}
+												{item.admin_nombre || "Nombre no disponible"} 
+												<span
+													className={`px-2 ml-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getTypeColor(
+														item.admin_categoria || "default"
+													)}`}
+												>
+													{item.admin_categoria === "admin"
+														? "Administrador"
+														: item.admin_categoria === "super_admin"
+														? "Super Admin."
+														: "-"}
+												</span>
 											</td>
 											<td className="px-6 py-4 whitespace-nowrap">
 												<span
@@ -97,7 +108,7 @@ export const AdminsHistorial = () => {
 														item.accion
 													)}`}
 												>
-													{getActionName(item.accion)}
+													{getActionName(item.accion || "No Proporcionado")}
 												</span>
 											</td>
 											<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">

@@ -9,6 +9,8 @@ interface HistorialAdmins {
 	accion: string;
 	motivo: string;
 	fecha_accion: string;
+	admin_nombre: string;
+	admin_categoria: string;
 }
 export const useAdminHistorial = () => {
 	const [historial, setHistorial] = useState<HistorialAdmins[]>([]);
@@ -20,13 +22,21 @@ export const useAdminHistorial = () => {
 		setError(null);
 		try {
 			const response = await authApi.get("/history");
-			if (response.data) {
+			if (response.data && response.data.error) {
+				setHistorial([]);
+				setError(null);
+				toast.info(response.data.error || 'No se encontraron registros en el historial');
+				return;
+			}
+			if (response.data && Array.isArray(response.data)) {
 				setHistorial(response.data);
+				setError(null);
 				toast.success("Historial cargado correctamente", {
 					id: "historial-success",
 				});
 			} else {
-				const errorMsg = "No se encontraron registros en el historial";
+				setHistorial([]);
+				const errorMsg = "Formato de respuesta inesperado";
 				setError(errorMsg);
 				toast.warning(errorMsg);
 			}
