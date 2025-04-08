@@ -333,3 +333,44 @@ export const getEstadoIcon = (estado: string) => {
 			return 'fa-question-circle';
 	}
 }
+export const getActionBadgeColor = (action: string) => {
+	switch(action) {
+		case 'estado':
+			return 'bg-amber-100 text-amber-800';
+		case 'password':
+			return 'bg-blue-100 text-blue-800';
+		case 'categoria':
+			return 'bg-purple-100 text-purple-800';
+		case 'crear_admin':
+			return 'bg-green-100 text-green-800';
+		default:
+			return 'bg-gray-100 text-gray-800';
+	}
+};
+export const getActionName = (action: string) => {
+	switch(action) {
+		case 'estado':
+			return 'Cambio de estado';
+		case 'password':
+			return 'Cambio de contraseña';
+		case 'categoria':
+			return 'Cambio de categoría';
+		case 'crear_admin':
+			return 'Creación de administrador';
+		default:
+			return action.replace(/_/g, ' ');
+	}
+};
+export const formatDateComplete = (dateString: string) => {
+	if (!dateString) return "Fecha no disponible";
+
+	const options: Intl.DateTimeFormatOptions = {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: true,
+	};
+	return new Date(dateString).toLocaleDateString("es-ES", options).replace(",", " -");
+};
