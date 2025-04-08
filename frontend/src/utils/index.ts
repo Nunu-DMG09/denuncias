@@ -1,102 +1,142 @@
-// Para validar tamaño de archivos y tipos de archivos permitidos
 import { toast } from "sonner";
 import { Adjunto, FormData } from "../types";
-export const MB = 1048576;
-export const MAX_SIZE_BYTES = MB * 20;
-export const MAX_FILES = 5;
 
+/**
+ * ========================================================
+ * SECCIÓN 1: GESTIÓN Y VALIDACIÓN DE ARCHIVOS
+ * ========================================================
+ * Constantes y funciones para validar archivos adjuntos,
+ * comprobar tamaños, extensiones permitidas y mostrar errores.
+ */
+
+// Constantes para tamaño de archivos
+export const MB = 1048576; // 1 Megabyte en bytes
+export const MAX_SIZE_BYTES = MB * 20; // Máximo 20MB permitidos
+export const MAX_FILES = 5; // Máximo 5 archivos permitidos
+
+// Tipos de archivos permitidos con sus extensiones correspondientes
 export const ALLOWED_FILE_TYPES = {
-	"image/jpeg": [".jpg", ".jpeg"],
-	"image/png": [".png"],
-	"image/gif": [".gif"],
-	"image/bmp": [".bmp"],
-	"image/webp": [".webp"],
-	"image/avif": [".avif"],
-	"image/svg+xml": [".svg"],
-	"application/pdf": [".pdf"],
-	"application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
-		".docx",
-	],
-	"application/msword": [".doc"],
-	"text/plain": [".txt"],
-	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
-		".xlsx",
-	],
-	"video/mp4": [".mp4"],
-	"video/x-msvideo": [".avi"],
-	"video/x-matroska": [".mkv"],
-	"video/quicktime": [".mov"],
-	"audio/mpeg": [".mp3"],
-	"audio/wav": [".wav"],
-	"audio/ogg": [".ogg"],
+    "image/jpeg": [".jpg", ".jpeg"],
+    "image/png": [".png"],
+    "image/gif": [".gif"],
+    "image/bmp": [".bmp"],
+    "image/webp": [".webp"],
+    "image/avif": [".avif"],
+    "image/svg+xml": [".svg"],
+    "application/pdf": [".pdf"],
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+    "application/msword": [".doc"],
+    "text/plain": [".txt"],
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
+    "video/mp4": [".mp4"],
+    "video/x-msvideo": [".avi"],
+    "video/x-matroska": [".mkv"],
+    "video/quicktime": [".mov"],
+    "audio/mpeg": [".mp3"],
+    "audio/wav": [".wav"],
+    "audio/ogg": [".ogg"],
 };
+
+// Lista plana de todas las extensiones permitidas
 export const ALLOWED_EXTENSIONS = Object.values(ALLOWED_FILE_TYPES)
-	.flat()
-	.join(", ");
+    .flat()
+    .join(", ");
+
+/**
+ * Verifica si el tipo de archivo está entre los permitidos
+ * @param file Archivo a verificar
+ * @returns boolean que indica si el tipo está permitido
+ */
 export const isFileTypeAllowed = (file: File) => {
-	return Object.keys(ALLOWED_FILE_TYPES).includes(file.type);
+    return Object.keys(ALLOWED_FILE_TYPES).includes(file.type);
 };
 
+/**
+ * Calcula el tamaño total de una colección de archivos adjuntos
+ * @param files Array de archivos adjuntos
+ * @returns Tamaño total en bytes
+ */
 export const calcTotalSize = (files: Adjunto[]) => {
-	return files.reduce((tot, file) => tot + file.file.size, 0);
+    return files.reduce((tot, file) => tot + file.file.size, 0);
 };
 
+/**
+ * Convierte bytes a megabytes
+ * @param bytes Tamaño en bytes
+ * @returns Tamaño en megabytes
+ */
 export const bytesToMB = (bytes: number) => {
-	return bytes / MB;
+    return bytes / MB;
 };
 
+/**
+ * Valida la adición de un nuevo archivo a la colección existente
+ * Comprueba límites de tamaño, cantidad y tipos permitidos
+ * @param currentFiles Archivos actuales en el formulario
+ * @param newFile Nuevo archivo a añadir
+ * @returns Objeto con el resultado de la validación y detalles
+ */
 export const validateFileAddition = (
-	currentFiles: Adjunto[],
-	newFile: Adjunto
+    currentFiles: Adjunto[],
+    newFile: Adjunto
 ) => {
-	const currentSize = calcTotalSize(currentFiles);
-	const newFileSize = newFile.file.size;
-	const totalSize = currentSize + newFileSize;
+    const currentSize = calcTotalSize(currentFiles);
+    const newFileSize = newFile.file.size;
+    const totalSize = currentSize + newFileSize;
 
-	const isOverSizeLimit = totalSize > MAX_SIZE_BYTES;
-	const isOverFileLimit = currentFiles.length >= MAX_FILES;
-	const isValidFileType = isFileTypeAllowed(newFile.file);
-	if (isOverSizeLimit || isOverFileLimit) {
-		return {
-			isValid: false,
-			isOverSizeLimit,
-			isOverFileLimit,
-			isInvalidType: false,
-			currentSizeMB: bytesToMB(currentSize),
-			newFileSizeMB: bytesToMB(newFileSize),
-			totalSizeMB: bytesToMB(totalSize),
-			remainingSizeMB: 20 - bytesToMB(currentSize),
-			fileType: newFile.file.type,
-		};
-	}
-	if (!isValidFileType) {
-		return {
-			isValid: false,
-			isOverSizeLimit: false,
-			isOverFileLimit: false,
-			isInvalidType: true,
-			currentSizeMB: bytesToMB(calcTotalSize(currentFiles)),
-			newFileSizeMB: bytesToMB(newFile.file.size),
-			totalSizeMB: 0,
-			remainingSizeMB: 0,
-			fileType: newFile.file.type,
-		};
-	}
+    const isOverSizeLimit = totalSize > MAX_SIZE_BYTES;
+    const isOverFileLimit = currentFiles.length >= MAX_FILES;
+    const isValidFileType = isFileTypeAllowed(newFile.file);
+    
+    // Lógica de validación con respuesta detallada
+    if (isOverSizeLimit || isOverFileLimit) {
+        return {
+            isValid: false,
+            isOverSizeLimit,
+            isOverFileLimit,
+            isInvalidType: false,
+            currentSizeMB: bytesToMB(currentSize),
+            newFileSizeMB: bytesToMB(newFileSize),
+            totalSizeMB: bytesToMB(totalSize),
+            remainingSizeMB: 20 - bytesToMB(currentSize),
+            fileType: newFile.file.type,
+        };
+    }
+    
+    if (!isValidFileType) {
+        return {
+            isValid: false,
+            isOverSizeLimit: false,
+            isOverFileLimit: false,
+            isInvalidType: true,
+            currentSizeMB: bytesToMB(calcTotalSize(currentFiles)),
+            newFileSizeMB: bytesToMB(newFile.file.size),
+            totalSizeMB: 0,
+            remainingSizeMB: 0,
+            fileType: newFile.file.type,
+        };
+    }
 
-	return {
-		isValid: true,
-		isOverSizeLimit: false,
-		isOverFileLimit: false,
-		isInvalidType: false,
-		currentSizeMB: bytesToMB(currentSize),
-		newFileSizeMB: bytesToMB(newFileSize),
-		totalSizeMB: bytesToMB(totalSize),
-		remainingSizeMB: 20 - bytesToMB(totalSize),
-		fileType: newFile.file.type,
-	};
+    return {
+        isValid: true,
+        isOverSizeLimit: false,
+        isOverFileLimit: false,
+        isInvalidType: false,
+        currentSizeMB: bytesToMB(currentSize),
+        newFileSizeMB: bytesToMB(newFileSize),
+        totalSizeMB: bytesToMB(totalSize),
+        remainingSizeMB: 20 - bytesToMB(totalSize),
+        fileType: newFile.file.type,
+    };
 };
 
-// Para validaciones entre páginas
+/**
+ * ========================================================
+ * SECCIÓN 2: VALIDACIÓN DE FORMULARIOS
+ * ========================================================
+ * Constantes y funciones para validaciones entre páginas
+ */
+
 export const TOTAL_PAGES = 4;
 
 export const SUBMIT_PAGE = 3;
@@ -264,7 +304,14 @@ export const validatePage = (
 	}
 };
 
-// Para formato de fechas
+/**
+ * ========================================================
+ * SECCIÓN 3: FORMATO DE FECHAS
+ * ========================================================
+ * Funciones para formatear fechas en diferentes formatos.
+ */
+
+// Para formato de fechas simple
 export const formatDate = (date: Date) => {
 	if (!date) return "";
 
@@ -274,6 +321,28 @@ export const formatDate = (date: Date) => {
 
 	return `${day}/${month}/${year}`;
 };
+// Para formatos de fechas completas
+export const formatDateComplete = (dateString: string) => {
+	if (!dateString) return "Fecha no disponible";
+
+	const options: Intl.DateTimeFormatOptions = {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: true,
+	};
+	return new Date(dateString).toLocaleDateString("es-ES", options).replace(",", " -");
+};
+
+/**
+ * ========================================================
+ * SECCIÓN 4: COLORES DINÁMICOS
+ * ========================================================
+ * Funciones para obtener colores dinámicos según el estado,
+ * tipo o acción.
+ */
 
 // Para colores dinamicos
 export const getStatusColor = (status: string) => {
@@ -360,17 +429,4 @@ export const getActionName = (action: string) => {
 		default:
 			return action.replace(/_/g, ' ');
 	}
-};
-export const formatDateComplete = (dateString: string) => {
-	if (!dateString) return "Fecha no disponible";
-
-	const options: Intl.DateTimeFormatOptions = {
-		year: "numeric",
-		month: "long",
-		day: "numeric",
-		hour: "2-digit",
-		minute: "2-digit",
-		hour12: true,
-	};
-	return new Date(dateString).toLocaleDateString("es-ES", options).replace(",", " -");
 };
