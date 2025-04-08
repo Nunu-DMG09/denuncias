@@ -223,7 +223,7 @@ export const CreateAdminForm: React.FC<CreateAdminFormProps> = ({
                         </button>
                         <button
                             type="submit"
-                            className="px-5 py-2.5 cursor-pointer bg-(--secondary-color) text-white rounded-md hover:bg-(--primary-color) transition-colors duration-200 flex items-center gap-2 shadow-sm"
+                            className="disabled:cursor-not-allowed disabled:bg-gray-400 px-5 py-2.5 cursor-pointer bg-(--secondary-color) text-white rounded-md hover:bg-(--primary-color) transition-colors duration-200 flex items-center gap-2 shadow-sm"
                             disabled={isLoading}
                         >
                             {isLoading ? (
