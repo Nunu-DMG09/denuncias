@@ -4,6 +4,7 @@ import { Loader } from "../../../Components/Loaders/Loader";
 import { useSearchAdmin } from "../../../hooks/Admin/useSearchAdmin";
 import { getEstadoColor, getTypeColor } from "../../../utils";
 import { SearchAdminLoader } from "../../../Components/Loaders/SearchAdminLoader";
+import FormularioAdministrador from "../../../Components/Admin/Usuarios/FormularioAdministrador";
 
 export const SearchAdmin = () => {
     const { 
@@ -12,7 +13,12 @@ export const SearchAdmin = () => {
         handleSearch, 
         adminData, 
         loading, 
-        error 
+        error,
+        editAction,
+        showForm,
+        handleEditStart,
+        handleEditCancel,
+        
     } = useSearchAdmin();
 
     return (
@@ -104,7 +110,7 @@ export const SearchAdmin = () => {
                                 <SearchAdminLoader />
                             )
                         }
-                        {dniAdmin && adminData && !loading && !error && (
+                        {adminData && !loading && !error && !showForm && (
                             <div className="animate__animated animate__fadeIn">
                                 <h4 className="text-lg font-medium text-gray-800 mb-4">
                                     Información del Administrador
@@ -141,6 +147,7 @@ export const SearchAdmin = () => {
                                             <div className="flex flex-wrap gap-3">
                                                 <button
                                                     className="cursor-pointer bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 px-3 py-2 rounded flex items-center gap-2 transition-colors duration-200"
+                                                    onClick={() => handleEditStart('password')}
                                                 >
                                                     <i className="fas fa-key text-sm"></i>
                                                     <span>Cambiar contraseña</span>
@@ -151,18 +158,39 @@ export const SearchAdmin = () => {
                                                             ? 'bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700'
                                                             : 'bg-green-50 hover:bg-green-100 text-green-600 hover:text-green-700'
                                                     }`}
+                                                    onClick={() => handleEditStart('state')}
                                                 >
                                                     <i className={`fas ${adminData.estado === 'activo' ? 'fa-toggle-off' : 'fa-toggle-on'} text-sm`}></i>
                                                     <span>{adminData.estado === 'activo' ? 'Desactivar' : 'Activar'}</span>
                                                 </button>
                                                 <button
                                                     className="cursor-pointer bg-purple-50 hover:bg-purple-100 text-purple-600 hover:text-purple-700 px-3 py-2 rounded flex items-center gap-2 transition-colors duration-200"
+                                                    onClick={() => handleEditStart('role')}
                                                 >
                                                     <i className="fas fa-tags text-sm"></i>
                                                     <span>Cambiar categoría</span>
                                                 </button>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {showForm && editAction && adminData && (
+                            <div className="animate__animated animate__fadeIn mt-4">
+                                <div className="bg-white rounded-lg shadow border border-gray-100 overflow-hidden">
+                                    <div className="p-4">
+                                        <h4 className="text-lg font-medium text-gray-800 mb-4">
+                                            {editAction === 'password' ? 'Cambiar Contraseña' : 
+                                            editAction === 'state' ? (adminData.estado === 'activo' ? 'Desactivar Cuenta' : 'Activar Cuenta') : 
+                                            'Cambiar Categoría'}
+                                        </h4>
+                                        
+                                        <FormularioAdministrador 
+                                            admin={adminData}
+                                            actionType={editAction}
+                                            onCancel={handleEditCancel}
+                                        />
                                     </div>
                                 </div>
                             </div>

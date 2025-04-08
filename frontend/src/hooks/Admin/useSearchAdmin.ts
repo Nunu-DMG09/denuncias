@@ -9,9 +9,15 @@ export const useSearchAdmin = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [adminData, setAdminData] = useState<Administrador | null>(null);
+    const [editAction, setEditAction] = useState<'password' | 'state' | 'role' | null>(null);
+    const [showForm, setShowForm] = useState(false);
 
     const handleDniChange = (value: string) => {
-        setDniAdmin(value);
+        const dniFormatted = value.replace(/\D/g, ""); 
+        setDniAdmin(dniFormatted);
+        if (adminData) {
+            setAdminData(null);
+        }
     }
     
     const getAdminInfo = useCallback(async (dni: string) => {
@@ -45,6 +51,25 @@ export const useSearchAdmin = () => {
             setAdminData(data);
         }
     }
+    const handleEditStart = (action: 'password' | 'state' | 'role') => {
+        setEditAction(action);
+        setShowForm(true);
+    }
+    const handleEditCancel = () => {
+        setShowForm(false);
+        setEditAction(null);
+    }
+    const handleEditComplete = async () => {
+        setShowForm(false);
+        setEditAction(null);
+        if (dniAdmin) {
+            const updatedData = await getAdminInfo(dniAdmin);
+            if (updatedData) {
+                setAdminData(updatedData);
+                toast.success("Actualización exitosa");
+            }
+        }
+    }
     return {
         loading,
         dniAdmin,
@@ -52,5 +77,10 @@ export const useSearchAdmin = () => {
         adminData,
         handleDniChange,
         handleSearch,
+        editAction,
+        showForm,
+        handleEditComplete,
+        handleEditCancel,
+        handleEditStart
     }
 }
