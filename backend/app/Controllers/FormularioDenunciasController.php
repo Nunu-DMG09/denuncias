@@ -180,7 +180,7 @@ class FormularioDenunciasController extends ResourceController
             'denuncia_id' => $id_denuncia,
             'estado' => 'registrado',
             'comentario' => 'Denuncia registrada',
-            'fecha_actualizacion' => date('Y-m-d H:i:s')
+            'fecha_actualizacion' => date('Y-m-d H:i:s', strtotime('-5 hours'))
         ])) {
         }
         return $this->response->setJSON([
