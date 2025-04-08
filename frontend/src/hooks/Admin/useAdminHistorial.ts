@@ -9,6 +9,8 @@ interface HistorialAdmins {
 	accion: string;
 	motivo: string;
 	fecha_accion: string;
+	admin_nombre: string;
+	admin_categoria: string;
 }
 export const useAdminHistorial = () => {
 	const [historial, setHistorial] = useState<HistorialAdmins[]>([]);
