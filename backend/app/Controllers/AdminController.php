@@ -339,7 +339,10 @@ class AdminController extends BaseController
                     'error' => 'No tiene permisos para eliminar administradores'
                 ])->setStatusCode(403);
             }
-            $history = $this->historialAdminModel->findAll();
+            $history = $this->historialAdminModel
+                ->select('historial_admin.*, administradores.nombres AS admin_nombre, administradores.categoria AS admin_categoria')
+                ->join('administradores', 'historial_admin.dni_admin = administradores.dni_admin', 'left')
+                ->findAll();
             if (!$history) {
                 return $this->response->setJSON(['error' => 'No se encontraron registros de historial'], 404);
             }
