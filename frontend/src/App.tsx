@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthenticationContext";
 // Componentes
 import { Layout } from "./Components/Layout";
 import { DenunciasLayout } from "./Components/DenunciasLayout";
+import { UsersLayout } from "./Components/UsersLayout";
 import FormularioDenuncia from "./Components/Form/FormDenuncia";
 import { ProtectedRoute } from "./Components/ProtectedRoute";
 // Páginas Admin
@@ -17,13 +18,12 @@ import { DashboardAdmin } from "./pages/Admin/Dashboard";
 import { AdminsHistorial } from "./pages/Admin/AdminsHistorial";
 import AdministrarUsuarios from "./pages/Admin/AdministrarUsuarios/AdministrarUsuarios";
 import { DenunciasRecibidas } from "./pages/Admin/Denuncias/DenunciasRecibidas";
+import { SearchAdmin } from "./pages/Admin/AdministrarUsuarios/SearchAdmin";
+import { SearchDenuncia } from "./pages/Admin/Denuncias/SearchDenuncia";
 // Páginas Generales
 import { TrackingDenuncia } from "./pages/Tracking/TrackingDenuncia";
 import { Unauthorized } from "./pages/Unauthorized";
 import { NotFound } from "./pages/404";
-import { SearchDenuncia } from "./pages/Admin/Denuncias/SearchDenuncia";
-import { UsersLayout } from "./Components/UsersLayout";
-import { SearchAdmin } from "./pages/Admin/AdministrarUsuarios/SearchAdmin";
 
 function App() {
 	return (
