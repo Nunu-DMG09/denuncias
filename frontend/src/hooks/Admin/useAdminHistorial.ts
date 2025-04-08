@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { authApi } from "../../utils/apiAxios";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { usePagination } from "../usePagination";
 interface HistorialAdmins {
 	id: string;
 	realizado_por: string;
@@ -12,10 +13,19 @@ interface HistorialAdmins {
 	admin_nombre: string;
 	admin_categoria: string;
 }
-export const useAdminHistorial = () => {
+export const useAdminHistorial = (itemsPerPage: number = 10) => {
 	const [historial, setHistorial] = useState<HistorialAdmins[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
+
+	const {
+		currentPage,
+		totalPages,
+		handleCurrentPage,
+		handlePageChange,
+		getVisiblePageNumbers,
+		paginatedItems: historialPaginado,
+	} = usePagination(historial, itemsPerPage);
 
 	const getHistorial = useCallback(async () => {
 		setLoading(true);
@@ -25,11 +35,19 @@ export const useAdminHistorial = () => {
 			if (response.data && response.data.error) {
 				setHistorial([]);
 				setError(null);
-				toast.info(response.data.error || 'No se encontraron registros en el historial');
+				toast.info(
+					response.data.error ||
+						"No se encontraron registros en el historial"
+				);
 				return;
 			}
 			if (response.data && Array.isArray(response.data)) {
-				setHistorial(response.data);
+				const sortedData = [...response.data].sort(
+					(a, b) =>
+						new Date(b.fecha_accion).getTime() -
+						new Date(a.fecha_accion).getTime()
+				);
+				setHistorial(sortedData);
 				setError(null);
 				toast.success("Historial cargado correctamente", {
 					id: "historial-success",
@@ -74,5 +92,16 @@ export const useAdminHistorial = () => {
 		getHistorial();
 	}, [getHistorial]);
 
-	return { historial, loading, error, refetch: getHistorial };
+	return {
+		historial,
+		loading,
+		error,
+		refetch: getHistorial,
+		historialPaginado,
+		currentPage,
+		totalPages,
+		handleCurrentPage,
+		handlePageChange,
+		getVisiblePageNumbers,
+	};
 };

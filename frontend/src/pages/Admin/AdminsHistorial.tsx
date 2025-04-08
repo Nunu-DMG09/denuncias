@@ -1,9 +1,25 @@
 import { useAdminHistorial } from "../../hooks/Admin/useAdminHistorial";
 import { LoaderWifi } from "../../Components/Loaders/LoaderWiFi";
-import { formatDateComplete, getActionBadgeColor, getActionName, getTypeColor } from "../../utils";
+import {
+	formatDateComplete,
+	getActionBadgeColor,
+	getActionName,
+	getTypeColor,
+} from "../../utils";
 
 export const AdminsHistorial = () => {
-	const { historial, loading, error, refetch } = useAdminHistorial();
+	const {
+		historialPaginado,
+		loading,
+		error,
+		refetch,
+		currentPage,
+		totalPages,
+		handleCurrentPage,
+		handlePageChange,
+		getVisiblePageNumbers,
+	} = useAdminHistorial(10); // 10 items por página
+
 	return (
 		<div className="container mx-auto my-8 px-4">
 			<div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-500 animate__animated animate__fadeIn">
@@ -45,88 +61,159 @@ export const AdminsHistorial = () => {
 							</div>
 						</div>
 					)}
-					{!loading && !error && historial.length > 0 && (
-						<div className="overflow-x-auto">
-							<table className="min-w-full divide-y divide-gray-200 bg-white rounded-lg shadow">
-								<thead className="bg-(--primary-color) text-white">
-									<tr>
-										<th
-											scope="col"
-											className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-										>
-											Afectado
-										</th>
-										<th
-											scope="col"
-											className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-										>
-											Acción
-										</th>
-										<th
-											scope="col"
-											className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-										>
-											Realizada por
-										</th>
-										<th
-											scope="col"
-											className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-										>
-											Motivo
-										</th>
-										<th
-											scope="col"
-											className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
-										>
-											Fecha
-										</th>
-									</tr>
-								</thead>
-								<tbody className="bg-white divide-y divide-gray-200">
-									{historial.map((item) => (
-										<tr
-											key={item.id}
-											className="hover:bg-gray-50 transition-colors"
-										>
-											<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-												{item.admin_nombre || "Nombre no disponible"} 
-												<span
-													className={`px-2 ml-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getTypeColor(
-														item.admin_categoria || "default"
-													)}`}
-												>
-													{item.admin_categoria === "admin"
-														? "Administrador"
-														: item.admin_categoria === "super_admin"
-														? "Super Admin."
-														: "-"}
-												</span>
-											</td>
-											<td className="px-6 py-4 whitespace-nowrap">
-												<span
-													className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getActionBadgeColor(
-														item.accion
-													)}`}
-												>
-													{getActionName(item.accion || "No Proporcionado")}
-												</span>
-											</td>
-											<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-												{item.realizado_por}
-											</td>
-											<td className="px-6 py-4 whitespace-nowrap text-sm">
-												{item.motivo}
-											</td>
-											<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-												{formatDateComplete(item.fecha_accion)}
-											</td>
+					{!loading && !error && historialPaginado.length > 0 && (
+						<>
+							<div className="overflow-x-auto">
+								<table className="min-w-full divide-y divide-gray-200 bg-white rounded-lg shadow">
+									<thead className="bg-(--primary-color) text-white">
+										<tr>
+											<th
+												scope="col"
+												className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+											>
+												Afectado
+											</th>
+											<th
+												scope="col"
+												className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+											>
+												Acción
+											</th>
+											<th
+												scope="col"
+												className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+											>
+												Realizada por
+											</th>
+											<th
+												scope="col"
+												className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+											>
+												Motivo
+											</th>
+											<th
+												scope="col"
+												className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+											>
+												Fecha
+											</th>
 										</tr>
-									))}
-								</tbody>
-							</table>
-						</div>
+									</thead>
+									<tbody className="bg-white divide-y divide-gray-200">
+										{historialPaginado.map((item) => (
+											<tr
+												key={item.id}
+												className="hover:bg-gray-50 transition-colors"
+											>
+												<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+													{item.admin_nombre ||
+														"Nombre no disponible"}
+													<span
+														className={`px-2 ml-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getTypeColor(
+															item.admin_categoria ||
+																"default"
+														)}`}
+													>
+														{item.admin_categoria ===
+														"admin"
+															? "Administrador"
+															: item.admin_categoria ===
+															  "super_admin"
+															? "Super Admin."
+															: "-"}
+													</span>
+												</td>
+												<td className="px-6 py-4 whitespace-nowrap">
+													<span
+														className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getActionBadgeColor(
+															item.accion
+														)}`}
+													>
+														{getActionName(
+															item.accion ||
+																"No Proporcionado"
+														)}
+													</span>
+												</td>
+												<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+													{item.realizado_por}
+												</td>
+												<td className="px-6 py-4 whitespace-nowrap text-sm">
+													{item.motivo}
+												</td>
+												<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+													{formatDateComplete(
+														item.fecha_accion
+													)}
+												</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
+							</div>
+							{totalPages > 1 && (
+								<div className="flex justify-center mt-6">
+									<nav
+										className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+										aria-label="Paginación"
+									>
+										<button
+											onClick={() =>
+												handleCurrentPage("prev")
+											}
+											disabled={currentPage === 1}
+											className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 ${
+												currentPage === 1
+													? "bg-gray-100 text-gray-400 cursor-not-allowed"
+													: "bg-white text-gray-500 hover:bg-gray-50"
+											}`}
+										>
+											<span className="sr-only">
+												Anterior
+											</span>
+											<i className="fas fa-chevron-left text-xs"></i>
+										</button>
+
+										{getVisiblePageNumbers().map((page) => (
+											<button
+												key={page}
+												onClick={() =>
+													handlePageChange(page)
+												}
+												className={`relative inline-flex items-center px-4 py-2 border ${
+													currentPage === page
+														? "z-10 bg-(--primary-color) border-(--primary-color) text-white"
+														: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
+												}`}
+											>
+												{page}
+											</button>
+										))}
+
+										<button
+											onClick={() =>
+												handleCurrentPage("next")
+											}
+											disabled={
+												currentPage === totalPages
+											}
+											className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 ${
+												currentPage === totalPages
+													? "bg-gray-100 text-gray-400 cursor-not-allowed"
+													: "bg-white text-gray-500 hover:bg-gray-50"
+											}`}
+										>
+											<span className="sr-only">
+												Siguiente
+											</span>
+											<i className="fas fa-chevron-right text-xs"></i>
+										</button>
+									</nav>
+								</div>
+							)}
+						</>
 					)}
-					{!loading && !error && historial.length === 0 && (
+					{!loading && !error && historialPaginado.length === 0 && (
 						<div className="text-center py-16 bg-gray-50 rounded-lg">
 							<div className="text-5xl text-gray-300 mb-3">
 								<i className="fas fa-history"></i>
