@@ -75,25 +75,23 @@ class GestionController extends BaseController
     }
     public function dashboard()
     {
-        $db = \Config\Database::connect();
-        $denuncias = $db->table('denuncias')
+        $denuncias = $this->denunciasModel
             ->select('
-            denuncias.tracking_code, 
-            denuncias.estado, 
-            denuncias.fecha_registro, 
-            COALESCE(denunciantes.nombres, "Anónimo") as denunciante_nombre, 
-            COALESCE(denunciantes.numero_documento, "00000000") as denunciante_dni, 
-            denunciados.nombre as denunciado_nombre, 
-            denunciados.numero_documento as denunciado_dni, 
-            motivos.nombre as motivo
-        ')
+                denuncias.tracking_code, 
+                denuncias.estado, 
+                denuncias.fecha_registro, 
+                COALESCE(denunciantes.nombres, "Anónimo") as denunciante_nombre, 
+                COALESCE(denunciantes.numero_documento, "00000000") as denunciante_dni, 
+                denunciados.nombre as denunciado_nombre, 
+                denunciados.numero_documento as denunciado_dni, 
+                motivos.nombre as motivo
+            ')
             ->join('denunciantes', 'denuncias.denunciante_id = denunciantes.id', 'left')
             ->join('denunciados', 'denuncias.denunciado_id = denunciados.id')
-            ->where('denuncias.dni_admin', null)
             ->join('motivos', 'denuncias.motivo_id = motivos.id')
-            ->where('denuncias.estado', ['registrado'])
-            ->get()
-            ->getResult();
+            ->where('denuncias.dni_admin', null)
+            ->where('denuncias.estado', 'registrado')
+            ->findAll();
 
         return $this->response->setJSON($denuncias);
     }
@@ -151,8 +149,8 @@ class GestionController extends BaseController
     {
         $data = $this->request->getGet();
         $dni_admin = $data['dni_admin'];
-        $db = \Config\Database::connect();
-        $denuncias = $db->table('denuncias')
+
+        $denuncias = $this->denunciasModel
             ->select('
             denuncias.tracking_code, 
             denuncias.estado, 
@@ -166,17 +164,16 @@ class GestionController extends BaseController
             denunciados.numero_documento as denunciado_dni, 
             motivos.nombre as motivo,
             seguimiento_denuncias.estado as seguimiento_estado,
-            seguimiento_denuncias.comentario as seguimiento_comentario,
+            seguimiento_denuncias.comentario as seguimiento_comentario
         ')
             ->join('denunciantes', 'denuncias.denunciante_id = denunciantes.id', 'left')
             ->join('denunciados', 'denuncias.denunciado_id = denunciados.id')
             ->join('motivos', 'denuncias.motivo_id = motivos.id')
             ->join('seguimiento_denuncias', 'denuncias.id = seguimiento_denuncias.denuncia_id', 'left')
-            ->groupBy('denuncias.id')
             ->where('denuncias.dni_admin', $dni_admin)
             ->whereIn('denuncias.estado', ['en proceso', 'recibida'])
-            ->get()
-            ->getResult();
+            ->groupBy('denuncias.id')
+            ->findAll();
 
         return $this->response->setJSON($denuncias);
     }
@@ -316,8 +313,7 @@ class GestionController extends BaseController
         $data = $this->request->getGet();
         $dni = $data['numero_documento'];
 
-        $db = \Config\Database::connect();
-        $denuncias = $db->table('denuncias')
+        $denuncias = $this->denunciasModel
             ->select('
                 denuncias.id,
                 denuncias.tracking_code,
@@ -339,8 +335,7 @@ class GestionController extends BaseController
             ->join('denunciados', 'denuncias.denunciado_id = denunciados.id')
             ->join('denunciantes', 'denuncias.denunciante_id = denunciantes.id', 'left')
             ->where('denunciados.numero_documento', $dni)
-            ->get()
-            ->getResult();
+            ->findAll();
 
         if (empty($denuncias)) {
             return $this->response->setJSON([
