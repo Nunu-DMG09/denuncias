@@ -1,8 +1,8 @@
-import { authApi } from "../../utils/apiAxios";
+import { authApi } from "../../../utils/apiAxios";
 import { toast } from "sonner";
 import { useState, useCallback } from "react";
 import { AxiosError } from "axios";
-import { Administrador } from "../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios";
+import { Administrador } from "../../../types";
 
 export const useSearchAdmin = () => {
     const [dniAdmin, setDniAdmin] = useState<string>("");

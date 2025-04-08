@@ -1,8 +1,7 @@
-import { Administrador } from "../../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios";
+import { Action, Administrador } from "../../../types";
 import { Loader } from "../../Loaders/Loader";
-import useEditAdmin from "../../../hooks/Admin/useEditAdmin";
+import useEditAdmin from "../../../hooks/Admin/Users/useEditAdmin";
 
-export type Action = "password" | "state" | "role";
 interface FormularioAdministradorProps {
 	admin: Administrador | null;
 	actionType: Action;

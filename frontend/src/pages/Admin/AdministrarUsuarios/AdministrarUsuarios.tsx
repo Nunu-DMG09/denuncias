@@ -3,13 +3,7 @@ import TablaAdministradores from '../../../Components/Admin/Usuarios/TablaAdmini
 import FormularioAdministrador from '../../../Components/Admin/Usuarios/FormularioAdministrador';
 import { AddIcon, AdminsIcon, BackIcon } from '../../../Components/Icons';
 import { CreateAdminForm } from '../../../Components/Admin/Usuarios/CreateAdminForm';
-
-export interface Administrador {
-    dni_admin: string;
-    nombres: string;
-    categoria: 'admin' | 'super_admin';
-    estado: 'activo' | 'inactivo';
-}
+import { Administrador } from '../../../types';
 
 const AdministrarUsuarios = () => {
     const [mostrarFormulario, setMostrarFormulario] = useState(false);

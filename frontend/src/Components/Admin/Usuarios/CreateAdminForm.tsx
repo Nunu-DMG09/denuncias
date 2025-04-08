@@ -1,5 +1,5 @@
 import { Loader } from "../../Loaders/Loader";
-import { useEditAdmin } from "../../../hooks/Admin/useEditAdmin";
+import { useEditAdmin } from "../../../hooks/Admin/Users/useEditAdmin";
 import React, { useState } from "react";
 
 interface CreateAdminFormProps {

@@ -1,7 +1,7 @@
 import { BackIcon } from "../../../Components/Icons";
 import { Link } from "react-router";
 import { Loader } from "../../../Components/Loaders/Loader";
-import { useSearchAdmin } from "../../../hooks/Admin/useSearchAdmin";
+import { useSearchAdmin } from "../../../hooks/Admin/Users/useSearchAdmin";
 import { getEstadoColor, getTypeColor } from "../../../utils";
 import { SearchAdminLoader } from "../../../Components/Loaders/SearchAdminLoader";
 import FormularioAdministrador from "../../../Components/Admin/Usuarios/FormularioAdministrador";
@@ -18,7 +18,6 @@ export const SearchAdmin = () => {
         showForm,
         handleEditStart,
         handleEditCancel,
-        
     } = useSearchAdmin();
 
     return (

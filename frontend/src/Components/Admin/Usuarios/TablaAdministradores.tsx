@@ -1,5 +1,5 @@
 import React from 'react';
-import useAdministrador from '../../../hooks/Admin/useAdministrador';
+import useAdministrador from '../../../hooks/Admin/Users/useAdministrador';
 import FormularioAdministrador from './FormularioAdministrador';
 import { LoaderWifi } from "../../../Components/Loaders/LoaderWiFi";
 import { AdminRow } from './AdminRow';

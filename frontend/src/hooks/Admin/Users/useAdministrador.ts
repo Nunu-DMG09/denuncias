@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { authApi } from "../../utils/apiAxios";
+import { authApi } from "../../../utils/apiAxios";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
-import { Administrador } from "../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios";
-import { useAuthContext } from "./useAuthContext";
+import { Administrador } from "../../../types";
+import { useAuthContext } from "../useAuthContext";
 interface AdminData {
 	dni_admin: string;
 	nombres: string;

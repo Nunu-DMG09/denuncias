@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { Administrador } from "../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios";
+import { Administrador, Action } from "../../../types";
 import useAdministrador from "./useAdministrador";
 import { toast } from "sonner";
-import { getDNIData } from "../../services/apisDocs";
-import { Action } from "../../Components/Admin/Usuarios/FormularioAdministrador";
+import { getDNIData } from "../../../services/apisDocs";
+
 
 interface FormData {
 	dni_admin: string;

@@ -1,4 +1,4 @@
-import { Administrador } from "../../../pages/Admin/AdministrarUsuarios/AdministrarUsuarios";
+import { Administrador } from "../../../types";
 import {
 	getEstadoColor,
 	getEstadoColorBtn,

@@ -73,3 +73,10 @@ export interface DenunciaRecibida {
 	seguimiento_comentario: string;
 	motivo_otro:string
 }
+export interface Administrador {
+    dni_admin: string;
+    nombres: string;
+    categoria: 'admin' | 'super_admin';
+    estado: 'activo' | 'inactivo';
+}
+export type Action = "password" | "state" | "role";
