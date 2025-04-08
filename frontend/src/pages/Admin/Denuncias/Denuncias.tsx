@@ -1,11 +1,10 @@
-import React from "react";
-import { ExpandedRecievedRow } from "../../Components/Admin/ExpandedRecievedRow";
-import { RecievedRows } from "../../Components/Admin/RecievedRows";
-import { DocumentIcon } from "../../Components/Icons";
-import { useAdminDenunciasRecibidas } from "../../hooks/Admin/Denuncias/useAdminDenunciasRecibidas";
-import { DenunciasLoader } from "../../Components/Loaders/DenunciasLoader";
+import { useAdminDenuncias } from "../../../hooks/Admin/Denuncias/useAdminDenuncias";
+import { getStatusColor } from "../../../utils";
+import { useAuthContext } from "../../../hooks/Admin/useAuthContext";
+import { DenunciasWarn } from "../../../Components/Errors/DenunciasWarn";
+import { DenunciasLoader } from "../../../Components/Loaders/DenunciasLoader";
 
-export const DenunciasRecibidas = () => {
+export const Denuncias = () => {
 	const itemsPerPage = 10;
 	const {
 		loading,
@@ -15,24 +14,14 @@ export const DenunciasRecibidas = () => {
 		handleCurrentPage,
 		getVisiblePageNumbers,
 		handlePageChange,
-		expandedRows,
-		toggleRowExpansion,
-		handleEdit,
-		editingRows,
-		handleCommentChange,
-		commentInputs,
-		handleStateChange,
-		stateRows,
-		submitUpdateDenuncia,
-		downloadAdjuntos,
-		isDownloading
-	} = useAdminDenunciasRecibidas(itemsPerPage);
-
+		recibirDenuncia
+	} = useAdminDenuncias(itemsPerPage);
+	const { user } = useAuthContext();
 	return (
 		<div className="container mx-auto my-8 px-4">
 			<div className="flex justify-between items-center mb-6">
 				<h2 className="text-2xl font-bold text-gray-800">
-					Denuncias Recibidas
+					Denuncias Disponibles
 				</h2>
 				{denunciasPaginadas.length > 0 && (
 					<div className="text-sm text-gray-600">
@@ -41,25 +30,16 @@ export const DenunciasRecibidas = () => {
 					</div>
 				)}
 			</div>
+
 			{loading ? (
 				<DenunciasLoader />
 			) : denunciasPaginadas.length === 0 ? (
-				<div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg shadow">
-					<div className="text-center">
-						<DocumentIcon />
-						<h3 className="mt-2 text-lg font-medium text-gray-900">
-							No tienes denuncias asignadas
-						</h3>
-						<p className="mt-1 text-base text-gray-500">
-							No se encontraron denuncias asignadas a tu cuenta.
-						</p>
-					</div>
-				</div>
+				<DenunciasWarn />
 			) : (
 				<>
 					<div className="overflow-x-auto bg-white rounded-lg shadow">
 						<table className="min-w-full divide-y divide-gray-200">
-							<thead className="bg-(--primary-color) bg-opacity-10">
+							<thead className="bg-(--primary-color) text-white">
 								<tr>
 									<th
 										scope="col"
@@ -93,7 +73,7 @@ export const DenunciasRecibidas = () => {
 									</th>
 									<th
 										scope="col"
-										className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider"
+										className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
 									>
 										Acción
 									</th>
@@ -101,31 +81,53 @@ export const DenunciasRecibidas = () => {
 							</thead>
 							<tbody className="bg-white divide-y divide-gray-200">
 								{denunciasPaginadas.map((denuncia) => (
-									<React.Fragment key={denuncia.tracking_code}>
-										<RecievedRows
-											denuncia={denuncia}
-											isExpanded={!!expandedRows[denuncia.tracking_code]}
-											onToggle={toggleRowExpansion}
-										/>
-										{expandedRows[
-											denuncia.tracking_code
-										] && (
-											<ExpandedRecievedRow
-												key={`details-${denuncia.tracking_code}`}
-												denuncia={denuncia}
-												onClose={toggleRowExpansion}
-												onEdit={handleEdit}
-												isEditing={!!editingRows[denuncia.tracking_code]}
-												commentValue = {commentInputs[denuncia.tracking_code]}
-												onCommentChange={handleCommentChange}
-												onStateChange={handleStateChange}
-												stateValue={stateRows[denuncia.tracking_code]}
-												onUpdate={submitUpdateDenuncia}
-												onDownload={downloadAdjuntos}
-												isDownloading={!!isDownloading[denuncia.tracking_code]}
-											/>
-										)}
-									</React.Fragment>
+									<tr
+										key={denuncia.tracking_code}
+										className="hover:bg-gray-50 transition duration-150"
+									>
+										<td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+											{denuncia.tracking_code}
+										</td>
+										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+											<div className="text-sm font-medium text-gray-900">
+												{denuncia.motivo}
+											</div>
+											<div className="text-sm text-gray-500 truncate max-w-xs">
+												Contra:{" "}
+												{denuncia.denunciado_nombre}
+											</div>
+										</td>
+										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+											{new Date(
+												denuncia.fecha_registro
+											).toLocaleDateString()}
+										</td>
+										<td className="px-6 py-4 whitespace-nowrap">
+											<span
+												className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+													denuncia.estado
+												)}`}
+											>
+												{denuncia.estado.replace(
+													"_",
+													" "
+												)}
+											</span>
+										</td>
+										<td className="px-6 capitalize py-4 whitespace-nowrap text-sm text-gray-500">
+											{denuncia.denunciante_nombre}
+										</td>
+										<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+											<button
+												onClick={() =>
+													recibirDenuncia( user?.dni_admin || '',denuncia.tracking_code)}
+												className="bg-(--secondary-color) cursor-pointer text-white px-3 py-1.5 rounded hover:bg-(--primary-color) transition duration-300 ease-in-out flex items-center"
+											>
+												<i className="fas fa-plus mr-1.5"></i>
+												Recibir
+											</button>
+										</td>
+									</tr>
 								))}
 							</tbody>
 						</table>
@@ -159,6 +161,7 @@ export const DenunciasRecibidas = () => {
 									</button>
 								))}
 							</div>
+
 							<button
 								onClick={() => handleCurrentPage("next")}
 								disabled={currentPage === totalPages}

@@ -1,8 +1,8 @@
-import { useSearchDenuncia } from "../../hooks/Admin/Denuncias/useSearchDenuncia";
-import { FiltersIcon, InfoIcon } from "../../Components/Icons";
-import { SearchForm } from "../../Components/Admin/Search/SearchForm";
-import { Filters } from "../../Components/Admin/Search/Filters";
-import { DenunciaCard } from "../../Components/Admin/Search/DenunciaCard";
+import { useSearchDenuncia } from "../../../hooks/Admin/Denuncias/useSearchDenuncia";
+import { FiltersIcon, InfoIcon } from "../../../Components/Icons";
+import { SearchForm } from "../../../Components/Admin/Search/SearchForm";
+import { Filters } from "../../../Components/Admin/Search/Filters";
+import { DenunciaCard } from "../../../Components/Admin/Search/DenunciaCard";
 export const SearchDenuncia = () => {
 	const {
 		numeroDocumento,
