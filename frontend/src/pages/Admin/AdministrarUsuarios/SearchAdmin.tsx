@@ -75,7 +75,7 @@ export const SearchAdmin = () => {
                                 </div>
                                 <button
                                     onClick={handleSearch}
-                                    className="bg-(--secondary-color) cursor-pointer text-white px-6 py-2.5 rounded-md hover:bg-(--primary-color) transition-colors duration-300 ease-in-out flex items-center gap-2 shadow-sm"
+                                    className="disabled:bg-gray-400 disabled:cursor-not-allowed bg-(--secondary-color) cursor-pointer text-white px-6 py-2.5 rounded-md hover:bg-(--primary-color) transition-colors duration-300 ease-in-out flex items-center gap-2 shadow-sm"
                                     disabled={loading || !dniAdmin.trim() || dniAdmin.length !== 8}
                                 >
                                     {loading ? (
