@@ -1,6 +1,9 @@
 import { Link } from "react-router";
+import { useLocation } from "react-router";
 
 export const NotFound = () => {
+	const location = useLocation();
+	const isAdminSection = location.pathname.includes("/admin");
 	return (
 		<div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
 			<h1 className="text-6xl font-bold text-gray-800 mb-4">404</h1>
@@ -18,12 +21,16 @@ export const NotFound = () => {
 				>
 					Volver al inicio
 				</Link>
-				<Link
-					to="/admin/dashboard"
-					className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 transition-all duration-300 ease-in-out"
-				>
-					Ir al Dashboard
-				</Link>
+				{
+					isAdminSection && (
+					<Link
+						to="/admin/dashboard"
+						className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 transition-all duration-300 ease-in-out"
+					>
+						Ir al Dashboard
+					</Link>
+					)
+				}
 			</div>
 		</div>
 	);
