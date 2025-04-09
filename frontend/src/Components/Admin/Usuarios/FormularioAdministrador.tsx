@@ -20,20 +20,21 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 	// Renderizado condicional según el tipo de acción
 	const renderActionForm = () => {
 		if (!admin) {
-            return (
-                <div className="p-4 bg-red-50 rounded-md">
-                    <p className="text-red-600">
-                        Error: No se ha seleccionado un administrador para editar.
-                    </p>
-                    <button
-                        onClick={onCancel}
-                        className="mt-4 bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
-                    >
-                        Volver
-                    </button>
-                </div>
-            );
-        }
+			return (
+				<div className="p-4 bg-red-50 rounded-md">
+					<p className="text-red-600">
+						Error: No se ha seleccionado un administrador para
+						editar.
+					</p>
+					<button
+						onClick={onCancel}
+						className="mt-4 bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition-colors"
+					>
+						Volver
+					</button>
+				</div>
+			);
+		}
 		switch (actionType) {
 			case "password":
 				return (
@@ -70,7 +71,10 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 									placeholder="Confirmar contraseña"
 									value={formData.confirmPassword}
 									onChange={(e) =>
-										updateField("confirmPassword", e.target.value)
+										updateField(
+											"confirmPassword",
+											e.target.value
+										)
 									}
 									className="w-full p-2 border border-blue-300 rounded outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out"
 									disabled={isLoading}
@@ -154,6 +158,10 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 							<p className="text-red-600 text-xs mb-2">{error}</p>
 						)}
 
+						<div className="text-right text-xs text-gray-500">
+							Asegúrese de dar un motivo para ejecutar la acción.
+						</div>
+
 						<div className="flex gap-2 mt-4">
 							<button
 								onClick={() => handleSubmit()}
@@ -161,8 +169,8 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 									admin?.estado === "activo"
 										? "bg-red-600 hover:bg-red-700"
 										: "bg-green-600 hover:bg-green-700"
-								} text-white px-4 py-2 rounded transition-colors duration-300 ease-in-out cursor-pointer`}
-								disabled={isLoading || !formData.motivo?.trim()}
+								} disabled:cursor-not-allowed disabled:bg-gray-500 text-white px-4 py-2 rounded transition-colors duration-300 ease-in-out cursor-pointer`}
+								disabled={isLoading || !formData.motivo.trim()}
 							>
 								{isLoading ? (
 									<Loader isBtn={true} />
@@ -203,7 +211,11 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 								<select
 									value={formData.categoria}
 									onChange={(e) =>
-										updateField("categoria", e.target.value as Administrador["categoria"])
+										updateField(
+											"categoria",
+											e.target
+												.value as Administrador["categoria"]
+										)
 									}
 									className="w-full p-2 border border-purple-300 rounded outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 ease-in-out"
 									disabled={isLoading}
@@ -239,16 +251,20 @@ const FormularioAdministrador: React.FC<FormularioAdministradorProps> = ({
 									{error}
 								</p>
 							)}
+							<div className="text-right text-xs text-gray-500">
+								Asegúrese de cambiar la categoría y dar un
+								motivo para ejecutar la acción.
+							</div>
 
 							<div className="flex gap-2 mt-2">
 								<button
 									type="submit"
-									className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors duration-300 ease-in-out cursor-pointer"
+									className="disabled:cursor-not-allowed disabled:bg-gray-500 bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition-colors duration-300 ease-in-out cursor-pointer"
 									disabled={
 										isLoading ||
 										formData.categoria ===
 											admin?.categoria ||
-										!formData.motivo?.trim()
+										!formData.motivo.trim()
 									}
 								>
 									{isLoading ? (

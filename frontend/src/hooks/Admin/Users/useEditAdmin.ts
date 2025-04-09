@@ -4,7 +4,6 @@ import useAdministrador from "./useAdministrador";
 import { toast } from "sonner";
 import { getDNIData } from "../../../services/apisDocs";
 
-
 interface FormData {
 	dni_admin: string;
 	nombres: string;
@@ -12,10 +11,14 @@ interface FormData {
 	confirmPassword: string;
 	categoria: Administrador["categoria"];
 	estado: Administrador["estado"];
-	motivo?: string;
+	motivo: string;
 }
 
-export const useEditAdmin = (admin: Administrador | null, onComplete: () => void, actionType: Action | 'create') => {
+export const useEditAdmin = (
+	admin: Administrador | null,
+	onComplete: () => void,
+	actionType: Action | "create"
+) => {
 	const {
 		loading: apiLoading,
 		updateAdminPassword,
@@ -155,8 +158,7 @@ export const useEditAdmin = (admin: Administrador | null, onComplete: () => void
 					formData.categoria,
 					formData.motivo
 				);
-
-				if (onComplete) onComplete();
+				window.location.reload();
 				return true;
 			}
 			return false;
@@ -164,13 +166,7 @@ export const useEditAdmin = (admin: Administrador | null, onComplete: () => void
 			console.error("Error al actualizar categoría:", error);
 			return false;
 		}
-	}, [
-		formData.categoria,
-		formData.motivo,
-		admin,
-		updateAdminRole,
-		onComplete,
-	]);
+	}, [formData.categoria, formData.motivo, admin, updateAdminRole]);
 
 	// Gestión de cambio de estado
 	const handleStatusSubmit = useCallback(async () => {
@@ -188,8 +184,7 @@ export const useEditAdmin = (admin: Administrador | null, onComplete: () => void
 					newStatus,
 					formData.motivo
 				);
-
-				if (onComplete) onComplete();
+				window.location.reload(); // Recargar la página para reflejar el cambio de estado
 				return true;
 			}
 			return false;
@@ -197,7 +192,7 @@ export const useEditAdmin = (admin: Administrador | null, onComplete: () => void
 			console.error("Error al actualizar estado:", error);
 			return false;
 		}
-	}, [formData.motivo, admin, updateAdminStatus, onComplete]);
+	}, [formData.motivo, admin, updateAdminStatus]);
 
 	const handleCreateSubmit = useCallback(async () => {
 		if (formData.dni_admin.length !== 8) {
@@ -214,7 +209,7 @@ export const useEditAdmin = (admin: Administrador | null, onComplete: () => void
 				nombres: formData.nombres,
 				password: formData.password,
 				categoria: formData.categoria,
-				estado: 'activo',
+				estado: "activo",
 			});
 
 			// Limpiar formulario
