@@ -61,7 +61,7 @@ class FormularioDenunciasController extends ResourceController
     public function correo($correo, $code)
     {
         $email = \Config\Services::email();
-        $email->setFrom('futboleraoficialsenati@gmail.com', 'Municipalidad Distrital de José Leonardo Ortiz');
+        $email->setFrom('munijloenlinea@gmail.com', 'Municipalidad Distrital de José Leonardo Ortiz');
         $email->setTo($correo);
         $email->setSubject('Código de Seguimiento de Denuncia');
         $email->setMessage("
@@ -81,7 +81,7 @@ class FormularioDenunciasController extends ResourceController
                     background-color: #CDDFEC';>$code</p>
                 <p>Por favor, conserve este código para futuras consultas.</p>
                 <p>Para realizar el seguimiento de su denuncia, puede ingresar al siguiente enlace:</p>
-                <p><a href='http://localhost:5173/seguimiento/$code'>Seguimiento</a></p>
+                <p><a href='http://localhost:5173/tracking-denuncia?codigo=$code'>Seguimiento</a></p>
                 <p>Atentamente,</p>
                 <p><strong>Municipalidad Distrital de José Leonardo Ortiz</strong></p>
             </body>

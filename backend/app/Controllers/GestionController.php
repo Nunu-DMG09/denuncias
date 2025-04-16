@@ -30,7 +30,7 @@ class GestionController extends BaseController
     public function correo($correo, $code, $estado, $comentario)
     {
         $email = \Config\Services::email();
-        $email->setFrom('futboleraoficialsenati@gmail.com', 'Municipalidad Distrital de José Leonardo Ortiz');
+        $email->setFrom('munijloenlinea@gmail.com', 'Municipalidad Distrital de José Leonardo Ortiz');
         $email->setTo($correo);
         $email->setSubject('Código de Seguimiento de Denuncia');
         $email->setMessage("
