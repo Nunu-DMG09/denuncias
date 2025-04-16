@@ -1,14 +1,15 @@
 import axios from "axios";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 const api = axios.create({
-	baseURL: "http://localhost/denuncias/backend/public/form/", // placeholder de la url del backend
+	baseURL: `"${BASE_URL}/form/"`,
 	headers: {
 		"Content-Type": "application/json",
 	},
 	timeout: 5000,
 });
 export const apiTracking = axios.create({
-	baseURL: "http://localhost/denuncias/backend/public/api/",
+	baseURL: `${BASE_URL}/api/`,
 	headers: {
 		"Content-Type": "application/json",
 	},
@@ -45,7 +46,7 @@ api.interceptors.response.use(
 	}
 );
 export const authApi = axios.create({
-	baseURL: "http://localhost/denuncias/backend/public/admin",
+	baseURL: `${BASE_URL}/admin`,
 	headers: {
 		"Content-Type": "application/json",
 	},
