@@ -34,7 +34,7 @@ class Cors extends BaseConfig
          *   - ['http://localhost:8080']
          *   - ['https://www.example.com']
          */
-        'allowedOrigins' => ['http://localhost:5173'],
+        'allowedOrigins' => [], // Lo inicializaremos en el constructor
 
         /**
          * Origin regex patterns for the `Access-Control-Allow-Origin` header.
@@ -68,7 +68,7 @@ class Cors extends BaseConfig
          *
          * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers
          */
-        'allowedHeaders' => ['http://localhost:5173'],
+        'allowedHeaders' => ['Origin', 'Content-Type', 'Accept', 'Authorization', 'X-Requested-With'],
 
         /**
          * Set headers to expose.
@@ -93,13 +93,23 @@ class Cors extends BaseConfig
          *
          * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods
          */
-        'allowedMethods' => ['GET', 'POST', 'PUT', 'DELETE'],
+        'allowedMethods' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 
         /**
          * Set how many seconds the results of a preflight request can be cached.
          *
          * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Max-Age
          */
-        'maxAge' => 0
+        'maxAge' => 86400
     ];
+
+    /**
+     * Constructor for loading configuration from environment variables.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $frontendOrigin = env('frontend.baseURL', 'http://localhost:5173');
+        $this->default['allowedOrigins'] = [$frontendOrigin];
+    }
 }

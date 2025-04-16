@@ -29,6 +29,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 	const [loading, setLoading] = useState(true);
 	const navigate = useNavigate();
 
+	const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 	useEffect(() => {
 		const token = localStorage.getItem("auth_token");
 		if (token) {
@@ -59,7 +61,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 	const login = async (dni: string, password: string) => {
 		try {
 			const response = await axios.post(
-				"http://localhost/denuncias/backend/public/login",
+				`${BASE_URL}/login`,
 				{
 					dni_admin: dni,
 					password: password,
@@ -107,7 +109,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 			const token = localStorage.getItem("auth_token");
 			if (!token || !isAuthenticated) return;
 			const response = await axios.get(
-				"http://localhost/denuncias/backend/public/admin-info",
+				`${BASE_URL}/admin-info`,
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
