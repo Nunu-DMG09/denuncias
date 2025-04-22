@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Denuncias\Controllers;
+
+use App\Controllers\BaseController;
 
 class CorsController extends BaseController
 {

@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Denuncias\Client;
 
-use CodeIgniter\RESTful\ResourceController;
-use App\Models\AdjuntosModel;
-use App\Models\DenunciadosModel;
-use App\Models\DenunciasModel;
-use App\Models\DenunciantesModel;
-use App\Models\MotivosModel;
-use App\Models\SeguimientoDenunciasModel;
+use App\Controllers\BaseController;
+use App\Models\Denuncias\AdjuntosModel;
+use App\Models\Denuncias\DenunciadosModel;
+use App\Models\Denuncias\DenunciasModel;
+use App\Models\Denuncias\DenunciantesModel;
+use App\Models\Denuncias\MotivosModel;
+use App\Models\Denuncias\SeguimientoDenunciasModel;
 
-class FormularioDenunciasController extends ResourceController
+class FormularioController extends BaseController
 {
     private $adjuntosModel;
     private $denunciadosModel;
