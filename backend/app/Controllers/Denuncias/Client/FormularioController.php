@@ -106,6 +106,14 @@ class FormularioController extends BaseController
         $id_denunciado = $this->generateId('denunciados');
         $id_denuncia = $this->generateId('denuncias');
         $id_seguimiento = $this->generateId('seguimientoDenuncias');
+        // Si la denuncia ya se encuentra registrada, no se puede volver a registrar
+        if ($this->denunciasModel->where('tracking_code', $code)->first()) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Denuncia ya registrada previamente',
+                'tracking_code' => $code,
+            ]);
+        }
         //Mandar correo con el código de seguimiento
         if (!$denuncia['es_anonimo']) {
             $this->correo($denunciante['email'], $code);

@@ -1,9 +1,15 @@
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
-import api, {apiTracking} from "../utils/apiAxios";
+import api, { apiTracking } from "../utils/apiAxios";
 import { AxiosError } from "axios";
 import { validateFileAddition, ALLOWED_EXTENSIONS } from "../utils";
-import type { Denunciado, Denunciante, FormData, Motivo, TrackingData } from "../types.d";
+import type {
+	Denunciado,
+	Denunciante,
+	FormData,
+	Motivo,
+	TrackingData,
+} from "../types.d";
 
 interface DenunciasContextType {
 	currentPage: number;
@@ -25,7 +31,7 @@ interface DenunciasContextType {
 	nextPage: () => void;
 	prevPage: () => void;
 	submitForm: () => Promise<boolean>;
-	consultarTracking: (trackingCode: string) => Promise<boolean>
+	consultarTracking: (trackingCode: string) => Promise<boolean>;
 	resetTracking: () => void;
 }
 
@@ -154,7 +160,9 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 				)}MB`
 			);
 			setTimeout(() => {
-				toast.info("Si tienes archivos demasiados pesados pero consideras que son necesarios, sube un archivo .txt con el link de algún repositorio o carpeta donde adjuntes todos los archivos.");
+				toast.info(
+					"Si tienes archivos demasiados pesados pero consideras que son necesarios, sube un archivo .txt con el link de algún repositorio o carpeta donde adjuntes todos los archivos."
+				);
 			}, 3000);
 			return;
 		}
@@ -211,24 +219,39 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		setError(null);
 		try {
 			const submissionData = prepareDataForSubmission();
-			const formDataToSend = new FormData()
-			formDataToSend.append('data', JSON.stringify(submissionData))
+			const formDataToSend = new FormData();
+			formDataToSend.append("data", JSON.stringify(submissionData));
 			formData.adjuntos.forEach((adjunto, i) => {
-				formDataToSend.append(`file${i}`, adjunto.file)
-			})
+				formDataToSend.append(`file${i}`, adjunto.file);
+			});
 			const response = await api.post("/create", formDataToSend, {
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},
 			});
-			if (response.data?.tracking_code) {
+			const data = response.data;
+			if (
+				data.success &&
+				data.message === "Denuncia ya registrada previamente"
+			) {
 				setFormData((prev) => ({
 					...prev,
-					tracking_code: response.data.tracking_code,
+					tracking_code: data.tracking_code,
 				}));
+				toast.success("Denuncia enviada correctamente");
+				return true;
 			}
-			toast.success("Denuncia enviada correctamente");
-			return true;
+			if (data.success && data.tracking_code) {
+				setFormData((prev) => ({
+					...prev,
+					tracking_code: data.tracking_code,
+				}));
+				toast.success("Denuncia enviada correctamente");
+				return true;
+			}
+			setError(data.error || "No se pudo registrar la denuncia.");
+			toast.error(data.error || "No se pudo registrar la denuncia.");
+			return false;
 		} catch (err: unknown) {
 			const axiosError = err as AxiosError<{ message?: string }>;
 			const errorMsg =
@@ -259,7 +282,8 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 				setTrackingData(data);
 				return true;
 			} else {
-				const errorMsg = data?.message || "Error al consultar el código";
+				const errorMsg =
+					data?.message || "Error al consultar el código";
 				setTrackingError(errorMsg);
 				toast.error(errorMsg);
 				return false;
@@ -276,13 +300,13 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({
 		} finally {
 			setTrackingLoading(false);
 		}
-	}
+	};
 
 	const resetTracking = () => {
 		setTrackingData(null);
 		setTrackingError(null);
 		setTrackingLoading(false);
-	}
+	};
 
 	const value: DenunciasContextType = {
 		currentPage,
