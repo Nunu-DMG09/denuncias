@@ -1,27 +1,25 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Denuncias;
 
 use CodeIgniter\Model;
 
-class DenunciadosModel extends Model
+class AdministradoresModel extends Model
 {
     protected $DBGroup = 'default';
-    protected $table = 'denunciados';
-    protected $primaryKey = 'id';
+    protected $table = 'administradores';
+    protected $primaryKey = 'dni_admin';
     protected $useAutoIncrement = false;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
     protected $allowedFields =
     [
-        'id',
-        'nombre',
-        'numero_documento',
-        'tipo_documento',
-        'representante_legal',
-        'razon_social',
-        'cargo'
+        'dni_admin',
+        'nombres',
+        'password',
+        'categoria',
+        'estado'
     ];
     // Dates
     protected $useTimestamps = false;
@@ -33,35 +31,42 @@ class DenunciadosModel extends Model
     // Validation
     protected $validationRules      = 
     [
-        'nombre' =>[
-            'label' => 'nombre',
+        'dni_admin' =>[
+            'label' => 'dni_admin',
             'rules' => 'required'
         ],
-        'numero_documento' =>[
-            'label' => 'numero_documento',
+        'nombres' =>[
+            'label' => 'nombres',
             'rules' => 'required'
         ],
-        'tipo_documento' =>[
-            'label' => 'tipo_documento',
+        'password' =>[
+            'label' => 'password',
             'rules' => 'required'
         ],
-        'cargo' =>[
-            'label' => 'cargo',
+        'categoria' =>[
+            'label' => 'categoria',
+            'rules' => 'required'
+        ],
+        'estado' =>[
+            'label' => 'estado',
             'rules' => 'required'
         ]
     ];
     protected $validationMessages   = 
     [
-        'nombre' =>[
+        'dni_admin' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
-        'numero_documento' =>[
+        'nombres' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
-        'tipo_documento' =>[
+        'password' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
-        'cargo' =>[
+        'categoria' =>[
+            'required' => 'El campo {field} es obligatorio'
+        ],
+        'estado' =>[
             'required' => 'El campo {field} es obligatorio'
         ]
     ];

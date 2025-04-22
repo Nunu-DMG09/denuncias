@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Denuncias;
 
 use CodeIgniter\Model;
 
-class AdjuntosModel extends Model
+class SeguimientoDenunciasModel extends Model
 {
     protected $DBGroup = 'default';
-    protected $table = 'adjuntos';
+    protected $table = 'seguimiento_denuncias';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = false;
+    protected $useAutoIncrement = true;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
@@ -17,16 +17,16 @@ class AdjuntosModel extends Model
     [
         'id',
         'denuncia_id',
-        'file_path',
-        'file_name',
-        'file_type',
-        'fecha_subida'
+        'estado',
+        'comentario',
+        'fecha_actualizacion',
+        'dni_admin'
     ];
     // Dates
     protected $useTimestamps = false;
-    protected $dateFormat = 'datetime';
-    protected $createdField = 'fecha_subida';
-    protected $updatedField  = false;
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = false;
+    protected $updatedField  = 'fecha_actualizacion';
     protected $deletedField  = false;
 
     // Validation
@@ -36,31 +36,31 @@ class AdjuntosModel extends Model
             'label' => 'denuncia_id',
             'rules' => 'required'
         ],
-        'file_path' =>[
-            'label' => 'file_path',
+        'estado' =>[
+            'label' => 'estado',
             'rules' => 'required'
         ],
-        'file_name' =>[
-            'label' => 'file_name',
+        'comentario' =>[
+            'label' => 'comentario',
             'rules' => 'required'
         ],
-        'file_type' =>[
-            'label' => 'file_type',
+        'fecha_actualizacion' =>[
+            'label' => 'fecha_actualizacion',
             'rules' => 'required'
         ]
     ];
     protected $validationMessages   = 
     [
         'denuncia_id' =>[
-            'required' => 'El campo {field} es obligatorio',
-        ],
-        'file_path' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
-        'file_name' =>[
+        'estado' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
-        'file_type' =>[
+        'comentario' =>[
+            'required' => 'El campo {field} es obligatorio'
+        ],
+        'fecha_actualizacion' =>[
             'required' => 'El campo {field} es obligatorio'
         ]
     ];

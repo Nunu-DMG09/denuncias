@@ -1,26 +1,25 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Denuncias;
 
 use CodeIgniter\Model;
 
-class AdministradoresModel extends Model
+class MotivosModel extends Model
 {
     protected $DBGroup = 'default';
-    protected $table = 'administradores';
-    protected $primaryKey = 'dni_admin';
+    protected $table = 'motivos';
+    protected $primaryKey = 'id';
     protected $useAutoIncrement = false;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
     protected $allowedFields =
     [
-        'dni_admin',
-        'nombres',
-        'password',
-        'categoria',
-        'estado'
+        'id',
+        'nombre',
+        'descripcion'
     ];
+
     // Dates
     protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
@@ -31,42 +30,21 @@ class AdministradoresModel extends Model
     // Validation
     protected $validationRules      = 
     [
-        'dni_admin' =>[
-            'label' => 'dni_admin',
+        'nombre' =>[
+            'label' => 'nombre',
             'rules' => 'required'
         ],
-        'nombres' =>[
-            'label' => 'nombres',
-            'rules' => 'required'
-        ],
-        'password' =>[
-            'label' => 'password',
-            'rules' => 'required'
-        ],
-        'categoria' =>[
-            'label' => 'categoria',
-            'rules' => 'required'
-        ],
-        'estado' =>[
-            'label' => 'estado',
+        'descripcion' =>[
+            'label' => 'descripcion',
             'rules' => 'required'
         ]
     ];
     protected $validationMessages   = 
     [
-        'dni_admin' =>[
+        'nombre' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
-        'nombres' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ],
-        'password' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ],
-        'categoria' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ],
-        'estado' =>[
+        'descripcion' =>[
             'required' => 'El campo {field} es obligatorio'
         ]
     ];

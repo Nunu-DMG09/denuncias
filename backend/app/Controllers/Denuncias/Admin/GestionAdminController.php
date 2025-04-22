@@ -1,31 +1,43 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Denuncias\Admin;
 
 use App\Controllers\BaseController;
-use App\Models\DenunciadosModel;
-use App\Models\DenunciantesModel;
-use App\Models\DenunciasModel;
-use App\Models\SeguimientoDenunciasModel;
-use App\Models\MotivosModel;
-use App\Models\AdjuntosModel;
 
-class GestionController extends BaseController
+use App\Models\Denuncias\DenunciantesModel;
+use App\Models\Denuncias\DenunciasModel;
+use App\Models\Denuncias\SeguimientoDenunciasModel;
+
+class GestionAdminController extends BaseController
 {
-    private $denunciadosModel;
+    // Funciones y constructores para la gestión de denuncias
     private $denunciantesModel;
     private $denunciasModel;
     private $seguimientoDenunciasModel;
-    private $motivosModel;
-    private $adjuntosModel;
     public function __construct()
     {
-        $this->denunciadosModel = new DenunciadosModel();
         $this->denunciantesModel = new DenunciantesModel();
         $this->denunciasModel = new DenunciasModel();
         $this->seguimientoDenunciasModel = new SeguimientoDenunciasModel();
-        $this->motivosModel = new MotivosModel();
-        $this->adjuntosModel = new AdjuntosModel();
+    }
+    public function generateId($table)
+    {
+        $prefixes = [
+            'denuncias' => 'de',
+            'denunciantes' => 'dn',
+            'denunciados' => 'de',
+            'adjuntos' => 'ad',
+            'seguimientoDenuncias' => 'sd'
+        ];
+        if (!isset($prefixes[$table])) {
+            throw new \InvalidArgumentException("Invalid table name: $table");
+        }
+        $model = $this->{$table . 'Model'};
+        $prefix = $prefixes[$table];
+        do {
+            $uuid = $prefix . substr(bin2hex(random_bytes(6)), 0, 6);
+        } while ($model->where('id', $uuid)->first());
+        return $uuid;
     }
     public function correo($correo, $code, $estado, $comentario)
     {
@@ -54,25 +66,7 @@ class GestionController extends BaseController
 
         return $email->send();
     }
-    public function generateId($table)
-    {
-        $prefixes = [
-            'denuncias' => 'de',
-            'denunciantes' => 'dn',
-            'denunciados' => 'de',
-            'adjuntos' => 'ad',
-            'seguimientoDenuncias' => 'sd'
-        ];
-        if (!isset($prefixes[$table])) {
-            throw new \InvalidArgumentException("Invalid table name: $table");
-        }
-        $model = $this->{$table . 'Model'};
-        $prefix = $prefixes[$table];
-        do {
-            $uuid = $prefix . substr(bin2hex(random_bytes(6)), 0, 6);
-        } while ($model->where('id', $uuid)->first());
-        return $uuid;
-    }
+    //Funciones para la gestion de denuncias
     public function dashboard()
     {
         $denuncias = $this->denunciasModel

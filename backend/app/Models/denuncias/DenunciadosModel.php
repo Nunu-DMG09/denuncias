@@ -1,66 +1,67 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Denuncias;
 
 use CodeIgniter\Model;
 
-class SeguimientoDenunciasModel extends Model
+class DenunciadosModel extends Model
 {
     protected $DBGroup = 'default';
-    protected $table = 'seguimiento_denuncias';
+    protected $table = 'denunciados';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = true;
+    protected $useAutoIncrement = false;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
     protected $allowedFields =
     [
         'id',
-        'denuncia_id',
-        'estado',
-        'comentario',
-        'fecha_actualizacion',
-        'dni_admin'
+        'nombre',
+        'numero_documento',
+        'tipo_documento',
+        'representante_legal',
+        'razon_social',
+        'cargo'
     ];
     // Dates
     protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = false;
-    protected $updatedField  = 'fecha_actualizacion';
-    protected $deletedField  = false;
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
 
     // Validation
     protected $validationRules      = 
     [
-        'denuncia_id' =>[
-            'label' => 'denuncia_id',
+        'nombre' =>[
+            'label' => 'nombre',
             'rules' => 'required'
         ],
-        'estado' =>[
-            'label' => 'estado',
+        'numero_documento' =>[
+            'label' => 'numero_documento',
             'rules' => 'required'
         ],
-        'comentario' =>[
-            'label' => 'comentario',
+        'tipo_documento' =>[
+            'label' => 'tipo_documento',
             'rules' => 'required'
         ],
-        'fecha_actualizacion' =>[
-            'label' => 'fecha_actualizacion',
+        'cargo' =>[
+            'label' => 'cargo',
             'rules' => 'required'
         ]
     ];
     protected $validationMessages   = 
     [
-        'denuncia_id' =>[
+        'nombre' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
-        'estado' =>[
+        'numero_documento' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
-        'comentario' =>[
+        'tipo_documento' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
-        'fecha_actualizacion' =>[
+        'cargo' =>[
             'required' => 'El campo {field} es obligatorio'
         ]
     ];
