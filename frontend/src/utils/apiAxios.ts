@@ -6,7 +6,7 @@ const api = axios.create({
 	headers: {
 		"Content-Type": "application/json",
 	},
-	timeout: 5000,
+	timeout: 60000,
 });
 export const apiTracking = axios.create({
 	baseURL: `${BASE_URL}/api/`,
