@@ -50,6 +50,7 @@ export const InfoDenuncia = () => {
 						className="min-h-[3em] max-h-[10em] resize-none field-sizing-content w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
 						placeholder=" "
 						value={formData.descripcion}
+						maxLength={250}
 						onChange={(e) =>
 							updateFormData("descripcion", e.target.value)
 						}
