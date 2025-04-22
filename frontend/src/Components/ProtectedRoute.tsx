@@ -21,7 +21,6 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         if (!loading && isAuthenticated && user) {
             if (user.estado !== 'activo') {
                 toast.error('Tu cuenta está inactiva. Por favor contacta al administrador.');
-                localStorage.removeItem('auth_token');
                 navigate('/admin/login', { replace: true });
             }
         }

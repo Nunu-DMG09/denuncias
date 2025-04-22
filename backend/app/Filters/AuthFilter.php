@@ -12,38 +12,25 @@ class AuthFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        $authHeader = $request->getHeaderLine('Authorization');
-        $token = null;
-        if ($authHeader && str_starts_with($authHeader, 'Bearer ')) {
-            $token = substr($authHeader, 7);
-        } elseif (session()->has('token')) {
-            $token = session()->get('token');
-        }
+        $token = service('request')->getCookie('auth_token');
         if (!$token) {
-            return redirect()->to('/login')->with('error', 'Acceso no autorizado');
+            return service('response')->setStatusCode(401)->setJSON(['error' => 'No autorizado']);
         }
         try {
             $decoded = JWT::decode($token, new Key('your-secret-key', 'HS256'));
             $dni_admin = $decoded->dni_admin;
 
             // Validate admin status and role from the database
-            $administradoresModel = new \App\Models\AdministradoresModel();
+            $administradoresModel = new \App\Models\Denuncias\AdministradoresModel();
             $user = $administradoresModel->find($dni_admin);
 
-            if (!$user || $user['estado'] !== 'activo') {
-                session()->destroy();
-                return redirect()->to('/login')->with('error', 'Usuario inactivo o no autorizado');
-            }
-
-            if ($arguments && !in_array($user['categoria'], $arguments)) {
-                return redirect()->to('/unauthorized')->with('error', 'Permisos insuficientes');
-            }
+            if (!$user || $user['estado'] !== 'activo') return service('response')->setStatusCode(401)->setJSON(['error', 'Usuario inactivo o no autorizado', 'forceLogout' => true]);
+            if ($arguments && !in_array($user['categoria'], $arguments)) return service('response')->setStatusCode(403)->setJSON(['error' => 'Permisos insuficientes']);
 
             session()->set('categoria', $user['categoria']);
             service('request')->setGlobal('user', $user);
         } catch (\Exception $e) {
-            session()->destroy();
-            return redirect()->to('/login')->with('error', 'Token inválido o expirado');
+            return service('response')->setStatusCode(401)->setJSON(['error' => 'Token inválido o expirado', 'forceLogout' => true]);
         }
     }
 

@@ -43,23 +43,33 @@ class VerificarController extends BaseController
                 'estado' => $user['estado']
             ];
             $token = JWT::encode($payload, $key, 'HS256');
-            session()->set([
-                'token' => $token,
-                'dni_admin' => $user['dni_admin'],
-                'categoria' => $user['categoria'],
-                'estado' => $user['estado']
+            $this->response->setCookie([
+                'name' => 'auth_token',
+                'value' => $token,
+                'expire' => time() + 3600,
+                'path' => '/',
+                'secure' => false, // Cambia a true si usas HTTPS
+                'httponly' => true,
+                'samesite' => 'Strict'
             ]);
-            return $this->response->setJSON(['token' => $token]);
+            return $this->response->setJSON([
+                'success' => true,
+                'user' => [
+                    'dni_admin' => $user['dni_admin'],
+                    'nombres' => $user['nombres'] ?? 'Administrador',
+                    'categoria' => $user['categoria'],
+                    'estado' => $user['estado']
+                ],
+            ]);
         }
         return $this->response->setStatusCode(401)->setJSON(['error' => 'Contraseña incorrecta']);
     }
     public function getAdminInfo()
     {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+        $token = $this->request->getCookie('auth_token');
+        if (!$token) {
             return $this->response->setStatusCode(401)->setJSON(['error' => 'No autorizado', 'forceLogout' => true]);
         }
-        $token = substr($authHeader, 7);
         try {
             $key = 'your-secret-key';
             $decoded = JWT::decode($token, new Key($key, 'HS256'));
@@ -85,10 +95,17 @@ class VerificarController extends BaseController
                     'estado' => $user['estado']
                 ];
                 $newToken = JWT::encode($newPayload, $key, 'HS256');
-
+                $this->response->setCookie([
+                    'name' => 'auth_token',
+                    'value' => $newToken,
+                    'expire' => time() + 3600,
+                    'path' => '/',
+                    'secure' => false, // Cambia a true si usas HTTPS
+                    'httponly' => true,
+                    'samesite' => 'Strict'
+                ]);
                 return $this->response->setJSON([
                     'roleChanged' => true,
-                    'token' => $newToken,
                     'user' => [
                         'dni_admin' => $user['dni_admin'],
                         'nombres' => $user['nombres'],
@@ -107,5 +124,18 @@ class VerificarController extends BaseController
                 'forceLogout' => true
             ]);
         }
+    }
+    public function logout()
+    {
+        $this->response->setCookie([
+            'name' => 'auth_token',
+            'value' => '',
+            'expire' => time() - 3600,
+            'path' => '/',
+            'secure' => false, // Cambia a true si usas HTTPS
+            'httponly' => true,
+            'samesite' => 'Strict'
+        ]);
+        return $this->response->setJSON(['success' => true]);
     }
 }

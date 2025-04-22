@@ -32,30 +32,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 	const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 	useEffect(() => {
-		const token = localStorage.getItem("auth_token");
-		if (token) {
+		const checkAuth = async () => {
 			try {
-				const base64Url = token.split(".")[1];
-				const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-				const payload = JSON.parse(window.atob(base64));
-
-				if (payload.exp > Date.now() / 1000) {
+				const response = await axios.get(`${BASE_URL}/admin-info`, {
+					withCredentials: true,
+				});
+				if (response.data.users) {
 					setIsAuthenticated(true);
-					setUser({
-						dni_admin: payload.dni_admin,
-						categoria: payload.categoria,
-						nombres: payload.nombres || "Administrador",
-						estado: payload.estado || "activo",
-					});
+					setUser(response.data.user);
 				} else {
-					localStorage.removeItem("auth_token");
+					setIsAuthenticated(false);
+					setUser(null);
 				}
-			} catch (error) {
-				console.error(error);
-				localStorage.removeItem("auth_token");
+			} catch {
+				setIsAuthenticated(false);
+				setUser(null);
+			} finally {
+				setLoading(false);
 			}
-		}
-		setLoading(false);
+		};
+		checkAuth();
 	}, []);
 
 	const login = async (dni: string, password: string) => {
@@ -65,21 +61,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 				{
 					dni_admin: dni,
 					password: password,
-				}
+				},
+				{ withCredentials: true }
 			);
-
-			if (response.data.token) {
-				localStorage.setItem("auth_token", response.data.token);
-				const base64Url = response.data.token.split(".")[1];
-				const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-				const payload = JSON.parse(window.atob(base64));
+			if (response.data.success) {
 				setIsAuthenticated(true);
-				setUser({
-					dni_admin: payload.dni_admin,
-					categoria: payload.categoria,
-					nombres: payload.nombres || "Administrador",
-					estado: payload.estado || "activo",
-				});
+				setUser(response.data.user);
 				return true;
 			}
 			return false;
@@ -98,24 +85,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 			logout();
 		}
 	};
-	const logout = () => {
-		localStorage.removeItem("auth_token");
+	const logout = async () => {
+		await axios.post(`${BASE_URL}/logout`, {}, { withCredentials: true });
 		setIsAuthenticated(false);
 		setUser(null);
 		navigate("/admin/login");
 	};
 	const checkUserInfo = async () => {
 		try {
-			const token = localStorage.getItem("auth_token");
-			if (!token || !isAuthenticated) return;
-			const response = await axios.get(
-				`${BASE_URL}/admin-info`,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
+			if (!isAuthenticated) return;
+			const response = await axios.get(`${BASE_URL}/admin-info`, {
+				withCredentials: true,
+			});
 
 			if (response.data.forceLogout === true) {
 				toast.error(
@@ -125,8 +106,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 				return;
 			}
 
-			if (response.data.roleChanged && response.data.token) {
-				localStorage.setItem("auth_token", response.data.token);
+			if (response.data.roleChanged) {
 				setUser({
 					dni_admin: response.data.user.dni_admin,
 					categoria: response.data.user.categoria,

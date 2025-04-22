@@ -14,6 +14,7 @@ export const apiTracking = axios.create({
 		"Content-Type": "application/json",
 	},
 	timeout: 5000,
+	withCredentials: true,
 })
 apiTracking.interceptors.response.use(
 	(response) => response,
@@ -51,6 +52,7 @@ export const authApi = axios.create({
 		"Content-Type": "application/json",
 	},
 	timeout: 5000,
+	withCredentials: true,
 });
 authApi.interceptors.request.use(
 	(config) => {

@@ -9,6 +9,7 @@ $routes->options('(:any)', 'Denuncias\CorsController::options');
 $routes->get('login', 'Home::index');
 $routes->get('/', 'Home::index');
 $routes->post('login', 'Denuncias\Admin\VerificarController::login');
+$routes->post('logout', 'Denuncias\Admin\VerificarController::logout');
 $routes->get('admin-info', 'Denuncias\Admin\VerificarController::getAdminInfo');
 $routes->get('download', 'Denuncias\Admin\GestionAdminController::downloadAdjunto');
 
