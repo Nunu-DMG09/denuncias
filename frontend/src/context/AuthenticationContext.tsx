@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 				const response = await axios.get(`${BASE_URL}/admin-info`, {
 					withCredentials: true,
 				});
-				if (response.data.users) {
+				if (response.data.user) {
 					setIsAuthenticated(true);
 					setUser(response.data.user);
 				} else {

@@ -54,18 +54,6 @@ export const authApi = axios.create({
 	timeout: 5000,
 	withCredentials: true,
 });
-authApi.interceptors.request.use(
-	(config) => {
-		const token = localStorage.getItem('auth_token')
-		if (token) {
-			config.headers['Authorization'] = `Bearer ${token}`
-		}
-		return config
-	}, 
-	(error) => {
-		return Promise.reject(error)
-	}
-)
 authApi.interceptors.response.use(
 	(response) => response,
 	(error) => {
@@ -73,7 +61,6 @@ authApi.interceptors.response.use(
 			console.error("Timeout error");
 		} else if (error.response) {
 			if (error.response.status === 401) {
-				localStorage.removeItem('auth_token');
 				if (!window.location.pathname.includes('/admin/login')) {
 					window.location.href = "/admin/login";
 				}
