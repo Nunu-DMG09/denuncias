@@ -35,7 +35,7 @@ export const DashboardAdmin = () => {
 			<div className="text-center mb-8">
 				<p className="text-gray-600">
 					<span className="font-semibold">Usuario:</span>{" "}
-					{user?.dni_admin || ""}
+					{user?.nombres || ""}
 				</p>
 				<p className="text-gray-600">
 					<span className="font-semibold">Rol:</span>{" "}
