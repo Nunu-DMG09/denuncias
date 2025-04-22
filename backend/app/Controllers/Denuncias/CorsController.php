@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Denuncias\Controllers;
+namespace App\Controllers\Denuncias;
 
 use App\Controllers\BaseController;
 
