@@ -51,7 +51,7 @@ export const authApi = axios.create({
 	headers: {
 		"Content-Type": "application/json",
 	},
-	timeout: 5000,
+	timeout: 60000,
 	withCredentials: true,
 });
 authApi.interceptors.response.use(
