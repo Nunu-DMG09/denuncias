@@ -5,40 +5,39 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->options('(:any)', 'CorsController::options');
+$routes->options('(:any)', 'Denuncias\CorsController::options');
 $routes->get('login', 'Home::index');
 $routes->get('/', 'Home::index');
-$routes->post('login', 'AdminController::login');
-$routes->get('register', 'AdminController::registerPrueba');
-$routes->get('admin-info', 'AdminController::getAdminInfo');
-$routes->get('download', 'GestionController::downloadAdjunto');
+$routes->post('login', 'Denuncias\Admin\VerificarController::login');
+$routes->get('admin-info', 'Denuncias\Admin\VerificarController::getAdminInfo');
+$routes->get('download', 'Denuncias\Admin\GestionAdminController::downloadAdjunto');
 
 // Rutas para la API
 $routes->group('api', function ($routes) {
-    $routes->get('dni/(:num)', 'ConsultaApi::buscarDNI/$1');
-    $routes->get('ruc/(:num)', 'ConsultaApi::buscarRUC/$1');
-    $routes->get('tracking/(:alphanum)', 'FormularioDenunciasController::query/$1');
+    $routes->get('dni/(:num)', 'Denuncias\ConsultaApi::buscarDNI/$1');
+    $routes->get('ruc/(:num)', 'Denuncias\ConsultaApi::buscarRUC/$1');
+    $routes->get('tracking/(:alphanum)', 'Denuncias\Client\FormularioController::query/$1');
 });
 $routes->group('form', function ($routes) {
-    $routes->get('motivos', 'FormularioDenunciasController::index');
-    $routes->post('create', 'FormularioDenunciasController::create');
+    $routes->get('motivos', 'Denuncias\Client\FormularioController::index');
+    $routes->post('create', 'Denuncias\Client\FormularioController::create');
 });
 
 // Rutas para el administrador
 $routes->group('admin', ['filter' => 'auth'], function ($routes) {
-    $routes->get('denuncias', 'GestionController::dashboard');
-    $routes->get('recibida', 'GestionController::receivedAdmin');
-    $routes->get('mandar', 'GestionController::receiveAdmin');
-    $routes->get('updateDenuncia', 'GestionController::procesosDenuncia');
-    $routes->get('search', 'GestionController::search');
-    $routes->get('administradores', 'AdminController::getAdministradores');
+    $routes->get('denuncias', 'Denuncias\Admin\GestionAdminController::dashboard');
+    $routes->get('recibida', 'Denuncias\Admin\GestionAdminController::receivedAdmin');
+    $routes->get('mandar', 'Denuncias\Admin\GestionAdminController::receiveAdmin');
+    $routes->get('updateDenuncia', 'Denuncias\Admin\GestionAdminController::procesosDenuncia');
+    $routes->get('search', 'Denuncias\Admin\GestionAdminController::search');
+    $routes->get('administradores', 'Denuncias\Admin\GestionSuperAdmin::getAdministradores');
 
     // Rutas que requieren ser super_admin
     $routes->group('', ['filter' => 'auth:super_admin'], function ($routes) {
-        $routes->post('administradores', 'AdminController::createAdministrador');
-        $routes->post('update', 'AdminController::updateAdministrador');
-        $routes->get('history','AdminController::historyAdmin');
-        $routes->get('searchAdmin', 'AdminController::searchAdmin');
-        $routes->get('history','AdminController::historyAdmin');
+        $routes->post('administradores', 'Denuncias\Admin\GestionSuperAdmin::createAdministrador');
+        $routes->post('update', 'Denuncias\Admin\GestionSuperAdmin::updateAdministrador');
+        $routes->get('history','Denuncias\Admin\GestionSuperAdmin::historyAdmin');
+        $routes->get('searchAdmin', 'Denuncias\Admin\GestionSuperAdmin::searchAdmin');
+        $routes->get('history','Denuncias\Admin\GestionSuperAdmin::historyAdmin');
     });
 });
