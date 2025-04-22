@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Denuncias;
 
 use CodeIgniter\Model;
 
-class MotivosModel extends Model
+class HistorialAdminModel extends Model
 {
     protected $DBGroup = 'default';
-    protected $table = 'motivos';
+    protected $table = 'historial_admin';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = false;
     protected $returnType = 'array';
@@ -16,38 +16,22 @@ class MotivosModel extends Model
     protected $allowedFields =
     [
         'id',
-        'nombre',
-        'descripcion'
+        'realizado_por',
+        'dni_admin',
+        'accion',
+        'motivo',
+        'fecha_accion'
     ];
-
     // Dates
     protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
+    protected $createdField = 'fecha_registro';
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = 
-    [
-        'nombre' =>[
-            'label' => 'nombre',
-            'rules' => 'required'
-        ],
-        'descripcion' =>[
-            'label' => 'descripcion',
-            'rules' => 'required'
-        ]
-    ];
-    protected $validationMessages   = 
-    [
-        'nombre' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ],
-        'descripcion' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ]
-    ];
+    protected $validationRules      =[];
+    protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 

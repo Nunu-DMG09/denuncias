@@ -1,27 +1,25 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Denuncias;
 
 use CodeIgniter\Model;
 
-class DenunciantesModel extends Model
+class AdministradoresModel extends Model
 {
     protected $DBGroup = 'default';
-    protected $table = 'denunciantes';
-    protected $primaryKey = 'id';
+    protected $table = 'administradores';
+    protected $primaryKey = 'dni_admin';
     protected $useAutoIncrement = false;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
     protected $allowedFields =
     [
-        'id',
+        'dni_admin',
         'nombres',
-        'email',
-        'telefono',
-        'numero_documento',
-        'tipo_documento',
-        'sexo'
+        'password',
+        'categoria',
+        'estado'
     ];
     // Dates
     protected $useTimestamps = false;
@@ -31,51 +29,44 @@ class DenunciantesModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      =
+    protected $validationRules      = 
     [
+        'dni_admin' =>[
+            'label' => 'dni_admin',
+            'rules' => 'required'
+        ],
         'nombres' =>[
             'label' => 'nombres',
             'rules' => 'required'
         ],
-        'email' =>[
-            'label' => 'email',
+        'password' =>[
+            'label' => 'password',
             'rules' => 'required'
         ],
-        'telefono' =>[
-            'label' => 'telefono',
+        'categoria' =>[
+            'label' => 'categoria',
             'rules' => 'required'
         ],
-        'numero_documento' =>[
-            'label' => 'numero_documento',
-            'rules' => 'required'
-        ],
-        'tipo_documento' =>[
-            'label' => 'tipo_documento',
-            'rules' => 'required'
-        ],
-        'sexo' =>[
-            'label' => 'sexo',
+        'estado' =>[
+            'label' => 'estado',
             'rules' => 'required'
         ]
     ];
-    protected $validationMessages   =
+    protected $validationMessages   = 
     [
+        'dni_admin' =>[
+            'required' => 'El campo {field} es obligatorio'
+        ],
         'nombres' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
-        'email' =>[
+        'password' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
-        'telefono' =>[
+        'categoria' =>[
             'required' => 'El campo {field} es obligatorio'
         ],
-        'numero_documento' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ],
-        'tipo_documento' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ],
-        'sexo' =>[
+        'estado' =>[
             'required' => 'El campo {field} es obligatorio'
         ]
     ];
