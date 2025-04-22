@@ -114,7 +114,7 @@ class GestionAdminController extends BaseController
             'denuncia_id' => $id_denuncias['id'],
             'estado' => $estado,
             'comentario' => $comentario,
-            'fecha_actualizacion' => date('Y-m-d H:i:s'),
+            'fecha_actualizacion' => date('Y-m-d H:i:s', strtotime('-5 hours')),
             'dni_admin' => $dni_admin
         ])) {
         }
