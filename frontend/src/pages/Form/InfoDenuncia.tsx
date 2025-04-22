@@ -9,6 +9,7 @@ import { AddFiles } from "../../Components/Form/AddFiles";
 import { ReasonsList } from "../../Components/Form/ReasonsList";
 import { MotivosLoader } from "../../Components/Loaders/MotivosLoader";
 import { MotivosError } from "../../Components/Errors/MotivosError";
+import { CharCounter } from "../../Components/Form/CharCounter";
 
 export const InfoDenuncia = () => {
 	const { startDate, handleDate, isLoading, error } = useDenuncias();
@@ -58,6 +59,7 @@ export const InfoDenuncia = () => {
 					<label className="absolute top-[45%] left-[1em] px-1.5 py-0 pointer-events-none bg-transparent text-(--gray-light) text-base transform -translate-y-1/2 transition-all duration-300 ease-in-out">
 						Cuéntanos qué sucedió
 					</label>
+					<CharCounter value={formData.descripcion} maxLength={250} />
 				</div>
 			</div>
 			<AddFiles />
