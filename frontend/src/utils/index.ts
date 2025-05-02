@@ -430,11 +430,3 @@ export const getActionName = (action: string) => {
 			return action.replace(/_/g, ' ');
 	}
 };
-
-// verificacion de cookie 
-export const getCookie = (name: string) => {
-	const value = `; ${document.cookie}`;
-	const parts = value.split(`; ${name}=`);
-	if (parts && parts.length === 2) return parts.pop()?.split(';').shift();
-	return null;
-}

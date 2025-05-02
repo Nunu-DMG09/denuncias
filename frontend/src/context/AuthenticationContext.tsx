@@ -2,7 +2,6 @@ import axios from "axios";
 import { createContext, useState, useEffect, ReactNode } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
-import { getCookie } from "../utils";
 
 interface AuthContextProps {
 	isAuthenticated: boolean;
@@ -31,16 +30,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 	const navigate = useNavigate();
 
 	const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-	const TOK_NME = import.meta.env.VITE_API_TOKEN_NAME;
 
 	useEffect(() => {
-		const hasAuthCookie = getCookie(TOK_NME);
-		if (!hasAuthCookie) {
-			setIsAuthenticated(false);
-			setUser(null);
-			setLoading(false);
-			return;
-		}
 		const checkAuth = async () => {
 			try {
 				const response = await axios.get(`${BASE_URL}/admin-info`, {
