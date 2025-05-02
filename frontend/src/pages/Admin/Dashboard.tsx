@@ -64,3 +64,4 @@ export const DashboardAdmin = () => {
 		</div>
 	);
 };
+export default DashboardAdmin;

@@ -213,3 +213,4 @@ export const SearchAdmin = () => {
         </div>
     );
 };
+export default SearchAdmin;

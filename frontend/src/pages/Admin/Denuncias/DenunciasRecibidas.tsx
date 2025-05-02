@@ -173,3 +173,4 @@ export const DenunciasRecibidas = () => {
 		</div>
 	);
 };
+export default DenunciasRecibidas;

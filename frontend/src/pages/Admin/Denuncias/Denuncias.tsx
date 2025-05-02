@@ -176,3 +176,4 @@ export const Denuncias = () => {
 		</div>
 	);
 };
+export default Denuncias;

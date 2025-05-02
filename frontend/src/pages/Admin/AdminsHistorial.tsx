@@ -232,3 +232,4 @@ export const AdminsHistorial = () => {
 		</div>
 	);
 };
+export default AdminsHistorial;

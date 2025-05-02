@@ -138,3 +138,4 @@ export const SearchDenuncia = () => {
 		</div>
 	);
 };
+export default SearchDenuncia;

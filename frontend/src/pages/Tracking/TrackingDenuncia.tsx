@@ -38,3 +38,4 @@ export const TrackingDenuncia = () => {
 		</div>
 	);
 };
+export default TrackingDenuncia;
