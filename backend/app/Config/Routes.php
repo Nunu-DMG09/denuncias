@@ -22,6 +22,7 @@ $routes->group('api', function ($routes) {
 $routes->group('form', function ($routes) {
     $routes->get('motivos', 'Denuncias\Client\FormularioController::index');
     $routes->post('create', 'Denuncias\Client\FormularioController::create');
+    $routes->get('check-connection', 'Denuncias\Client\FormularioController::checkConnection'); // New route
 });
 
 // Rutas para el administrador

@@ -219,4 +219,22 @@ class FormularioController extends BaseController
             'data' => $seguimientos
         ]);
     }
+    public function checkConnection()
+    {
+        try {
+            $db = \Config\Database::connect();
+            if ($db->connect()) {
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Conexión exitosa a la base de datos.'
+                ]);
+            }
+        } catch (\Throwable $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Error al conectar con la base de datos.',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 }
