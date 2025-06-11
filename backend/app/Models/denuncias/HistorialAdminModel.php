@@ -23,9 +23,9 @@ class HistorialAdminModel extends Model
         'fecha_accion'
     ];
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
-    protected $createdField = 'fecha_registro';
+    protected $createdField = 'created_at';
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
 
