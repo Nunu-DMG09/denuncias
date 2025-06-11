@@ -87,7 +87,7 @@ class GestionAdminController extends ResourceController
             'denuncia_id' => null,
             'estado' => $estado,
             'comentario' => $comentario,
-            'fecha_actualizacion' => date('Y-m-d H:i:s', strtotime('-5 hours')),
+            'fecha_actualizacion' => date('Y-m-d H:i:s'),
             'dni_admin' => $dni_admin
         ];
 
@@ -230,7 +230,7 @@ class GestionAdminController extends ResourceController
             'denuncia_id' => $id_denuncias['id'],
             'estado' => $estado,
             'comentario' => $comentario,
-            'fecha_actualizacion' => date('Y-m-d H:i:s', strtotime('-5 hours')),
+            'fecha_actualizacion' => date('Y-m-d H:i:s'),
             'dni_admin' => $dni_admin
         ])) {
         }
