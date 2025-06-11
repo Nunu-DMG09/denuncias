@@ -2,23 +2,25 @@
 
 namespace App\Controllers\Denuncias\Admin;
 
-use App\Controllers\BaseController;
-
+use CodeIgniter\RESTful\ResourceController;
 use App\Models\Denuncias\DenunciantesModel;
 use App\Models\Denuncias\DenunciasModel;
 use App\Models\Denuncias\SeguimientoDenunciasModel;
+use CodeIgniter\Config\Services;
 
-class GestionAdminController extends BaseController
+class GestionAdminController extends ResourceController
 {
     // Funciones y constructores para la gestión de denuncias
     private $denunciantesModel;
     private $denunciasModel;
     private $seguimientoDenunciasModel;
+    private $email;
     public function __construct()
     {
         $this->denunciantesModel = new DenunciantesModel();
         $this->denunciasModel = new DenunciasModel();
         $this->seguimientoDenunciasModel = new SeguimientoDenunciasModel();
+        $this->email = Services::email();
     }
     public function generateId($table)
     {
@@ -41,11 +43,10 @@ class GestionAdminController extends BaseController
     }
     public function correo($correo, $code, $estado, $comentario)
     {
-        $email = \Config\Services::email();
-        $email->setFrom('munijloenlinea@gmail.com', 'Municipalidad Distrital de José Leonardo Ortiz');
-        $email->setTo($correo);
-        $email->setSubject('Código de Seguimiento de Denuncia');
-        $email->setMessage("
+        $this->email->setFrom('munijloenlinea@gmail.com', 'Municipalidad Distrital de José Leonardo Ortiz');
+        $this->email->setTo($correo);
+        $this->email->setSubject('Código de Seguimiento de Denuncia');
+        $this->email->setMessage("
             <html>
             <head>
             <title>Estado de Denuncia</title>
@@ -64,29 +65,12 @@ class GestionAdminController extends BaseController
             </html>
         ");
 
-        return $email->send();
+        return $this->email->send();
     }
     //Funciones para la gestion de denuncias
     public function dashboard()
     {
-        $denuncias = $this->denunciasModel
-            ->select('
-                denuncias.tracking_code, 
-                denuncias.estado, 
-                denuncias.fecha_registro, 
-                COALESCE(denunciantes.nombres, "Anónimo") as denunciante_nombre, 
-                COALESCE(denunciantes.numero_documento, "00000000") as denunciante_dni, 
-                denunciados.nombre as denunciado_nombre, 
-                denunciados.numero_documento as denunciado_dni, 
-                motivos.nombre as motivo
-            ')
-            ->join('denunciantes', 'denuncias.denunciante_id = denunciantes.id', 'left')
-            ->join('denunciados', 'denuncias.denunciado_id = denunciados.id')
-            ->join('motivos', 'denuncias.motivo_id = motivos.id')
-            ->where('denuncias.dni_admin', null)
-            ->where('denuncias.estado', 'registrado')
-            ->findAll();
-
+        $denuncias = $this->denunciasModel->getDashboardData();
         return $this->response->setJSON($denuncias);
     }
     public function receiveAdmin()
@@ -94,80 +78,48 @@ class GestionAdminController extends BaseController
         $data = $this->request->getGet();
         $code = $data['tracking_code'];
         $dni_admin = $data['dni_admin'];
-        $id = $this->generateId('seguimientoDenuncias');
         $estado = 'recibida';
         $comentario = 'La denuncia ha sido recibida por el administrador';
-        $id_denuncias = $this->denunciasModel
-            ->where('tracking_code', $code)
-            ->first();
 
-        $correo = $this->denunciantesModel
-            ->select('email')
-            ->where('id', $id_denuncias['denunciante_id'])
-            ->first();
-        if ($correo) {
-            $this->correo($correo['email'], $code, $estado, $comentario);
-        }
-
-        if ($this->seguimientoDenunciasModel->insert([
+        $id = $this->generateId('seguimientoDenuncias');
+        $seguimientoData = [
             'id' => $id,
-            'denuncia_id' => $id_denuncias['id'],
+            'denuncia_id' => null,
             'estado' => $estado,
             'comentario' => $comentario,
             'fecha_actualizacion' => date('Y-m-d H:i:s', strtotime('-5 hours')),
             'dni_admin' => $dni_admin
-        ])) {
-        }
-        if ($update = $this->denunciasModel
-            ->where('tracking_code', $code)
-            ->set([
-                'dni_admin' => $dni_admin,
-                'estado' => 'recibida'
-            ])
-            ->update()
-        ) {
-        } else {
+        ];
+
+        $denuncia = $this->denunciasModel->receiveDenuncia($code, $dni_admin, $estado, $comentario, $seguimientoData);
+
+        if (!$denuncia) {
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'Error al insertar el seguimiento de la denuncia'
             ]);
         }
-        if ($update) {
-            return $this->response->setJSON([
-                'success' => true,
-                'message' => 'La denuncia recibida'
-            ]);
+
+        $correo = $this->denunciantesModel
+            ->select('email')
+            ->where('id', $denuncia['denunciante_id'])
+            ->first();
+
+        if ($correo) {
+            $this->correo($correo['email'], $code, $estado, $comentario);
         }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'La denuncia recibida'
+        ]);
     }
     public function receivedAdmin()
     {
         $data = $this->request->getGet();
         $dni_admin = $data['dni_admin'];
 
-        $denuncias = $this->denunciasModel
-            ->select('
-            denuncias.tracking_code, 
-            denuncias.estado, 
-            denuncias.fecha_registro, 
-            denuncias.fecha_incidente,
-            denuncias.descripcion,
-            denuncias.motivo_otro,
-            COALESCE(denunciantes.nombres, "Anónimo") as denunciante_nombre, 
-            COALESCE(denunciantes.numero_documento, "00000000") as denunciante_dni, 
-            denunciados.nombre as denunciado_nombre, 
-            denunciados.numero_documento as denunciado_dni, 
-            motivos.nombre as motivo,
-            seguimiento_denuncias.estado as seguimiento_estado,
-            seguimiento_denuncias.comentario as seguimiento_comentario
-        ')
-            ->join('denunciantes', 'denuncias.denunciante_id = denunciantes.id', 'left')
-            ->join('denunciados', 'denuncias.denunciado_id = denunciados.id')
-            ->join('motivos', 'denuncias.motivo_id = motivos.id')
-            ->join('seguimiento_denuncias', 'denuncias.id = seguimiento_denuncias.denuncia_id', 'left')
-            ->where('denuncias.dni_admin', $dni_admin)
-            ->whereIn('denuncias.estado', ['en proceso', 'recibida'])
-            ->groupBy('denuncias.id')
-            ->findAll();
+        $denuncias = $this->denunciasModel->getReceivedAdminData($dni_admin);
 
         return $this->response->setJSON($denuncias);
     }
@@ -307,29 +259,7 @@ class GestionAdminController extends BaseController
         $data = $this->request->getGet();
         $dni = $data['numero_documento'];
 
-        $denuncias = $this->denunciasModel
-            ->select('
-                denuncias.id,
-                denuncias.tracking_code,
-                denuncias.motivo_id,
-                denuncias.descripcion, 
-                denuncias.fecha_registro,
-                denuncias.estado,
-                denuncias.motivo_otro,
-                denunciados.nombre as denunciado_nombre,
-                denunciados.numero_documento as denunciado_dni,
-                COALESCE(denunciantes.nombres, "Anónimo") as denunciante_nombre,
-                COALESCE(denunciantes.numero_documento, "") as denunciante_dni,
-                (
-                    SELECT comentario FROM seguimiento_denuncias 
-                    WHERE seguimiento_denuncias.denuncia_id = denuncias.id 
-                    ORDER BY fecha_actualizacion DESC LIMIT 1
-                ) as seguimiento_comentario
-            ')
-            ->join('denunciados', 'denuncias.denunciado_id = denunciados.id')
-            ->join('denunciantes', 'denuncias.denunciante_id = denunciantes.id', 'left')
-            ->where('denunciados.numero_documento', $dni)
-            ->findAll();
+        $denuncias = $this->denunciasModel->searchByDocumento($dni);
 
         if (empty($denuncias)) {
             return $this->response->setJSON([
