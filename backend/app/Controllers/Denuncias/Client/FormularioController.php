@@ -9,6 +9,7 @@ use App\Models\Denuncias\DenunciasModel;
 use App\Models\Denuncias\DenunciantesModel;
 use App\Models\Denuncias\MotivosModel;
 use App\Models\Denuncias\SeguimientoDenunciasModel;
+use CodeIgniter\Config\Services;
 
 class FormularioController extends BaseController
 {
@@ -18,6 +19,7 @@ class FormularioController extends BaseController
     private $denunciantesModel;
     private $motivosModel;
     private $seguimientoDenunciasModel;
+    private $email;
     function __construct()
     {
         $this->adjuntosModel = new AdjuntosModel();
@@ -26,6 +28,7 @@ class FormularioController extends BaseController
         $this->denunciantesModel = new DenunciantesModel();
         $this->motivosModel = new MotivosModel();
         $this->seguimientoDenunciasModel = new SeguimientoDenunciasModel();
+        $this->email = Services::email();
     }
     function index()
     {
@@ -60,11 +63,11 @@ class FormularioController extends BaseController
     }
     public function correo($correo, $code)
     {
-        $email = \Config\Services::email();
-        $email->setFrom('munijloenlinea@gmail.com', 'Municipalidad Distrital de José Leonardo Ortiz');
-        $email->setTo($correo);
-        $email->setSubject('Código de Seguimiento de Denuncia');
-        $email->setMessage("
+        // Cargar la librería de correo
+        $this->email->setFrom('munijloenlinea@gmail.com', 'Municipalidad Distrital de José Leonardo Ortiz');
+        $this->email->setTo($correo);
+        $this->email->setSubject('Código de Seguimiento de Denuncia');
+        $this->email->setMessage("
             <html>
             <head>
                 <title>Código de Seguimiento de Denuncia</title>
@@ -88,24 +91,27 @@ class FormularioController extends BaseController
             </html>
         ");
 
-        return $email->send();
+        return $this->email->send();
     }
     function create()
     {
-        //Obtener datos del formulario
+        // Obtener datos del formulario
         $dataJson = $this->request->getPost('data');
         $formData = json_decode($dataJson, true);
-        //Extraer datos del Json
+
+        // Extraer datos del JSON
         $denunciante = $formData['denunciante'];
         $denunciado = $formData['denunciado'];
         $denuncia = $formData['denuncia'];
         $adjuntos = $formData['adjuntos'];
-        //Generar id y tracking code
+
+        // Generar ID y tracking code
         $code = $this->generateTrackingCode();
         $id_denunciante = $denuncia['es_anonimo'] ? null : $this->generateId('denunciantes');
         $id_denunciado = $this->generateId('denunciados');
         $id_denuncia = $this->generateId('denuncias');
         $id_seguimiento = $this->generateId('seguimientoDenuncias');
+
         // Si la denuncia ya se encuentra registrada, no se puede volver a registrar
         if ($this->denunciasModel->where('tracking_code', $code)->first()) {
             return $this->response->setJSON([
@@ -114,13 +120,15 @@ class FormularioController extends BaseController
                 'tracking_code' => $code,
             ]);
         }
-        //Mandar correo con el código de seguimiento
+
+        // Mandar correo con el código de seguimiento
         if (!$denuncia['es_anonimo']) {
             $this->correo($denunciante['email'], $code);
         }
+
         // Insert denunciante
         if ($denunciante) {
-            if ($this->denunciantesModel->insert([
+            $this->denunciantesModel->insertDenunciante([
                 'id' => $id_denunciante,
                 'nombres' => $denunciante['nombres'],
                 'email' => $denunciante['email'],
@@ -128,12 +136,12 @@ class FormularioController extends BaseController
                 'numero_documento' => $denunciante['numero_documento'],
                 'tipo_documento' => $denunciante['tipo_documento'],
                 'sexo' => $denunciante['sexo']
-            ])) {
-            }
+            ]);
         }
+
         // Insert denunciado
         if ($denunciado) {
-            if ($this->denunciadosModel->insert([
+            $this->denunciadosModel->insertDenunciado([
                 'id' => $id_denunciado,
                 'nombre' => $denunciado['nombre'],
                 'numero_documento' => $denunciado['numero_documento'],
@@ -141,12 +149,12 @@ class FormularioController extends BaseController
                 'representante_legal' => $denunciado['representante_legal'],
                 'razon_social' => $denunciado['razon_social'],
                 'cargo' => $denunciado['cargo']
-            ])) {
-            }
+            ]);
         }
+
         // Insert denuncia
         if ($denuncia) {
-            if ($this->denunciasModel->insert([
+            $this->denunciasModel->insertDenuncia([
                 'id' => $id_denuncia,
                 'tracking_code' => $code,
                 'es_anonimo' => $denuncia['es_anonimo'],
@@ -158,22 +166,23 @@ class FormularioController extends BaseController
                 'denunciado_id' => $id_denunciado,
                 'estado' => 'registrado',
                 'pdf_path' => null
-            ])) {
-            }
+            ]);
         }
-        // Guardar archivo 
+
+        // Guardar archivo
         $files = $this->request->getFiles();
         $uploadPath = FCPATH . 'uploads/' . $id_denuncia;
         if (!is_dir($uploadPath)) {
             mkdir($uploadPath, 0777, true);
         }
+
         // Insert adjuntos
         foreach ($files as $file) {
             if ($file->isValid() && !$file->hasMoved()) {
                 $newName = $file->getRandomName();
                 $file->move($uploadPath, $newName);
                 $fileType = $file->getClientMimeType();
-                $this->adjuntosModel->insert([
+                $this->adjuntosModel->insertAdjunto([
                     'id' => $this->generateId('adjuntos'),
                     'denuncia_id' => $id_denuncia,
                     'file_path' => 'uploads/' . $id_denuncia . '/' . $newName,
@@ -182,15 +191,16 @@ class FormularioController extends BaseController
                 ]);
             }
         }
+
         // Insert seguimiento
-        if ($this->seguimientoDenunciasModel->insert([
+        $this->seguimientoDenunciasModel->insertSeguimiento([
             'id' => $id_seguimiento,
             'denuncia_id' => $id_denuncia,
             'estado' => 'registrado',
             'comentario' => 'Denuncia registrada',
             'fecha_actualizacion' => date('Y-m-d H:i:s', strtotime('-5 hours'))
-        ])) {
-        }
+        ]);
+
         return $this->response->setJSON([
             'success' => true,
             'message' => 'Denuncia registrada correctamente',
@@ -199,21 +209,19 @@ class FormularioController extends BaseController
     }
     function query($code)
     {
-        //Buscar id de la denuncia
-        $denuncia = $this->denunciasModel
-            ->where('tracking_code', $code)
-            ->first();
+        // Fetch denuncia by tracking code
+        $denuncia = $this->denunciasModel->getDenunciaByTrackingCode($code);
+
         if (!$denuncia) {
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'No se encontró la denuncia con el código proporcionado.'
             ]);
         }
-        //Buscar seguimientos
-        $seguimientos = $this->seguimientoDenunciasModel
-            ->where('denuncia_id', $denuncia['id'])
-            ->orderBy('fecha_actualizacion', 'DESC')
-            ->findAll();
+
+        // Fetch seguimientos by denuncia ID
+        $seguimientos = $this->seguimientoDenunciasModel->getSeguimientosByDenunciaId($denuncia['id']);
+
         return $this->response->setJSON([
             'success' => true,
             'data' => $seguimientos
