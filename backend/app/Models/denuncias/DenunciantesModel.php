@@ -24,7 +24,7 @@ class DenunciantesModel extends Model
         'sexo'
     ];
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
@@ -92,4 +92,9 @@ class DenunciantesModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function insertDenunciante(array $data)
+    {
+        return $this->insert($data);
+    }
 }
