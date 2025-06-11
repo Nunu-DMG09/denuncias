@@ -26,11 +26,11 @@ class Database extends Config
      */
     public array $default = [
         'DSN'          => '',
-        'hostname'     => 'dpg-d08nblruibrs73ch5oug-a.oregon-postgres.render.com',
-        'username'     => 'denuncias_jlo_0qtn_user',
-        'password'     => '09mpdiZOcKfhGrAB9yHqFtFgf1yVhhz5',
-        'database'     => 'denuncias_jlo_0qtn',
-        'DBDriver'     => 'Postgre',
+        'hostname'     => '',
+        'username'     => '',
+        'password'     => '',
+        'database'     => '',
+        'DBDriver'     => '',
         'DBPrefix'     => '',
         'pConnect'     => false,
         'DBDebug'      => true,
