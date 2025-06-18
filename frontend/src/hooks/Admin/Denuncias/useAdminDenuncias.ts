@@ -17,6 +17,7 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 	const [denuncias, setDenuncias] = useState<Denuncia[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
 	const { user } = useAuthContext();
 
 	const fetchDenuncias = useCallback(async () => {
@@ -68,6 +69,7 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 			return;
 		}
 		try {
+			setIsLoading(true);
 			await authApi.get(`/mandar`, {
 				params: {
 					dni_admin: adminDni,
@@ -86,6 +88,8 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 				description:
 					"Ocurrió un error al recibir la denuncia, por favor intenta de nuevo",
 			});
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -110,6 +114,7 @@ export const useAdminDenuncias = (itemsPerPage: number = 10) => {
 		handleCurrentPage,
 		handlePageChange,
 		getVisiblePageNumbers,
-		recibirDenuncia
+		recibirDenuncia,
+		isLoading
 	};
 };
