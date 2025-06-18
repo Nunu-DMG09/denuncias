@@ -14,7 +14,8 @@ export const Denuncias = () => {
 		handleCurrentPage,
 		getVisiblePageNumbers,
 		handlePageChange,
-		recibirDenuncia
+		recibirDenuncia,
+		isLoading
 	} = useAdminDenuncias(itemsPerPage);
 	const { user } = useAuthContext();
 	return (
@@ -121,7 +122,8 @@ export const Denuncias = () => {
 											<button
 												onClick={() =>
 													recibirDenuncia( user?.dni_admin || '',denuncia.tracking_code)}
-												className="bg-(--secondary-color) cursor-pointer text-white px-3 py-1.5 rounded hover:bg-(--primary-color) transition duration-300 ease-in-out flex items-center"
+												disabled={isLoading}
+												className={`bg-(--secondary-color) cursor-pointer text-white px-3 py-1.5 rounded hover:bg-(--primary-color) disabled:bg-gray-600 disabled:cursor-not-allowed transition duration-300 ease-in-out flex items-center`}
 											>
 												<i className="fas fa-plus mr-1.5"></i>
 												Recibir
