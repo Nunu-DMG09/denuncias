@@ -12,7 +12,7 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 	const pageWidth = doc.internal.pageSize.getWidth();
 
 	try {
-		const logoPath = "/logo.jpeg";
+		const logoPath = "/denuncias-corrupcion/logo.jpeg";
 
 		const logoWidth = 16;
 		const logoHeight = 20;
