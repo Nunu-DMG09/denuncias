@@ -23,15 +23,14 @@ class SeguimientoDenunciasModel extends Model
         'dni_admin'
     ];
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
-    protected $createdField  = false;
-    protected $updatedField  = 'fecha_actualizacion';
-    protected $deletedField  = false;
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = 
-    [
+    protected $validationRules      = [
         'denuncia_id' =>[
             'label' => 'denuncia_id',
             'rules' => 'required'
@@ -77,4 +76,16 @@ class SeguimientoDenunciasModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function insertSeguimiento(array $data)
+    {
+        return $this->insert($data);
+    }
+
+    public function getSeguimientosByDenunciaId($denunciaId)
+    {
+        return $this->where('denuncia_id', $denunciaId)
+                    ->orderBy('fecha_actualizacion', 'DESC')
+                    ->findAll();
+    }
 }

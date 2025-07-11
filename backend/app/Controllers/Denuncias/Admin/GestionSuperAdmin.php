@@ -6,8 +6,6 @@ use App\Controllers\BaseController;
 
 use App\Models\Denuncias\AdministradoresModel;
 use App\Models\Denuncias\HistorialAdminModel;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 
 class GestionSuperAdmin extends BaseController
 {
