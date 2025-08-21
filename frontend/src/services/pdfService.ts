@@ -211,4 +211,3 @@ export const generarDenunciaPDF = (formData: FormData, motivos: Motivo[]) => {
 
 	doc.save(`Denuncia-${formData.tracking_code}.pdf`);
 };
-//me llegas el pene nero
