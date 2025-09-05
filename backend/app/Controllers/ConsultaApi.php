@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Denuncias;
+namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
 
@@ -8,13 +8,7 @@ class ConsultaApi extends ResourceController
 {
     private $apiUrlDNI = "http://161.132.51.161/mdjlo/api/open/dni";
     private $apiUrlRUC = "http://161.132.51.161/mdjlo/api/open/ruc";
-    private $token;
-
-    public function __construct()
-    {
-        $this->token = getenv('API_TOKEN');
-    }
-
+    private $token = "dUr\"*Z!3ZqS4Xri";
     public function buscarDNI($dni)
     {
         $response = $this->consultarApi($this->apiUrlDNI, $dni);

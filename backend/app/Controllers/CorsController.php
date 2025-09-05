@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Denuncias;
+namespace App\Controllers;
 
 use App\Controllers\BaseController;
 
@@ -8,7 +8,7 @@ class CorsController extends BaseController
 {
     public function options($any = null)
     {
-        $frontendOrigin = env('frontend.baseURL', 'http://localhost:5173');
+        $frontendOrigin = env('FRONTEND_URL', 'http://localhost:5173');
         return $this->response
             ->setHeader('Access-Control-Allow-Origin', $frontendOrigin)
             ->setHeader('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization, Content-Disposition')
