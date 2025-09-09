@@ -42,8 +42,8 @@ export const ReasonsList = () => {
 					</label>
 				</div>
 			))}
-			{formData.motivo_id === "mo_otros" && (
-				<div className="relative">
+			{formData.motivo_id === "8" && (
+				<div className="relative my-8">
 					<input
 						type="text"
 						className="w-full p-3.5 border-2 border-solid border-(--gray-light) rounded-lg outline-none bg-transparent focus:ring-2 focus:ring-(--primary-color) focus:border-(--primary-color) transition-all duration-300 ease-in-out form-part"
