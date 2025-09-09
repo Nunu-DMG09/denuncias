@@ -95,7 +95,7 @@ export const DatosDenunciante = () => {
 						</span>
 						<p className="text-gray-500 text-sm mt-1">
 							Eligiendo esta alternativa, nadie conocerá tu
-							identifad, pero tampoco podrás añadir información a
+							identidad, pero tampoco podrás añadir información a
 							tu denuncia, recibir notificaciones sobre tu avance,
 							ni pedir medidas de protección.
 						</p>
