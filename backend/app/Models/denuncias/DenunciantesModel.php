@@ -113,4 +113,8 @@ class DenunciantesModel extends Model
     {
         return $this->insert($data);
     }
+    public function getByDocument(string $doc)
+    {
+        return $this->where('documento', $doc)->first();
+    }
 }
