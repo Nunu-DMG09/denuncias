@@ -15,12 +15,12 @@
 #--------------------------------------------------------------------
 
 CI_ENVIRONMENT = development
-API_TOKEN="dUr\"*Z!3ZqS4Xri"
+# API_TOKEN="dUr\"*Z!3ZqS4Xri"
 #--------------------------------------------------------------------
 # APP
 #--------------------------------------------------------------------
 
-# app.baseURL = ''
+app.baseURL = 'http://localhost/denuncias/backend'
 # If you have trouble with `.`, you could also use `_`.
 # app_baseURL = ''
 # app.forceGlobalSecureRequests = false
@@ -30,12 +30,12 @@ API_TOKEN="dUr\"*Z!3ZqS4Xri"
 # DATABASE
 #--------------------------------------------------------------------
 
-# database.default.hostname = localhost
-# database.default.database = ci4
-# database.default.username = root
-# database.default.password = root
-# database.default.DBDriver = MySQLi
-# database.default.DBPrefix =
+database.default.hostname = localhost
+database.default.database = denuncias
+database.default.username = root
+database.default.password = 
+database.default.DBDriver = MySQLi
+database.default.DBPrefix =
 # database.default.port = 3306
 
 # If you use MySQLi as tests, first update the values of Config\Database::$tests.
@@ -67,3 +67,11 @@ API_TOKEN="dUr\"*Z!3ZqS4Xri"
 #--------------------------------------------------------------------
 
 # logger.threshold = 4
+
+#--------------------------------------------------------------------
+# JWT
+#--------------------------------------------------------------------
+
+JWT_SECRET = 'cdde63410ba678449a768ba65b2444e9'
+JWT_EXP = 3600
+FRONTEND_URL = 'http://localhost:5173'
