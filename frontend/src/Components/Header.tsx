@@ -1,4 +1,4 @@
-const logo = "/denuncias-corrupcion/logo.jpeg";
+const logo = "/corrupcion/logo.jpeg";
 import { Link } from "react-router";
 import { ConfirmLogout } from "./Admin/ConfirmLogout";
 import { useHeader } from "../hooks/useHeaderLogic";
