@@ -6,52 +6,85 @@ use CodeIgniter\Model;
 
 class DenunciasModel extends Model
 {
-    protected $DBGroup = 'default';
-    protected $table = 'denuncias';
-    protected $primaryKey = 'id';
-    protected $useAutoIncrement = false;
-    protected $returnType = 'array';
-    protected $useSoftDeletes = false;
-    protected $protectFields = true;
+    protected $table            = 'denuncia';
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = true;
     protected $allowedFields =
     [
         'id',
         'tracking_code',
         'es_anonimo',
         'denunciante_id',
+        'denunciado_id',
+        'estado',
+        'fecha_incidente',
+        'descripcion',
+        'lugar',
         'motivo_id',
         'motivo_otro',
-        'descripcion',
-        'fecha_incidente',
-        'denunciado_id',
-        'dni_admin',
-        'fecha_registro',
-        'estado',
-        'pdf_path'
+        'area'
     ];
     // Dates
     protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField = 'created_at';
     protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
+    protected $validationRules = [
+        'tracking_code'   => 'required|string|max_length[20]',
+        'es_anonimo'      => 'required|in_list[0,1]',
+        'denunciante_id'  => 'permit_empty|integer',
+        'descripcion'     => 'required|string',
+        'fecha_incidente' => 'required|valid_date',
+        'denunciado_id' => 'permit_empty|is_natural_no_zero',
+        'estado'          => 'required|string|max_length[20]',
+        'lugar'           => 'permit_empty|string|max_length[50]',
+        'area'            => 'permit_empty|string|max_length[50]',
+        'motivo_id'       => 'permit_empty|is_natural_no_zero',
+        'motivo_otro'     => 'permit_empty|string|max_length[255]',
+    ];
+    protected $validationMessages = [
+        'tracking_code' => [
+            'required' => 'El código de seguimiento es obligatorio.',
+            'max_length' => 'El código de seguimiento no puede exceder los 50 caracteres.'
+        ],
+        'es_anonimo' => [
+            'required' => 'Debe indicar si la denuncia es anónima.',
+            'in_list'  => 'El valor de anonimato debe ser 0 o 1.'
+        ],
+        'descripcion' => [
+            'required' => 'La descripción de la denuncia es obligatoria.'
+        ],
+        'fecha_incidente' => [
+            'required'    => 'La fecha del incidente es obligatoria.',
+            'valid_date'  => 'Debe proporcionar una fecha de incidente válida.'
+        ],
+        'denunciado_id' => [
+            'integer'  => 'El ID del denunciado debe ser un número entero.'
+        ],
+        'denunciante_id' => [
+            'required' => 'Debe especificar la persona denunciante.',
+            'integer'  => 'El ID del denunciado debe ser un número entero.'
+        ],
+        'lugar' => [
+            'max_length' => 'El campo lugar no puede exceder los 50 caracteres.'
+        ],
+        'area' => [
+            'max_length' => 'El campo área no puede exceder los 50 caracteres.'
+        ],
+        'motivo_id' => [
+            'integer' => 'El ID del motivo debe ser un número entero.'
+        ],
+        'motivo_otro' => [
+            'max_length' => 'El campo motivo (otro) no puede exceder los 255 caracteres.'
+        ]
+    ];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
 
     public function getDashboardData()
     {

@@ -6,21 +6,18 @@ use CodeIgniter\Model;
 
 class AdjuntosModel extends Model
 {
-    protected $DBGroup = 'default';
-    protected $table = 'adjuntos';
-    protected $primaryKey = 'id';
-    protected $useAutoIncrement = false;
-    protected $returnType = 'array';
-    protected $useSoftDeletes = false;
-    protected $protectFields = true;
+    protected $DBGroup          = 'default';
+    protected $table            = 'adjunto';
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = true;
+    protected $protectFields    = true;
     protected $allowedFields =
     [
         'id',
         'denuncia_id',
         'file_path',
-        'file_name',
-        'file_type',
-        'fecha_subida'
     ];
     // Dates
     protected $useTimestamps = true;
@@ -30,39 +27,19 @@ class AdjuntosModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = 
-    [
-        'denuncia_id' =>[
-            'label' => 'denuncia_id',
-            'rules' => 'required'
-        ],
-        'file_path' =>[
-            'label' => 'file_path',
-            'rules' => 'required'
-        ],
-        'file_name' =>[
-            'label' => 'file_name',
-            'rules' => 'required'
-        ],
-        'file_type' =>[
-            'label' => 'file_type',
-            'rules' => 'required'
-        ]
+    protected $validationRules = [
+        'denuncia_id' => 'required|integer',
+        'file_path'   => 'required|string|max_length[255]',
     ];
-    protected $validationMessages   = 
-    [
-        'denuncia_id' =>[
-            'required' => 'El campo {field} es obligatorio',
+    protected $validationMessages = [
+        'denuncia_id' => [
+            'required' => 'El campo {field} es obligatorio.',
+            'integer'  => 'El campo {field} debe ser un número entero.'
         ],
-        'file_path' =>[
-            'required' => 'El campo {field} es obligatorio'
+        'file_path' => [
+            'required'   => 'El campo {field} es obligatorio.',
+            'max_length' => 'El campo {field} no puede exceder {param} caracteres.'
         ],
-        'file_name' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ],
-        'file_type' =>[
-            'required' => 'El campo {field} es obligatorio'
-        ]
     ];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
@@ -80,6 +57,10 @@ class AdjuntosModel extends Model
 
     public function insertAdjunto(array $data)
     {
-        return $this->insert($data);
+        return $this->insert($data, true);
+    }
+    public function getByDenunciaId(int $denunciaId)
+    {
+        return $this->where('denuncia_id', $denunciaId)->findAll();
     }
 }

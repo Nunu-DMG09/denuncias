@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class MotivosModel extends Model
 {
     protected $DBGroup = 'default';
-    protected $table = 'motivos';
+    protected $table = 'motivo';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = false;
     protected $returnType = 'array';

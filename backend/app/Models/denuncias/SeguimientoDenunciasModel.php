@@ -6,21 +6,16 @@ use CodeIgniter\Model;
 
 class SeguimientoDenunciasModel extends Model
 {
-    protected $DBGroup = 'default';
-    protected $table = 'seguimiento_denuncias';
-    protected $primaryKey = 'id';
+    protected $table            = 'seguimiento_denuncia';
+    protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType = 'array';
-    protected $useSoftDeletes = false;
-    protected $protectFields = true;
-    protected $allowedFields =
-    [
-        'id',
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = true;
+    protected $allowedFields    = [
         'denuncia_id',
-        'estado',
         'comentario',
-        'fecha_actualizacion',
-        'dni_admin'
+        'administrador_id',
+        'estado'
     ];
     // Dates
     protected $useTimestamps = true;
@@ -30,37 +25,28 @@ class SeguimientoDenunciasModel extends Model
     protected $deletedField  = 'deleted_at';
 
     // Validation
-    protected $validationRules      = [
-        'denuncia_id' =>[
-            'label' => 'denuncia_id',
-            'rules' => 'required'
-        ],
-        'estado' =>[
-            'label' => 'estado',
-            'rules' => 'required'
-        ],
-        'comentario' =>[
-            'label' => 'comentario',
-            'rules' => 'required'
-        ],
-        'fecha_actualizacion' =>[
-            'label' => 'fecha_actualizacion',
-            'rules' => 'required'
-        ]
+    protected $validationRules = [
+        'denuncia_id'     => 'required|integer',
+        'comentario'      => 'permit_empty|string|max_length[500]',
+        'administrador_id'=> 'required|integer',
+        'estado'           => 'required|string|max_length[100]'
     ];
-    protected $validationMessages   = 
-    [
-        'denuncia_id' =>[
-            'required' => 'El campo {field} es obligatorio'
+
+    protected $validationMessages = [
+        'denuncia_id' => [
+            'required' => 'El ID de la denuncia es obligatorio',
+            'integer'  => 'El ID de la denuncia debe ser un número entero'
         ],
-        'estado' =>[
-            'required' => 'El campo {field} es obligatorio'
+        'comentario' => [
+            'max_length' => 'El comentario no puede exceder los 500 caracteres'
         ],
-        'comentario' =>[
-            'required' => 'El campo {field} es obligatorio'
+        'administrador_id' => [
+            'required' => 'El ID del administrador es obligatorio',
+            'integer'  => 'El ID del administrador debe ser un número entero'
         ],
-        'fecha_actualizacion' =>[
-            'required' => 'El campo {field} es obligatorio'
+        'estado' => [
+            'required'   => 'El estado es obligatorio',
+            'max_length' => 'El estado no puede exceder los 100 caracteres'
         ]
     ];
     protected $skipValidation       = false;
