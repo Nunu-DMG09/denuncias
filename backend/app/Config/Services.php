@@ -19,14 +19,13 @@ use CodeIgniter\Config\BaseService;
  */
 class Services extends BaseService
 {
-    /*
-     * public static function example($getShared = true)
-     * {
-     *     if ($getShared) {
-     *         return static::getSharedInstance('example');
-     *     }
-     *
-     *     return new \CodeIgniter\Example();
-     * }
-     */
+    public static function getSecretKey()
+    {
+        return getenv('JWT_SECRET');
+    }
+    public static function getTokenExpiration()
+    {
+        $exp = getenv('JWT_EXP');
+        return $exp ? (int)$exp : 3600; // Default to 1 hour if not set
+    }
 }
