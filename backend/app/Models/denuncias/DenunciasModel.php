@@ -3,6 +3,7 @@
 namespace App\Models\Denuncias;
 
 use CodeIgniter\Model;
+use App\Services\MailService;
 
 class DenunciasModel extends Model
 {
@@ -37,8 +38,8 @@ class DenunciasModel extends Model
         'tracking_code'   => 'required|string|max_length[20]',
         'es_anonimo'      => 'required|in_list[0,1]',
         'denunciante_id'  => 'permit_empty|integer',
-        'descripcion'     => 'required|string',
-        'fecha_incidente' => 'required|valid_date',
+        'descripcion'     => 'permit_empty|string',
+        'fecha_incidente' => 'permit_empty|valid_date',
         'denunciado_id' => 'permit_empty|is_natural_no_zero',
         'estado'          => 'required|string|max_length[20]',
         'lugar'           => 'permit_empty|string|max_length[50]',
@@ -84,6 +85,221 @@ class DenunciasModel extends Model
     ];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
+
+    // Dependencias externas (otros modelos)
+    protected $denunciantesModel;
+    protected $denunciadosModel;
+    protected $adjuntosModel;
+    private $emailService;
+    // protected $seguimientoDenunciasModel; // si luego lo habilitas
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->denunciantesModel = new \App\Models\Denuncias\DenunciantesModel();
+        $this->denunciadosModel  = new \App\Models\Denuncias\DenunciadosModel();
+        $this->adjuntosModel     = new \App\Models\Denuncias\AdjuntosModel();
+        $this->emailService     = new MailService();
+        // $this->seguimientoDenunciasModel = new \App\Models\Denuncias\SeguimientoDenunciasModel();
+    }
+
+    public function obtenerPorTracking(string $trackingCode)
+    {
+        return $this->where('tracking_code', $trackingCode)->first();
+    }
+
+    public function generateTrackingCode()
+    {
+        do {
+            $trackingCode = 'TD' . strtoupper(bin2hex(random_bytes(4)));
+        } while ($this->obtenerPorTracking($trackingCode));
+        return $trackingCode;
+    }
+
+
+    public function createDenuncia(array $data, array $files)
+    {
+        $db = \Config\Database::connect();
+        $db->transBegin();
+
+        try {
+            // Decodificar JSON de la denuncia, denunciado y denunciante
+            $denunciaData     = json_decode($data["denuncia"] ?? '{}', true);
+            $denunciadoData   = json_decode($data["denunciado"] ?? '{}', true);
+            $denuncianteRaw   = $data["denunciante"] ?? null;
+            $denuncianteData  = !empty($denuncianteRaw) ? json_decode($denuncianteRaw, true) : null;
+
+            // =====================
+            // PROCESAR DENUNCIADO
+            // =====================
+            $denunciadoID = null;
+            if (!empty($denunciadoData) && !empty($denunciadoData['documento'])) {
+                $denunciado = $this->denunciadoModel->getByDocument($denunciadoData['documento']);
+                if ($denunciado) {
+                    $denunciadoID = $denunciado['id'];
+                } else {
+                    $this->denunciadoModel->insert([
+                        'nombre'             => $denunciadoData['nombre'] ?? null,
+                        'razon_social'       => $denunciadoData['razon_social'] ?? null,
+                        'representante_legal'=> $denunciadoData['representante_legal'] ?? null,
+                        'tipo_documento'     => $denunciadoData['tipo_documento'] ?? null,
+                        'documento'          => $denunciadoData['documento'] ?? null,
+                        'direccion'          => $denunciadoData['direccion'] ?? null,
+                        'telefono'           => $denunciadoData['celular'] ?? null,
+                    ]);
+                    $denunciadoID = $this->denunciadoModel->getInsertID();
+                }
+            }
+
+            // =====================
+            // PROCESAR DENUNCIANTE
+            // =====================
+            $denuncianteID = null;
+            if ((int)($denunciaData['es_anonimo'] ?? 0) === 0 && !empty($denuncianteData)) {
+                if (!empty($denuncianteData['documento'])) {
+                    $denunciante = $this->denuncianteModel->getByDocument($denuncianteData['documento']);
+                    if ($denunciante) {
+                        $denuncianteID = $denunciante['id'];
+                    } else {
+                        $this->denuncianteModel->insert([
+                            'nombre'        => $denuncianteData['nombre'] ?? null,
+                            'email'         => $denuncianteData['email'] ?? null,
+                            'telefono'      => null,
+                            'celular'       => $denuncianteData['celular'] ?? null,
+                            'documento'     => $denuncianteData['documento'] ?? null,
+                            'tipo_documento'=> $denuncianteData['tipo_documento'] ?? null,
+                            'razon_social'  => $denuncianteData['razon_social'] ?? null,
+                            'sexo'          => $denuncianteData['sexo'] ?? null,
+                            'distrito'      => $denuncianteData['distrito'] ?? null,
+                            'provincia'     => $denuncianteData['provincia'] ?? null,
+                            'departamento'  => $denuncianteData['departamento'] ?? null,
+                            'direccion'     => $denuncianteData['direccion'] ?? null,
+                        ]);
+                        $denuncianteID = $this->denuncianteModel->getInsertID();
+                    }
+                }
+            }
+
+            // =====================
+            // CREAR DENUNCIA
+            // =====================
+            $trackingCode = $this->generateTrackingCode();
+            $denunciaID = $this->insert([
+                'tracking_code'  => $trackingCode,
+                'es_anonimo'     => $denunciaData['es_anonimo'] ?? 0,
+                'denunciante_id' => $denuncianteID,
+                'denunciado_id'  => $denunciadoID,
+                'descripcion'     => !empty($denunciaData['descripcion']) ? $denunciaData['descripcion'] : '',
+                'fecha_incidente' => !empty($denunciaData['fecha_incidente']) ? $denunciaData['fecha_incidente'] : null,
+                'estado'         => 'registrado',
+                'lugar'          => $denunciaData['lugar'] ?? null
+            ], true);
+
+            if (!$denunciaID) {
+                $db->transRollback();
+                log_message('error', '❌ Error de validación al registrar denuncia: ' . json_encode($this->errors()));
+                return ['success' => false, 'errors' => $this->errors()];
+            }
+
+            // =====================
+            // PROCESAR ADJUNTOS
+            // =====================
+            if (isset($files['adjuntos'])) {
+                if (count($files['adjuntos']) > 10) {
+                    throw new \Exception('Se permiten un máximo de 10 archivos adjuntos');
+                }
+
+                $uploadPath = FCPATH . 'uploads/adjuntos_denuncias/' . $denunciaID . '/';
+                if (!is_dir($uploadPath)) mkdir($uploadPath, 0777, true);
+
+                $allowedTypes = [
+                    'image/jpeg','image/png','image/webp','image/avif',
+                    'application/pdf','application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'text/plain','audio/mpeg','audio/mp3','audio/wav',
+                    'audio/ogg','audio/x-m4a','video/mp4','video/x-msvideo',
+                    'video/avi','video/mpeg','video/ogg','video/webm',
+                    'application/zip','application/x-zip-compressed'
+                ];
+
+                foreach ($files['adjuntos'] as $file) {
+                    if ($file->isValid() && !$file->hasMoved()) {
+                        if ($file->getSize() > 20 * 1024 * 1024) {
+                            throw new \Exception("El archivo {$file->getClientName()} excede el límite de 20MB");
+                        }
+                        if (!in_array($file->getClientMimeType(), $allowedTypes)) {
+                            throw new \Exception("Tipo de archivo no permitido: {$file->getClientMimeType()}");
+                        }
+
+                        $fileName = $file->getRandomName();
+                        $file->move($uploadPath, $fileName);
+
+                        $this->adjuntoModel->insert([
+                            'denuncia_id' => $denunciaID,
+                            'file_path'   => $uploadPath . '/' . $fileName
+                        ]);
+                    }
+                }
+            }
+
+            // =====================
+            // ENVIAR EMAIL SI CORRESPONDE
+            // =====================
+            if (!empty($denuncianteID)) {
+                $denunciante = $this->denuncianteModel->find($denuncianteID);
+                if ($denunciante && !empty($denunciante['email'])) {
+                    $this->emailService->sendTrackingMail($denunciante['email'], $trackingCode);
+                }
+            }
+
+            $db->transCommit();
+
+            return [
+                'success'       => true,
+                'message'       => '✅ Denuncia registrada con éxito',
+                'tracking_code' => $trackingCode
+            ];
+
+        } catch (\Throwable $e) {
+            $db->transRollback();
+            log_message('error', '❌ Error al crear denuncia: ' . $e->getMessage() . ' | Trace: ' . $e->getTraceAsString());
+            return [
+                'success' => false,
+                'message' => 'Error al procesar la denuncia: ' . $e->getMessage(),
+                'errors'  => $this->errors()
+            ];
+        }
+    }
+
+
+    public function correo($correo, $code)
+{
+    $email = \Config\Services::email();
+
+    $email->setFrom('munijloenlinea@gmail.com', 'Municipalidad Distrital de José Leonardo Ortiz');
+    $email->setTo($correo);
+    $email->setSubject('Código de Seguimiento de Denuncia');
+    $email->setMessage("
+        <html>
+        <head>
+            <title>Código de Seguimiento de Denuncia</title>
+        </head>
+        <body style='font-family: Asap, sans-serif;'>
+            <p>Estimado usuario,</p>
+            <p>Su denuncia ha sido registrada exitosamente. A continuación, le proporcionamos su código de seguimiento:</p>
+            <p style='font-size: 18px; font-weight: bold; color: #2E8ACB; padding:15px; background-color: #CDDFEC;'>$code</p>
+            <p>Por favor, conserve este código para futuras consultas.</p>
+            <p>Para realizar el seguimiento de su denuncia, puede ingresar al siguiente enlace:</p>
+            <p><a href='http://localhost:5173/tracking-denuncia?codigo=$code'>Seguimiento</a></p>
+            <p>Atentamente,</p>
+            <p><strong>Municipalidad Distrital de José Leonardo Ortiz</strong></p>
+        </body>
+        </html>
+    ");
+
+    return $email->send();
+}
 
 
     public function getDashboardData()
@@ -200,164 +416,166 @@ class DenunciasModel extends Model
         return $this->insert($data);
     }
 
-    public function createDenuncia(array $data, array $files)
-{
-    $db = \Config\Database::connect();
-    $db->transBegin();
 
-    try {
-        $denunciaData = json_decode($data["denuncia"], true);
-        $denunciadoData = json_decode($data["denunciado"], true);
-        $denuncianteRaw = $data["denunciante"];
-        $denuncianteData = !empty($denuncianteRaw) ? json_decode($denuncianteRaw, true) : null;
 
-        // Inicialización de IDs
-        $denunciadoID = null;
-        $denuncianteID = null;
+//     public function createDenuncia(array $data, array $files)
+// {
+//     $db = \Config\Database::connect();
+//     $db->transBegin();
 
-        /** ==============================
-         *  1. Registrar o buscar denunciado
-         * ============================== */
-        if (!empty($denunciadoData) && !empty($denunciadoData['documento'])) {
-            $denunciado = $this->denunciadoModel->getByDocument($denunciadoData['documento']);
-            if ($denunciado) {
-                $denunciadoID = $denunciado['id'];
-            } else {
-                $this->denunciadoModel->insert([
-                    'nombre'               => $denunciadoData['nombre'] ?? null,
-                    'razon_social'         => $denunciadoData['razon_social'] ?? null,
-                    'representante_legal'  => $denunciadoData['representante_legal'] ?? null,
-                    'tipo_documento'       => $denunciadoData['tipo_documento'] ?? null,
-                    'documento'            => $denunciadoData['documento'] ?? null,
-                    'direccion'            => $denunciadoData['direccion'] ?? null,
-                    'telefono'             => $denunciadoData['celular'] ?? null,
-                ]);
-                $denunciadoID = $this->denunciadoModel->getInsertID();
-            }
-        }
+//     try {
+//         $denunciaData = json_decode($data["denuncia"], true);
+//         $denunciadoData = json_decode($data["denunciado"], true);
+//         $denuncianteRaw = $data["denunciante"];
+//         $denuncianteData = !empty($denuncianteRaw) ? json_decode($denuncianteRaw, true) : null;
 
-        /** ==============================
-         *  2. Registrar o buscar denunciante (si no es anónimo)
-         * ============================== */
-        if ((int)($denunciaData['es_anonimo'] ?? 0) === 0 && !empty($denuncianteData)) {
-            if (!empty($denuncianteData['documento'])) {
-                $denunciante = $this->denuncianteModel->getByDocument($denuncianteData['documento']);
-                if ($denunciante) {
-                    $denuncianteID = $denunciante['id'];
-                } else {
-                    $this->denuncianteModel->insert([
-                        'nombre'         => $denuncianteData['nombre'] ?? null,
-                        'email'          => $denuncianteData['email'] ?? null,
-                        'telefono'       => null,
-                        'celular'        => $denuncianteData['celular'] ?? null,
-                        'documento'      => $denuncianteData['documento'] ?? null,
-                        'tipo_documento' => $denuncianteData['tipo_documento'] ?? null,
-                        'razon_social'   => $denuncianteData['razon_social'] ?? null,
-                        'sexo'           => $denuncianteData['sexo'] ?? null,
-                        'distrito'       => $denuncianteData['distrito'] ?? null,
-                        'provincia'      => $denuncianteData['provincia'] ?? null,
-                        'departamento'   => $denuncianteData['departamento'] ?? null,
-                        'direccion'      => $denuncianteData['direccion'] ?? null,
-                    ], true);
-                    $denuncianteID = $this->denuncianteModel->getInsertID();
-                }
-            }
-        }
+//         // Inicialización de IDs
+//         $denunciadoID = null;
+//         $denuncianteID = null;
 
-        /** ==============================
-         *  3. Validar motivo si existe
-         * ============================== */
-        $motivoID = $denunciaData['motivo_id'] ?? null;
-        if (!empty($motivoID)) {
-            $motivo = $this->motivosModel->find($motivoID);
-            if (!$motivo) {
-                throw new \Exception('El motivo especificado no existe.');
-            }
-        }
+//         /** ==============================
+//          *  1. Registrar o buscar denunciado
+//          * ============================== */
+//         if (!empty($denunciadoData) && !empty($denunciadoData['documento'])) {
+//             $denunciado = $this->denunciadoModel->getByDocument($denunciadoData['documento']);
+//             if ($denunciado) {
+//                 $denunciadoID = $denunciado['id'];
+//             } else {
+//                 $this->denunciadoModel->insert([
+//                     'nombre'               => $denunciadoData['nombre'] ?? null,
+//                     'razon_social'         => $denunciadoData['razon_social'] ?? null,
+//                     'representante_legal'  => $denunciadoData['representante_legal'] ?? null,
+//                     'tipo_documento'       => $denunciadoData['tipo_documento'] ?? null,
+//                     'documento'            => $denunciadoData['documento'] ?? null,
+//                     'direccion'            => $denunciadoData['direccion'] ?? null,
+//                     'telefono'             => $denunciadoData['celular'] ?? null,
+//                 ]);
+//                 $denunciadoID = $this->denunciadoModel->getInsertID();
+//             }
+//         }
 
-        /** ==============================
-         *  4. Insertar denuncia
-         * ============================== */
-        $trackingCode = $this->generateTrackingCode();
-        $denunciaID = $this->insert([
-            'tracking_code'   => $trackingCode,
-            'es_anonimo'      => $denunciaData['es_anonimo'] ?? 0,
-            'denunciante_id'  => $denuncianteID,
-            'denunciado_id'   => $denunciadoID,
-            'descripcion'     => $denunciaData['descripcion'] ?? null,
-            'fecha_incidente' => $denunciaData['fecha_incidente'] ?? null,
-            'estado'          => 'registrado',
-            'lugar'           => $denunciaData['lugar'] ?? null,
-            'area'            => $denunciaData['area'] ?? null,
-            'motivo_id'       => $motivoID,
-            'motivo_otro'     => $denunciaData['motivo_otro'] ?? null
-        ], true);
+//         /** ==============================
+//          *  2. Registrar o buscar denunciante (si no es anónimo)
+//          * ============================== */
+//         if ((int)($denunciaData['es_anonimo'] ?? 0) === 0 && !empty($denuncianteData)) {
+//             if (!empty($denuncianteData['documento'])) {
+//                 $denunciante = $this->denuncianteModel->getByDocument($denuncianteData['documento']);
+//                 if ($denunciante) {
+//                     $denuncianteID = $denunciante['id'];
+//                 } else {
+//                     $this->denuncianteModel->insert([
+//                         'nombre'         => $denuncianteData['nombre'] ?? null,
+//                         'email'          => $denuncianteData['email'] ?? null,
+//                         'telefono'       => null,
+//                         'celular'        => $denuncianteData['celular'] ?? null,
+//                         'documento'      => $denuncianteData['documento'] ?? null,
+//                         'tipo_documento' => $denuncianteData['tipo_documento'] ?? null,
+//                         'razon_social'   => $denuncianteData['razon_social'] ?? null,
+//                         'sexo'           => $denuncianteData['sexo'] ?? null,
+//                         'distrito'       => $denuncianteData['distrito'] ?? null,
+//                         'provincia'      => $denuncianteData['provincia'] ?? null,
+//                         'departamento'   => $denuncianteData['departamento'] ?? null,
+//                         'direccion'      => $denuncianteData['direccion'] ?? null,
+//                     ], true);
+//                     $denuncianteID = $this->denuncianteModel->getInsertID();
+//                 }
+//             }
+//         }
 
-        if (!$denunciaID) {
-            $db->transRollback();
-            log_message('error', 'Error de validación al registrar denuncia: ' . json_encode($this->errors()));
-            return ['success' => false, 'errors' => $this->errors()];
-        }
+//         /** ==============================
+//          *  3. Validar motivo si existe
+//          * ============================== */
+//         $motivoID = $denunciaData['motivo_id'] ?? null;
+//         if (!empty($motivoID)) {
+//             $motivo = $this->motivosModel->find($motivoID);
+//             if (!$motivo) {
+//                 throw new \Exception('El motivo especificado no existe.');
+//             }
+//         }
 
-        /** ==============================
-         *  5. Manejo de archivos adjuntos
-         * ============================== */
-        if (isset($files['adjuntos'])) {
-            if (count($files['adjuntos']) > 10) {
-                throw new \Exception('Se permiten un máximo de 10 archivos adjuntos');
-            }
-            $uploadPath = FCPATH . 'uploads/adjuntos_denuncias/' . $denunciaID . '/';
-            if (!is_dir($uploadPath)) mkdir($uploadPath, 0777, true);
-            $allowedTypes = [
-                'image/jpeg', 'image/png', 'image/webp', 'image/avif',
-                'application/pdf', 'application/msword',
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'text/plain', 'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/x-m4a',
-                'video/mp4', 'video/x-msvideo', 'video/avi', 'video/mpeg', 'video/ogg', 'video/webm',
-                'application/zip', 'application/x-zip-compressed'
-            ];
-            foreach ($files['adjuntos'] as $file) {
-                if ($file->isValid() && !$file->hasMoved()) {
-                    if ($file->getSize() > 20 * 1024 * 1024)
-                        throw new \Exception("El archivo {$file->getClientName()} excede el límite de 20MB");
-                    if (!in_array($file->getClientMimeType(), $allowedTypes))
-                        throw new \Exception("Tipo de archivo no permitido: {$file->getClientMimeType()}");
-                    $fileName = $file->getRandomName();
-                    $file->move($uploadPath, $fileName);
+//         /** ==============================
+//          *  4. Insertar denuncia
+//          * ============================== */
+//         $trackingCode = $this->generateTrackingCode();
+//         $denunciaID = $this->insert([
+//             'tracking_code'   => $trackingCode,
+//             'es_anonimo'      => $denunciaData['es_anonimo'] ?? 0,
+//             'denunciante_id'  => $denuncianteID,
+//             'denunciado_id'   => $denunciadoID,
+//             'descripcion'     => $denunciaData['descripcion'] ?? null,
+//             'fecha_incidente' => $denunciaData['fecha_incidente'] ?? null,
+//             'estado'          => 'registrado',
+//             'lugar'           => $denunciaData['lugar'] ?? null,
+//             'area'            => $denunciaData['area'] ?? null,
+//             'motivo_id'       => $motivoID,
+//             'motivo_otro'     => $denunciaData['motivo_otro'] ?? null
+//         ], true);
 
-                    $this->adjuntoModel->insert([
-                        'denuncia_id' => $denunciaID,
-                        'file_path'   => $uploadPath . '/' . $fileName
-                    ]);
-                }
-            }
-        }
+//         if (!$denunciaID) {
+//             $db->transRollback();
+//             log_message('error', 'Error de validación al registrar denuncia: ' . json_encode($this->errors()));
+//             return ['success' => false, 'errors' => $this->errors()];
+//         }
 
-        /** ==============================
-         *  6. Enviar correo si corresponde
-         * ============================== */
-        if (!empty($denuncianteID)) {
-            $denunciante = $this->denuncianteModel->find($denuncianteID);
-            if ($denunciante && !empty($denunciante['email'])) {
-                $this->emailService->sendTrackingMail($denunciante['email'], $trackingCode);
-            }
-        }
+//         /** ==============================
+//          *  5. Manejo de archivos adjuntos
+//          * ============================== */
+//         if (isset($files['adjuntos'])) {
+//             if (count($files['adjuntos']) > 10) {
+//                 throw new \Exception('Se permiten un máximo de 10 archivos adjuntos');
+//             }
+//             $uploadPath = FCPATH . 'uploads/adjuntos_denuncias/' . $denunciaID . '/';
+//             if (!is_dir($uploadPath)) mkdir($uploadPath, 0777, true);
+//             $allowedTypes = [
+//                 'image/jpeg', 'image/png', 'image/webp', 'image/avif',
+//                 'application/pdf', 'application/msword',
+//                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+//                 'text/plain', 'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/x-m4a',
+//                 'video/mp4', 'video/x-msvideo', 'video/avi', 'video/mpeg', 'video/ogg', 'video/webm',
+//                 'application/zip', 'application/x-zip-compressed'
+//             ];
+//             foreach ($files['adjuntos'] as $file) {
+//                 if ($file->isValid() && !$file->hasMoved()) {
+//                     if ($file->getSize() > 20 * 1024 * 1024)
+//                         throw new \Exception("El archivo {$file->getClientName()} excede el límite de 20MB");
+//                     if (!in_array($file->getClientMimeType(), $allowedTypes))
+//                         throw new \Exception("Tipo de archivo no permitido: {$file->getClientMimeType()}");
+//                     $fileName = $file->getRandomName();
+//                     $file->move($uploadPath, $fileName);
 
-        $db->transCommit();
+//                     $this->adjuntoModel->insert([
+//                         'denuncia_id' => $denunciaID,
+//                         'file_path'   => $uploadPath . '/' . $fileName
+//                     ]);
+//                 }
+//             }
+//         }
 
-        return [
-            'success'       => true,
-            'message'       => 'Denuncia registrada con éxito',
-            'tracking_code' => $trackingCode
-        ];
-    } catch (\Throwable $e) {
-        $db->transRollback();
-        log_message('error', 'Error al crear denuncia: ' . $e->getMessage());
-        return [
-            'success' => false,
-            'message' => 'Error al procesar la denuncia: ' . $e->getMessage(),
-            'errors'  => $this->errors()
-        ];
-    }
-}
+//         /** ==============================
+//          *  6. Enviar correo si corresponde
+//          * ============================== */
+//         if (!empty($denuncianteID)) {
+//             $denunciante = $this->denuncianteModel->find($denuncianteID);
+//             if ($denunciante && !empty($denunciante['email'])) {
+//                 $this->emailService->sendTrackingMail($denunciante['email'], $trackingCode);
+//             }
+//         }
+
+//         $db->transCommit();
+
+//         return [
+//             'success'       => true,
+//             'message'       => 'Denuncia registrada con éxito',
+//             'tracking_code' => $trackingCode
+//         ];
+//     } catch (\Throwable $e) {
+//         $db->transRollback();
+//         log_message('error', 'Error al crear denuncia: ' . $e->getMessage());
+//         return [
+//             'success' => false,
+//             'message' => 'Error al procesar la denuncia: ' . $e->getMessage(),
+//             'errors'  => $this->errors()
+//         ];
+//     }
+// }
 }
