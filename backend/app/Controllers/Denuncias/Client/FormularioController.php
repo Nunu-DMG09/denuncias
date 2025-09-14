@@ -98,44 +98,37 @@ class FormularioController extends ResourceController
         return $this->email->send();
     }
 
-   public function create()
+public function create()
     {
         $data  = $this->request->getPost();
         $files = $this->request->getFiles();
 
         $result = $this->denunciasModel->createDenuncia($data, $files);
 
-        // Log automático para depuración
-        if (!$result['success']) {
-            log_message('error', '❌ Error en create denuncia: ' . json_encode($result));
-        } else {
-            log_message('info', '✅ Denuncia creada: ' . $result['tracking_code']);
-        }
-
         return $this->respond($result);
     }
 
     
-    // function query($code)
-    // {
-    //     // Fetch denuncia by tracking code
-    //     $denuncia = $this->denunciasModel->getDenunciaByTrackingCode($code);
+    function query($code)
+    {
+        // Fetch denuncia by tracking code
+        $denuncia = $this->denunciasModel->getDenunciaByTrackingCode($code);
 
-    //     if (!$denuncia) {
-    //         return $this->response->setJSON([
-    //             'success' => false,
-    //             'message' => 'No se encontró la denuncia con el código proporcionado.'
-    //         ]);
-    //     }
+        if (!$denuncia) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No se encontró la denuncia con el código proporcionado.'
+            ]);
+        }
 
-    //     // Fetch seguimientos by denuncia ID
-    //     $seguimientos = $this->seguimientoDenunciasModel->getSeguimientosByDenunciaId($denuncia['id']);
+        // Fetch seguimientos by denuncia ID
+        $seguimientos = $this->seguimientoDenunciasModel->getSeguimientosByDenunciaId($denuncia['id']);
 
-    //     return $this->response->setJSON([
-    //         'success' => true,
-    //         'data' => $seguimientos
-    //     ]);
-    // }
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $seguimientos
+        ]);
+    }
 
     public function checkConnection()
     {
@@ -156,25 +149,4 @@ class FormularioController extends ResourceController
         }
     }
 
-    public function query($code)
-    {
-        $denuncia = $this->denunciasModel->where('tracking_code', $code)->first();
-
-        if (!$denuncia) {
-            return $this->respond([
-                'success' => false,
-                'message' => 'No se encontró la denuncia con el código proporcionado.'
-            ]);
-        }
-
-        $seguimientos = $this->seguimientoDenunciasModel
-            ->where('denuncia_id', $denuncia['id'])
-            ->orderBy('created_at', 'DESC')
-            ->findAll();
-
-        return $this->respond([
-            'success' => true,
-            'data'    => $seguimientos
-        ]);
-    }
 }
