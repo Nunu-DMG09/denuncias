@@ -220,33 +220,33 @@ class DenunciasModel extends Model
         }
     }
 
-    public function correo($correo, $code)
-{
-    $email = \Config\Services::email();
+//     public function correo($correo, $code)
+// {
+//     $email = \Config\Services::email();
 
-    $email->setFrom('munijloenlinea@gmail.com', 'Municipalidad Distrital de José Leonardo Ortiz');
-    $email->setTo($correo);
-    $email->setSubject('Código de Seguimiento de Denuncia');
-    $email->setMessage("
-        <html>
-        <head>
-            <title>Código de Seguimiento de Denuncia</title>
-        </head>
-        <body style='font-family: Asap, sans-serif;'>
-            <p>Estimado usuario,</p>
-            <p>Su denuncia ha sido registrada exitosamente. A continuación, le proporcionamos su código de seguimiento:</p>
-            <p style='font-size: 18px; font-weight: bold; color: #2E8ACB; padding:15px; background-color: #CDDFEC;'>$code</p>
-            <p>Por favor, conserve este código para futuras consultas.</p>
-            <p>Para realizar el seguimiento de su denuncia, puede ingresar al siguiente enlace:</p>
-            <p><a href='http://localhost:5173/tracking-denuncia?codigo=$code'>Seguimiento</a></p>
-            <p>Atentamente,</p>
-            <p><strong>Municipalidad Distrital de José Leonardo Ortiz</strong></p>
-        </body>
-        </html>
-    ");
+//     $email->setFrom('munijloenlinea@gmail.com', 'Municipalidad Distrital de José Leonardo Ortiz');
+//     $email->setTo($correo);
+//     $email->setSubject('Código de Seguimiento de Denuncia');
+//     $email->setMessage("
+//         <html>
+//         <head>
+//             <title>Código de Seguimiento de Denuncia</title>
+//         </head>
+//         <body style='font-family: Asap, sans-serif;'>
+//             <p>Estimado usuario,</p>
+//             <p>Su denuncia ha sido registrada exitosamente. A continuación, le proporcionamos su código de seguimiento:</p>
+//             <p style='font-size: 18px; font-weight: bold; color: #2E8ACB; padding:15px; background-color: #CDDFEC;'>$code</p>
+//             <p>Por favor, conserve este código para futuras consultas.</p>
+//             <p>Para realizar el seguimiento de su denuncia, puede ingresar al siguiente enlace:</p>
+//             <p><a href='http://localhost:5173/tracking-denuncia?codigo=$code'>Seguimiento</a></p>
+//             <p>Atentamente,</p>
+//             <p><strong>Municipalidad Distrital de José Leonardo Ortiz</strong></p>
+//         </body>
+//         </html>
+//     ");
 
-    return $email->send();
-}
+//     return $email->send();
+// }
 
 
     public function getDashboardData()
