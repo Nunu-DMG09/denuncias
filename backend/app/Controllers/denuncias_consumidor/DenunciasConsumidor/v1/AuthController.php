@@ -39,7 +39,10 @@ class AuthController extends ResourceController
         }
 
         // Verificar que el área sea CONSUMIDOR
-        if (strtoupper($user['area']) !== 'CONSUMIDOR') {
+        if (
+            strtolower($user['rol']) === 'admin' &&
+            strtoupper($user['area']) !== 'CONSUMIDOR'
+        ) {
             return service("response")
                 ->setStatusCode(403)
                 ->setJSON(['error' => 'Acceso denegado. El administrador no pertenece al área CONSUMIDOR.']);
@@ -129,7 +132,10 @@ class AuthController extends ResourceController
             }
 
             //Validar que el área sea CONSUMIDOR
-            if (strtoupper($user['area']) !== 'CONSUMIDOR') {
+            if (
+                strtolower($user['rol']) === 'admin' &&
+                strtoupper($user['area']) !== 'CONSUMIDOR'
+            ) {
                 $this->logout();
                 return $this->response
                     ->setStatusCode(403)
