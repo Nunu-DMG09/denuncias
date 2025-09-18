@@ -18,6 +18,26 @@ class DenunciasSeeder extends Seeder
             'area' => 'SGITP'
         ]);
 
+        // Insert admin Corrupción
+        $this->db->table('administrador')->insert([
+            'dni' => '12345678',
+            'nombre' => 'ADMIN CORRUPCION',
+            'password' => password_hash('12345678', PASSWORD_DEFAULT),
+            'rol' => 'admin',
+            'estado' => '1',
+            'area' => 'CORRUPCION'
+        ]);
+
+        // Insert admin Consumidor
+        $this->db->table('administrador')->insert([
+            'dni' => '87654321',
+            'nombre' => 'ADMIN CONSUMIDOR',
+            'password' => password_hash('87654321', PASSWORD_DEFAULT),
+            'rol' => 'admin',
+            'estado' => '1',
+            'area' => 'CONSUMIDOR'
+        ]);
+
         // Insert data into motivo
         $this->db->table('motivo')->insertBatch([
             [
